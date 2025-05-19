@@ -1,0 +1,25 @@
+main {
+    padding: 2rem;
+  }
+  .grid.items {
+    /* dos filas de 4 columnas */
+    grid-template-columns: repeat(4, 1fr);
+  }
+  /* cada tarjeta genérica */
+  .card {
+    background: #DDD;
+    border-radius: 1rem;
+    overflow: hidden;
+    position: relative;
+    height: 200px;
+  }
+  .card .footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: .75rem;
+    background: #5ba861;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+  
