@@ -1,6 +1,7 @@
 /* -------------------------------- */
 /* Estilos comunes                  */
 /* -------------------------------- */
+
 /* Layout general */
 html, body {
   height: 100%;
@@ -26,7 +27,11 @@ main {
 
 /* Header / nav */
 header {
-  position: relative;           /* para posicionar .logo en absoluto */
+  transition: all .2s ease;
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
   background: #03690b;
   padding: 1rem 2rem;
   display: flex;
@@ -34,32 +39,49 @@ header {
   justify-content: space-between;
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
+
+  width: 80%;
+  margin: 0 auto;
+  max-width: 1200px;
+  z-index: 0;
 }
 
-header nav {
+/* Nueva estructura para nav */
+.nav-wrapper {
+  flex: 1;
   display: flex;
-  gap: 1.5rem;
 }
 
-header nav a {
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-links a {
   text-decoration: none;
   color: #ffffff;
-  padding: .5rem 1rem;
-  border-radius: .5rem;
-  transition: background .2s;
+  padding: .5rem;
+  margin: -7px;
+  white-space: nowrap;
 }
-header nav a.active,
-header nav a:hover {
+
+.nav-links a.active,
+.nav-links a:hover {
   background: #FFF;
+  border-radius: .5rem;
+  color: #020000;
+  transition: background .2s;
 }
 
 /* Logo centrado */
-header .logo {
-  position: absolute;           /* sale del flujo flex */
-  left: 50%;                    /* punto medio del header */
-  transform: translateX(-50%);  /* centro exacto */
-  width: 3rem;
-  height: 3rem;
+.logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4rem;
+  height: 4rem;
   overflow: hidden;
   border-radius: 50%;
   background: #FFF;
@@ -67,11 +89,22 @@ header .logo {
   align-items: center;
   justify-content: center;
 }
-header .logo img {
+
+.logo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
+}
+
+/* Ícono de perfil a la derecha */
+.profile img {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10rem;
+  padding: .5rem;
+  background-color: #013005;
 }
 
 /* Footer */
@@ -86,4 +119,25 @@ footer {
 .grid {
   display: grid;
   gap: 1.5rem;
+}
+
+/* Responsive: reducir tamaño de enlaces */
+@media (max-width: 800px) {
+  .nav-links a {
+    font-size: 0.8rem;
+    transition: all .2s ease;
+  }
+}
+
+/* Responsive: reducir tamaño de enlaces */
+@media (max-width: 700px) {
+  .nav-links a {
+    font-size: 0.7rem;
+    margin: -8px;
+    transition: all .2s ease;
+  }
+  header {
+    width: 100%;
+    transition: all .2s ease;
+  }
 }
