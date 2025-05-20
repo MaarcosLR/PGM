@@ -1,73 +1,199 @@
+/* Que toda la página ocupe el 100% */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+body{
+  flex: 1;
+}
+
+/* Contenedor general */
+.container {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+/* Botón superior */
+.btnTerms {
+  margin: 0 auto 8px;
+  display: block;
+  padding: 16px 32px;
+  background: #03690b;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
 /* Layout principal */
 main {
-    display: flex;
-    gap: 32px;           /* antes 2rem */
-    padding: 32px;       /* antes 2rem */
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  padding: 16px;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+/* Secciones */
+.section {
+  background: #5ba861;
+  border-radius: 24px;
+  padding: 24px;
+  flex: 1;
+  min-width: 300px;
+  box-sizing: border-box;
+}
+
+/* Sección del formulario */
+#formulario {
+  width: 100%;
+  max-width: 900px;
+  background: #5ba861;
+  border-radius: 24px;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+/* Título */
+.section h2 {
+  text-align: center;
+  margin: 0 0 16px;
+  font-size: 20px;
+}
+
+/* Grid del formulario dividido en columnas */
+.formulario-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+/* Columnas dentro del formulario */
+.formulario-grid .col {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Cada fila de campo */
+.form-row {
+  margin-bottom: 20px;
+}
+
+/* Etiquetas */
+.section label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+/* Inputs y textarea */
+.section input[type="text"],
+.section input[type="email"],
+.section input[type="file"],
+.section textarea,
+.section select {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Textarea */
+.section textarea {
+  height: 150px;
+  resize: vertical;
+}
+
+/* Archivo */
+input[type="file"] {
+  padding: 8px;
+}
+
+/* Botones */
+.section button {
+  margin-top: 24px;
+  padding: 12px 32px;
+  background: #03690b;
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btnEnviar {
+  display: block;
+  margin: 32px auto 0; /* Centrado con margen arriba */
+}
+
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  #formulario {
+    padding: 20px;
   }
-  
-  /* Secciones */
-  .section {
-    background: #5ba861;
-    border-radius: 24px; /* antes 1.5rem */
-    padding: 24px;       /* antes 1.5rem */
-    flex: 1;
+
+  .formulario-grid {
+    flex-direction: column;
   }
-  
-  /* Intro vs formulario */
-  .section#intro {
-    flex: 1.2;
-  }
-  .section#formulario {
-    flex: 1.5;
-    /* empujamos un poco el contenido hacia abajo */
-    padding-top: 40px;   /* antes 1.5rem, ahora 40px para más separación */
-  }
-  
-  /* Títulos */
+
   .section h2 {
-    text-align: center;
-    margin: 24px 0 16px; /* 24px arriba, 16px abajo */
-    font-size: 20px;     /* ajustable */
+    font-size: 18px;
   }
-  
-  /* Etiquetas */
-  .section label {
-    display: block;
-    margin-top: 16px;    /* antes 1rem */
-    margin-bottom: 8px;  /* añadido para separar del campo */
-    font-weight: bold;
+
+  .section input,
+  .section textarea,
+  .section select {
+    font-size: 15px;
   }
-  
-  /* Campos de texto, email, file y textarea */
-  .section input[type="text"],
-  .section input[type="email"],
-  .section input[type="file"],
-  .section textarea {
-    width: 100%;
-    padding: 12px 16px;   /* antes .75rem 1rem */
-    margin-top: 8px;      /* antes .5rem */
-    margin-bottom: 24px;  /* añadido para dar “aire” tras el campo */
-    border: none;
-    border-radius: 16px;  /* antes 1rem */
-    outline: none;
-    font-size: 16px;      /* antes 1rem */
-  }
-  
-  /* Textarea con altura fija */
-  .section textarea {
-    height: 150px;
-    resize: vertical;
-  }
-  
-  /* Botón */
+
   .section button {
-    margin-top: 24px;     /* antes 1.5rem */
-    padding: 12px 32px;   /* antes .75rem 2rem */
-    background: #03690b;
-    color: #FFF;
-    border: none;
-    border-radius: 16px;  /* antes 1rem */
-    cursor: pointer;
-    font-size: 16px;      /* antes 1rem */
+    width: 100%;
+    font-size: 16px;
   }
-  
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-responsive {
+  max-width: 150px;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .logo-responsive {
+    max-width: 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo-responsive {
+    max-width: 450px;
+  }
+}
+
+.custom-spacing {
+  margin-top: 100px; /* Puedes cambiar este valor a 20px, 60px, etc. */
+}
+
+.footerSoli {
+  width: 100%;
+}

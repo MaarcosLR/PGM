@@ -13,7 +13,6 @@
       <div class="nav-links">
         <a href="index.html">INICIO</a>
         <a href="anuncios.html">ANUNCIOS</a>
-        <a href="solicitar.html">SOLICITAR</a>
       </div>
     </nav>
 
@@ -21,52 +20,159 @@
       <img src="../static/img/icologo.png" alt="PGM Logo">
     </div>
 
+      <div class="nav-link-solicitar">
+        <a href="solicitar.html" class="indicator">SOLICITAR</a>
+      </div>
+
     <a href="#" class="profile">
       <img src="../static/img/icoperfil.png" alt="Perfil" width="33">
     </a>
   </header>
 
-  <main>
-    <section id="intro" class="section">
-      <p>
-        Esta es la sección en la que podrás solicitar la publicación de un anuncio. 
-        Debes rellenar primero los datos de contacto por los que podremos mandar avisos 
-        sobre las actualizaciones de tu anuncio. No se admiten imágenes o anuncios +18 o sensibles.
-      </p>
-    </section>
+  <div class="container">
+    <button id="btnTerms" class="btnTerms">TÉRMINOS Y CONDICIONES</button>
 
-    <section id="formulario" class="section">
-      <h2>DATOS DE CONTACTO</h2>
-      <form id="solicitar-form">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required>
+    <main>
+      <section id="formulario" class="section">
+        <h2>FORMULARIO DE PUBLICACIÓN</h2>
+        <form id="solicitar-form">
+          <div class="formulario-grid">
 
-        <label for="apellidos">Apellidos:</label>
-        <input type="text" id="apellidos" name="apellidos" required>
+            <!-- Columna izquierda: datos de contacto -->
+            <div class="col">
+              <div class="form-row">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+              </div>
 
-        <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" name="email" required>
+              <div class="form-row">
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" required>
+              </div>
 
-        <label for="telefono">Teléfono de contacto:</label>
-        <input type="text" id="telefono" name="telefono" required>
+              <div class="form-row">
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required>
+              </div>
 
-        <h2>INFORMACIÓN DEL ANUNCIO</h2>
+              <div class="form-row">
+                <label for="telefono">Teléfono de contacto:</label>
+                <input type="text" id="telefono" name="telefono" required>
+              </div>
 
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" required>
+              <div class="form-row custom-spacing"></div>
 
-        <label for="foto">Foto/Imagen:</label>
-        <input type="file" id="foto" name="foto" accept="image/*">
+              <div class="form-row logo-container">
+                <img src="../static/img/icologo.png" alt="Logo de la empresa" class="logo-responsive">
+              </div>
 
-        <label for="descripcion">Descripción:</label>
-        <textarea id="descripcion" name="descripcion" required></textarea>
+            </div>
 
-        <button type="submit">Enviar solicitud</button>
-      </form>
-    </section>
-  </main>
+            <!-- Columna derecha: datos del anuncio -->
+            <div class="col">
+              <div class="form-row">
+                <label for="titulo">Título del anuncio:</label>
+                <input type="text" id="titulo" name="titulo" required>
+              </div>
 
-  <footer></footer>
+              <div class="form-row">
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" required></textarea>
+              </div>
+
+              <div class="form-row">
+                <label for="localizacion">Localización:</label>
+                <select id="localizacion" name="localizacion" required>
+                  <option value="">Selecciona una provincia</option>
+                  <option value="Álava">Álava</option>
+                  <option value="Albacete">Albacete</option>
+                  <option value="Alicante">Alicante</option>
+                  <option value="Almería">Almería</option>
+                  <option value="Asturias">Asturias</option>
+                  <option value="Ávila">Ávila</option>
+                  <option value="Badajoz">Badajoz</option>
+                  <option value="Barcelona">Barcelona</option>
+                  <option value="Burgos">Burgos</option>
+                  <option value="Cáceres">Cáceres</option>
+                  <option value="Cádiz">Cádiz</option>
+                  <option value="Cantabria">Cantabria</option>
+                  <option value="Castellón">Castellón</option>
+                  <option value="Ciudad Real">Ciudad Real</option>
+                  <option value="Córdoba">Córdoba</option>
+                  <option value="La Coruña">La Coruña</option>
+                  <option value="Cuenca">Cuenca</option>
+                  <option value="Gerona">Gerona</option>
+                  <option value="Granada">Granada</option>
+                  <option value="Guadalajara">Guadalajara</option>
+                  <option value="Guipúzcoa">Guipúzcoa</option>
+                  <option value="Huelva">Huelva</option>
+                  <option value="Huesca">Huesca</option>
+                  <option value="Islas Baleares">Islas Baleares</option>
+                  <option value="Jaén">Jaén</option>
+                  <option value="León">León</option>
+                  <option value="Lérida">Lérida</option>
+                  <option value="Lugo">Lugo</option>
+                  <option value="Madrid">Madrid</option>
+                  <option value="Málaga">Málaga</option>
+                  <option value="Murcia">Murcia</option>
+                  <option value="Navarra">Navarra</option>
+                  <option value="Orense">Orense</option>
+                  <option value="Palencia">Palencia</option>
+                  <option value="Las Palmas">Las Palmas</option>
+                  <option value="Pontevedra">Pontevedra</option>
+                  <option value="La Rioja">La Rioja</option>
+                  <option value="Salamanca">Salamanca</option>
+                  <option value="Santa Cruz de Tenerife">Santa Cruz de Tenerife</option>
+                  <option value="Segovia">Segovia</option>
+                  <option value="Sevilla">Sevilla</option>
+                  <option value="Soria">Soria</option>
+                  <option value="Tarragona">Tarragona</option>
+                  <option value="Teruel">Teruel</option>
+                  <option value="Toledo">Toledo</option>
+                  <option value="Valencia">Valencia</option>
+                  <option value="Valladolid">Valladolid</option>
+                  <option value="Vizcaya">Vizcaya</option>
+                  <option value="Zamora">Zamora</option>
+                  <option value="Zaragoza">Zaragoza</option>
+                  <option value="Ceuta">Ceuta</option>
+                  <option value="Melilla">Melilla</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="precio">Precio:</label>
+                <input type="text" id="precio" name="precio" required>
+              </div>
+
+              <div class="form-row">
+                <label for="estado">Estado del producto:</label>
+                <select id="estado" name="estado" required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="nuevo">Nuevo</option>
+                  <option value="usado">Usado</option>
+                  <option value="reacondicionado">Reacondicionado</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="imagenes">Imágenes (máximo 6):</label>
+                <input type="file" id="imagenes" name="imagenes" accept="image/*" multiple required>
+              </div>
+
+              <div class="form-row">
+                <label for="altImagen">Texto alternativo para las imágenes:</label>
+                <input type="text" id="altImagen" name="altImagen" maxlength="150" placeholder="Descripción breve de la imagen">
+              </div>
+            </div>
+
+          </div>
+
+          <button type="submit" id="btnEnviar" class="btnEnviar">Enviar</button>
+        </form>
+      </section>
+    </main>
+      <footer class="footerSoli"></footer>
+  </div>
   <script src="../static/js/script.js"></script>
 </body>
 </html>

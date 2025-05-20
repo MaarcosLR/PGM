@@ -40,10 +40,17 @@ header {
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
 
-  width: 80%;
+  width: 40%;
   margin: 0 auto;
   max-width: 1200px;
   z-index: 0;
+}
+
+.indicator {
+  font-weight: bold;
+  border-bottom: 2px solid #5ba861;
+  padding-bottom: 4px;
+  text-decoration: none; /* por si es un <a> */
 }
 
 /* Nueva estructura para nav */
@@ -59,16 +66,40 @@ header {
   align-items: center;
 }
 
+.nav-link-solicitar {
+  position: absolute;
+  top: 50%;
+  right: 20%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .nav-links a {
   text-decoration: none;
   color: #ffffff;
   padding: .5rem;
-  margin: -7px;
+  white-space: nowrap;
+}
+
+.nav-link-solicitar a {
+  text-decoration: none;
+  color: #ffffff;
+  padding: .5rem;
   white-space: nowrap;
 }
 
 .nav-links a.active,
 .nav-links a:hover {
+  background: #FFF;
+  border-radius: .5rem;
+  color: #020000;
+  transition: background .2s;
+}
+
+.nav-link-solicitar a.active,
+.nav-link-solicitar a:hover {
   background: #FFF;
   border-radius: .5rem;
   color: #020000;
@@ -122,9 +153,13 @@ footer {
 }
 
 /* Responsive: reducir tamaño de enlaces */
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
   .nav-links a {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    transition: all .2s ease;
+  }
+  header {
+    width: 80%;
     transition: all .2s ease;
   }
 }
@@ -132,12 +167,13 @@ footer {
 /* Responsive: reducir tamaño de enlaces */
 @media (max-width: 700px) {
   .nav-links a {
-    font-size: 0.7rem;
+    font-size: 1rem;
     margin: -8px;
     transition: all .2s ease;
   }
   header {
     width: 100%;
     transition: all .2s ease;
+    border-radius: 0;
   }
 }

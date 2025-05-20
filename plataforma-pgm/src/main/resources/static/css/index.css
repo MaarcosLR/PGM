@@ -1,25 +1,113 @@
+/* Reset básico */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+/* Centrado de todo el main */
 main {
-    padding: 2rem;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Grid con 2 columnas */
+.grid.items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  justify-items: center;
+  max-width: 900px; /* límite máximo */
+  width: 90%;       /* adaptativo */
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+/* Contenedor de cada tarjeta */
+.card-container {
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  min-width: 300px;     /* evita que se achiquen demasiado */
+  transition: all 0.3s ease;
+}
+
+/* Título */
+.card-title {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: black;
+}
+
+/* Caja gris */
+.card-content {
+  background: #DDD;
+  height: 400px;
+  min-height: 400px;    /* Fija la altura mínima */
+  max-height: 400px;    /* Fija la altura máxima */
+  border-radius: 3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: hidden;     /* Evita que imágenes más grandes se desborden */
+}
+
+/* Botón */
+.card-button {
+  background-color: #b3bdd8;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 2rem;
+  font-size: 22px;
+  width: 18rem;
+  height: 3rem;
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, font-size 0.3s, width 0.3s;
+}
+
+.card-button:hover {
+  background-color: #a1aac7;
+}
+
+/* Responsive: cuando la ventana es menor a 850px */
+@media (max-width: 850px) {
   .grid.items {
-    /* dos filas de 4 columnas */
-    grid-template-columns: repeat(4, 1fr);
+    transition: all ease .8s;
+    grid-template-columns: 1fr;
+    width: 90%;  /* puedes dejarlo más ancho si lo deseas */
+    gap: 2rem;
   }
-  /* cada tarjeta genérica */
-  .card {
-    background: #DDD;
-    border-radius: 1rem;
-    overflow: hidden;
-    position: relative;
-    height: 200px;
+
+  .card-content {
+    transition: all ease .8s;
+    height: 400px;     /* mantenemos altura fija */
   }
-  .card .footerAd {
-    position: absolute;
-    bottom: 0;
+
+  .card-button {
+    transition: all ease .8s;
     width: 100%;
-    padding: .75rem;
-    background: #5ba861;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    font-size: 18px;
   }
-  
+}
+
+@media (max-width: 400px) {
+  .card-content {
+    transition: all ease .8s;
+    height: 400px; /* mantener la misma altura */
+  }
+
+  .card-button {
+    transition: all ease .8s;
+    font-size: 16px;
+    height: 2.5rem;
+  }
+}
+

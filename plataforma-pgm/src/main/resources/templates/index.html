@@ -11,15 +11,18 @@
   <header>
     <nav class="nav-wrapper">
       <div class="nav-links">
-        <a href="index.html">INICIO</a>
+        <a href="index.html" class="indicator">INICIO</a>
         <a href="anuncios.html">ANUNCIOS</a>
-        <a href="solicitar.html">SOLICITAR</a>
       </div>
     </nav>
 
     <div class="logo">
       <img src="../static/img/icologo.png" alt="PGM Logo">
     </div>
+
+      <div class="nav-link-solicitar">
+        <a href="solicitar.html">SOLICITAR</a>
+      </div>
 
     <a href="#" class="profile">
       <img src="../static/img/icoperfil.png" alt="Perfil" width="33">
@@ -28,15 +31,19 @@
 
   <main>
     <div class="grid items">
-      <!-- Repite estas .card según necesites -->
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 1</div></div>
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 2</div></div>
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 3</div></div>
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 4</div></div>
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 5</div></div>
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 6</div></div>
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 7</div></div>
-      <div class="card"><!-- Aquí­ la imagen --><div class="footerAd">Anuncio Recomendado 8</div></div>
+      <div class="card-container">
+        <p class="card-title">VER ANUNCIOS</p>
+        <div class="card-content">
+          <a href="./anuncios.html" class="card-button">CLICK AQUÍ</a>
+        </div>
+      </div>
+
+      <div class="card-container">
+        <p class="card-title">SOLICITAR PUBLICACIÓN ANUNCIO</p>
+        <div class="card-content">
+          <a href="./solicitar.html" class="card-button">CLICK AQUÍ</a>
+        </div>
+      </div>
     </div>
   </main>
 
