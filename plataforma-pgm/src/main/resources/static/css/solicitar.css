@@ -165,6 +165,7 @@ input[type="file"] {
 }
 
 .logo-container {
+  margin-top: -80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,12 +182,15 @@ input[type="file"] {
 @media (min-width: 768px) {
   .logo-responsive {
     max-width: 300px;
+    transition: all 0.3s ease;
+
   }
 }
 
 @media (min-width: 1024px) {
   .logo-responsive {
     max-width: 450px;
+    transition: all 0.3s ease;
   }
 }
 
