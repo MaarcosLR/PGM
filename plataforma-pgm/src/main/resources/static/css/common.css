@@ -146,6 +146,14 @@ footer {
   background: #03690b;
 }
 
+.footerSoli {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* ajusta la altura según necesites */
+  text-align: center;
+}
+
 /* Grid común */
 .grid {
   display: grid;
