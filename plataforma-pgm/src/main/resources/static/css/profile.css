@@ -1,0 +1,246 @@
+.profile-menu {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+    gap: 20px;
+}
+
+.menu-btn {
+    padding: 10px 20px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.menu-btn.active,
+.menu-btn:hover {
+    background: #007bff;
+    color: white;
+}
+
+.profile-content {
+    max-width: 700px;
+    margin: 0 auto 50px auto;
+    padding: 0 20px;
+}
+
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+#user-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#user-settings-form label {
+    font-weight: bold;
+}
+
+#user-settings-form input[type="text"],
+#user-settings-form input[type="password"],
+#user-settings-form input[type="tel"],
+#user-settings-form input[type="email"] {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#user-settings-form input[type="file"] {
+    padding: 5px 0;
+}
+
+#user-settings-form button {
+    width: fit-content;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#user-settings-form button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+}
+
+#delete-profile {
+    background-color: #dc3545;
+    color: white;
+}
+
+.menu-card {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px 30px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+}
+
+.menu-btn {
+    display: inline-block;
+    background: #f5f5f5;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 12px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: black;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.menu-btn:hover {
+    background: #ddd;
+}
+
+.menu-btn.active {
+    background: #333;
+    color: white;
+}
+
+.content-section {
+    display: none;
+    color: black;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.profile-photo-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    cursor: pointer;
+}
+
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ccc;
+    display: block;
+}
+
+.photo-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+}
+
+.profile-photo-wrapper:hover .photo-overlay {
+    opacity: 1;
+}
+
+.photo-overlay svg {
+    width: 30px;
+    height: 30px;
+}
+
+.photo-menu {
+    position: absolute;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 100;
+}
+
+.photo-menu button {
+    border: none;
+    background: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.photo-menu button:hover {
+    background: #0056b3;
+}
+
+#user-settings-form select {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    /* Para que no tengan el fondo gris que suele tener el select */
+    appearance: none;  /* Quita el estilo nativo en navegadores modernos */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* Opcional: un pequeño margen inferior para que no queden muy pegados */
+#user-settings-form label + select {
+    margin-bottom: 10px;
+}
+
+/* Puedes agregar un hover o focus si quieres igual que inputs */
+
+#user-settings-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 3px #007bff;
+}
+
+.password-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.password-wrapper input[type="password"],
+.password-wrapper input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.password-wrapper button {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+}
+
+.password-wrapper button:hover {
+    background-color: #0056b3;
+}
+
+#ciudad:disabled {
+    cursor: not-allowed;
+    color: #888; /* Opcional: que el texto se vea "gris" para indicar deshabilitado */
+}

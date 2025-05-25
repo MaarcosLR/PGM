@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  window.usuarioLogueado = /*[[${usuario}]]*/ null;
+  /*]]>*/
+</script>
+
+<head>
+  <meta charset="UTF-8">
+  <title>PGM · Perfil</title>
+  <link rel="icon" href="/img/icologo.png" type="image/icon">
+  <link rel="stylesheet" href="/css/common.css">
+  <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+<header>
+  <nav class="nav-wrapper">
+    <div class="nav-links">
+      <a href="index.html" class="indicator">INICIO</a>
+      <a href="anuncios.html">ANUNCIOS</a>
+    </div>
+  </nav>
+
+  <div class="logo">
+    <img src="/img/icologo.png" alt="PGM Logo">
+  </div>
+
+  <div class="nav-link-solicitar">
+    <a href="solicitar.html">SOLICITAR</a>
+  </div>
+
+  <a href="profile.html" class="profile">
+    <img src="/img/icoperfil.png" alt="Perfil" width="33">
+  </a>
+
+</header>
+
+<main>
+  <div class="menu-card">
+    <section class="profile-menu">
+      <button class="menu-btn active" data-section="publicados">Anuncios Publicados</button>
+      <button class="menu-btn" data-section="solicitados">Anuncios Solicitados</button>
+      <button class="menu-btn" data-section="ajustes">Perfil de Usuario</button>
+    </section>
+
+    <section class="profile-content" id="profile-content">
+      <!-- Aquí irá el contenido dinámico según el menú -->
+      <div id="publicados" class="content-section active">
+        <h2>Anuncios Publicados</h2>
+        <p>Aquí irán los anuncios que has publicado.</p>
+      </div>
+
+      <div id="solicitados" class="content-section">
+        <h2>Anuncios Solicitados</h2>
+        <p>Aquí irán los anuncios que has solicitado y su estado.</p>
+      </div>
+
+      <div id="ajustes" class="content-section">
+        <h2>Perfil de Usuario</h2>
+
+        <div class="profile-photo-wrapper">
+          <img src="/img/icologo.png" alt="Foto de perfil" id="profile-photo" class="profile-photo" />
+          <div class="photo-overlay" id="photo-overlay" title="Cambiar foto">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="white" viewBox="0 0 24 24">
+              <path d="M5 20h14v-2H5v2zm7-18c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zM4 6h3l3-3h4l3 3h3v14H4V6z"/>
+            </svg>
+          </div>
+        </div>
+
+        <input type="file" id="foto" name="foto" accept="image/*" style="display:none" />
+
+        <form id="user-settings-form">
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" value="">
+
+          <label for="correoElectronico">Correo Electrónico:</label>
+          <input type="email" id="correoElectronico" name="correoElectronico" value="">
+
+          <label for="telefono">Teléfono de Contacto:</label>
+          <input type="tel" id="telefono" name="telefono" value="">
+
+          <label for="pais">País:</label>
+          <select id="pais" name="pais">
+            <option value="">Selecciona un país</option>
+            <option value="España">España</option>
+          </select>
+
+          <label for="ciudad">Ciudad:</label>
+          <select id="ciudad" name="ciudad" disabled>
+            <option value="">Selecciona una ciudad</option>
+          </select>
+
+          <button type="submit">Guardar Cambios</button>
+        </form>
+
+      </div>
+
+      <!-- Menú para cambiar o borrar la foto -->
+      <div id="photo-menu" class="photo-menu" style="display:none;">
+        <button id="change-photo-btn">Cambiar foto</button>
+        <button id="remove-photo-btn">Borrar foto</button>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+
+
+<footer></footer>
+<script src="/js/profile.js"></script>
+</body>
+</html>
