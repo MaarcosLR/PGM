@@ -41,22 +41,35 @@ main {
   color: black;
 }
 
-/* Caja gris */
 .card-content {
   background: #DDD;
   height: 400px;
-  min-height: 400px;    /* Fija la altura mínima */
-  max-height: 400px;    /* Fija la altura máxima */
+  min-height: 400px;
+  max-height: 400px;
   border-radius: 3rem;
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between; /* CAMBIO: separa imagen y botón verticalmente */
   align-items: center;
-  padding: 1rem;
+  padding: 2rem 1rem; /* más padding para separación */
   box-sizing: border-box;
-  overflow: hidden;     /* Evita que imágenes más grandes se desborden */
+  overflow: hidden;
 }
+
+.card-image1 {
+  max-width: 340px;
+  height: auto;
+  margin: auto 0;
+}
+
+.card-image2 {
+  max-width: 500px;
+  height: auto;
+  margin: auto 0;
+  margin-right: -40px;
+}
+
 
 /* Botón */
 .card-button {

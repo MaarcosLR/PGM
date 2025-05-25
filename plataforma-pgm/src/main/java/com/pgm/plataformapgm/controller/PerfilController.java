@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.controller;
 
+import com.pgm.plataformapgm.DTO.UsuarioDTO;
 import com.pgm.plataformapgm.model.Anuncio;
 import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.service.AnuncioService;
@@ -97,7 +98,7 @@ public class PerfilController {
         session.setAttribute("usuarioLogueado", usuarioSesion);
 
         response.put("success", true);
-        response.put("usuario", usuarioSesion);
+        response.put("usuario", new UsuarioDTO(usuarioSesion));
         return response;
     }
 
