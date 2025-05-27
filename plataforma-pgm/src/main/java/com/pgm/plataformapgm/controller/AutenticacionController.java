@@ -1,9 +1,9 @@
 package com.pgm.plataformapgm.controller;
 
 import com.pgm.plataformapgm.DTO.LoginUsuarioDTO;
-import com.pgm.plataformapgm.DTO.RegistroUsuarioDTO;
 import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,11 +41,13 @@ public class AutenticacionController {
         }
     }
 
-
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login.html";
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // Evita crear nueva sesión si no existe
+        if (session != null) {
+            session.invalidate(); // Invalida la sesión actual
+        }
+        return "redirect:/login"; // Redirige a la página de login
     }
 
 }

@@ -1,7 +1,7 @@
 .profile-menu {
     display: flex;
     justify-content: center;
-    margin: 30px 0;
+    margin: 10px 0;
     gap: 20px;
 }
 
@@ -23,7 +23,7 @@
 
 .profile-content {
     max-width: 700px;
-    margin: 0 auto 50px auto;
+    margin: 0 auto 20px auto;
     padding: 0 20px;
 }
 
@@ -67,7 +67,7 @@
     cursor: pointer;
 }
 
-#user-settings-form button[type="submit"] {
+.btnGCambios{
     background-color: #28a745;
     color: white;
 }
@@ -80,7 +80,8 @@
 .menu-card {
     max-width: 600px;
     margin: 40px auto;
-    padding: 20px 30px;
+    padding-top: 10px;
+    padding-bottom: 1px;
     background: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border-radius: 8px;
@@ -243,4 +244,15 @@
 #ciudad:disabled {
     cursor: not-allowed;
     color: #888; /* Opcional: que el texto se vea "gris" para indicar deshabilitado */
+}
+
+.btnsGL {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btnLogout {
+    background-color: #ff0000;
+    color: black;
 }

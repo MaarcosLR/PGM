@@ -22,6 +22,7 @@ document.getElementById('registroForm').addEventListener('submit', async functio
             document.getElementById('mensaje').style.color = 'green';
             document.getElementById('mensaje').textContent = result.message || 'Usuario registrado correctamente';
             this.reset();
+            setTimeout(() => window.location.href = '/login.html', 500);
         } else {
             const errorResult = await response.json();
             document.getElementById('mensaje').style.color = 'red';

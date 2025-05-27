@@ -4,7 +4,6 @@ import com.pgm.plataformapgm.DTO.LoginUsuarioDTO;
 import com.pgm.plataformapgm.DTO.RegistroUsuarioDTO;
 import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.repository.UsuarioRepository;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +21,6 @@ public class UsuarioService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public boolean validarCredenciales(String correoElectronico, String contrasena) {
-        return usuarioRepository.findByCorreoElectronico(correoElectronico)
-                .map(usuario -> passwordEncoder.matches(contrasena, usuario.getContrasena()))
-                .orElse(false);
-    }
-
-
 
     public void registrarUsuario(RegistroUsuarioDTO dto) {
         if (usuarioRepository.findByCorreoElectronico(dto.getCorreoElectronico()).isPresent()) {
@@ -45,7 +37,6 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-
     public Usuario autenticarUsuario(LoginUsuarioDTO dto) {
         Usuario usuario = usuarioRepository.findByCorreoElectronico(dto.getCorreoElectronico())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -61,7 +52,7 @@ public class UsuarioService {
         return usuarioOpt.orElse(null);
     }
 
-    public Usuario save(Usuario usuarioSesion) {
-        return usuarioRepository.save(usuarioSesion);
+    public void save(Usuario usuarioSesion) {
+        usuarioRepository.save(usuarioSesion);
     }
 }
