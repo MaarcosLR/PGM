@@ -36,10 +36,21 @@ main {
 /* GRID DE ANUNCIOS: 4 columnas */
 .grid.ads {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 220px);
-  justify-content: center; /* centra las columnas si hay espacio extra */
+  grid-template-columns: repeat(7, 220px); /* fijo 7 columnas */
+  justify-content: center;
   gap: 1rem;
+
+  /* Altura para 2 filas (2 x 280px) + 1 gap */
+  max-height: calc(280px * 2 + 1rem);
+
+  overflow-y: auto; /* scroll vertical interno si hay más anuncios */
+  overflow-x: hidden;
+  margin: 0 auto 2rem auto; /* centrado y separación inferior */
+
+  padding-bottom: 1rem; /* ESPACIO EXTRA para que no se corten los anuncios */
 }
+
+
 
 /* TARJETA DE ANUNCIO */
 .cardAd {

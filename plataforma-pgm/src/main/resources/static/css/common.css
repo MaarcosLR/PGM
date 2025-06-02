@@ -146,13 +146,27 @@ footer {
   background: #03690b;
 }
 
+
 .footerSoli {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px; /* ajusta la altura según necesites */
   text-align: center;
+  padding: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  position: relative;
 }
+
+.btnTerms {
+  background: none;
+  border: none;
+  color: white;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.8rem;  /* Más pequeño */
+  display: block;     /* Para que esté en línea nueva */
+  margin: 0.3rem auto 0 auto; /* Centrado y separado un poco */
+  padding: 0;
+}
+
 
 /* Grid común */
 .grid {
@@ -199,7 +213,5 @@ footer {
     border-radius: 6px;
     font-size: 14px;
   }
-
-
 
 }

@@ -24,3 +24,25 @@ document.querySelectorAll('header nav a').forEach(link => {
       }
     });
   }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btnTerms = document.getElementById('btnTerms');
+  const modalTerms = document.getElementById('modalTerms');
+  const closeModal = document.getElementById('closeModal');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+
+  btnTerms.addEventListener('click', () => {
+    modalTerms.style.display = 'block';
+    modalBackdrop.style.display = 'block';
+  });
+
+  closeModal.addEventListener('click', () => {
+    modalTerms.style.display = 'none';
+    modalBackdrop.style.display = 'none';
+  });
+
+  modalBackdrop.addEventListener('click', () => {
+    modalTerms.style.display = 'none';
+    modalBackdrop.style.display = 'none';
+  });
+});

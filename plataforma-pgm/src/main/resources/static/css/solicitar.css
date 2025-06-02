@@ -20,19 +20,6 @@ body{
   margin-top: 20px;
 }
 
-/* Botón superior */
-.btnTerms {
-  margin: 0 auto 8px;
-  display: block;
-  padding: 16px 32px;
-  background: #03690b;
-  color: #fff;
-  border: none;
-  border-radius: 16px;
-  cursor: pointer;
-  font-size: 18px;
-}
-
 /* Layout principal */
 main {
   display: flex;
@@ -195,8 +182,4 @@ input[type="file"] {
 
 .custom-spacing {
   margin-top: 100px; /* Puedes cambiar este valor a 20px, 60px, etc. */
-}
-
-.footerSoli {
-  width: 100%;
 }
