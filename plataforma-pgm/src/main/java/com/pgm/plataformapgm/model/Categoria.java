@@ -21,8 +21,6 @@ public class Categoria {
 
     private String descripcion;
 
-    private String icono;
-
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     private List<Anuncio> anuncios;
 

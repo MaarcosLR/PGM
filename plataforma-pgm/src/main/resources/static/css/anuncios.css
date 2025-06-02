@@ -1,7 +1,9 @@
 main {
     padding: 2rem;
-  }
+    position: relative;
+}
   .search-bar {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -9,7 +11,6 @@ main {
     margin-bottom: 2rem;
     width: 80%;
     margin: 0 auto;
-    margin-bottom: 2rem;
     max-width: 1200px;
   }
   .search-bar input {
@@ -32,24 +33,283 @@ main {
     cursor: pointer;
   }
 
+/* GRID DE ANUNCIOS: 4 columnas */
+.grid.ads {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 220px);
+  justify-content: center; /* centra las columnas si hay espacio extra */
+  gap: 1rem;
+}
+
+/* TARJETA DE ANUNCIO */
+.cardAd {
+  width: 220px;        /* tamaño fijo ancho */
+  height: 280px;       /* alto fijo proporcional */
+  background: #f9f9f9;
+  border-radius: 1rem;
+  overflow: hidden;
+  position: relative;
+  flex-direction: column;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  flex-shrink: 0;      /* evitar que se reduzca */
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* resto de estilos existentes */
+}
+
+.cardAd:hover {
+  transform: scale(1.05); /* Agranda el anuncio un 5% */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); /* Sombra más intensa para resaltar */
+  z-index: 10; /* Para que el elemento ampliado se superponga a los demás */
+  cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+}
+
+/* IMAGEN */
+.cardAd .imageAd {
+  flex: 1 0 auto;
+  overflow: hidden;
+}
+
+.cardAd .imageAd img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* INFORMACIÓN DEBAJO */
+.cardAd .footerAd,
+.cardAd .priceAd,
+.cardAd .locationAd {
+  gap: 5px;
+  font-size: 0.9rem;
+  color: black;
+  padding-left: 10px;
+  background-color: #fff;
+}
+.cardAd .footerAd {
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+  box-sizing: border-box; /* para que el padding no afecte al borde */
+}
+
+
+.cardAd .priceAd {
+  font-weight: 500;
+}
+
+.cardAd .locationAd {
+  font-size: 0.85rem;
+  color: #444;
+  margin-bottom: 5px;
+}
+/* PANEL DESPLEGABLE DE FILTROS */
+.filter-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.6s ease, padding 0.6s ease;
+  margin: 1rem auto;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 0 1rem; /* solo horizontal cerrado */
+  border-radius: 5px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  color: black;
+  width: 80%;
+  max-width: 1200px;
+  margin-bottom: 2rem;
+}
+
+/* Al abrir */
+.filter-dropdown.open {
+  max-height: 1000px; /* aumenta el límite para evitar cortes */
+  padding: 1rem;
+}
+
+/* SECCIÓN DE CATEGORÍAS Y ORDENAMIENTO */
+.filtro-categorias,
+.filtro-orden {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filtro-categorias h4,
+.filtro-orden h4 {
+  flex-basis: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.filtro-categorias ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filtro-categorias li,
+.filtro-categorias label,
+.filtro-orden label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #f4f4f4;
+  padding: 0.4rem 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cat-item {
+  display: inline-block;
+}
+
+/* FILTROS ACTIVOS */
+.active-filters {
+  margin: 0 auto;
+  max-width: 1200px;
+  width: 80%;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.active-filter-tag {
+  background-color: #03690b;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.active-filter-tag .remove-btn {
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.btn-aplicar-filtro{
+  background-color: #03690b;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.btn-aplicar-filtro:hover {
+  background-color: #0aa616;
+}
+
+.btn-borrar-filtro{
+  background-color: #c10404;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.btn-borrar-filtro:hover {
+  background-color: #e10404;
+}
+
+.btn-cerrar-filtro {
+  background-color: #03690b;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.btn-cerrar-filtro:hover {
+  background-color: #0aa616;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 1rem; /* separación entre botones */
+  align-items: center;
+}
+
+/* Empujar el botón Cerrar filtros a la derecha */
+.btn-cerrar-filtro {
+  margin-left: auto;
+}
+
+
+/* CONTENEDOR SCROLLABLE DE RESULTADOS */
+.results-container {
+  height: calc(100vh - 350px);
+  overflow-y: auto;
+  overflow-x: hidden;    /* evita scroll horizontal */
+  padding-right: 0.5rem;
+  max-width: 1200px;
+  width: 80%;
+  margin: 0 auto 2rem auto;
+}
+
+/* RESPONSIVE */
+
+/* Hasta 1200px: 6 columnas */
+@media (max-width: 1200px) {
   .grid.ads {
-    /* dos filas de 4 columnas */
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 220px);
   }
-  /* cada tarjeta gen�rica */
+}
+
+/* Hasta 992px: 4 columnas */
+@media (max-width: 992px) {
+  .grid.ads {
+    grid-template-columns: repeat(4, 220px);
+  }
+}
+
+/* Hasta 600px: 2 columnas */
+@media (max-width: 600px) {
+  .grid.ads {
+    grid-template-columns: repeat(2, 220px);
+  }
+}
+
+/* Hasta 480px: 1 columna, tarjetas 100% ancho */
+@media (max-width: 480px) {
+  .grid.ads {
+    grid-template-columns: 1fr; /* solo 1 columna */
+    justify-content: center;
+  }
   .cardAd {
-    background: #DDD;
-    border-radius: 1rem;
-    overflow: hidden;
-    position: relative;
-    height: 200px;
+    width: 100%;  /* ancho completo del contenedor */
+    max-width: 350px; /* opcional: limitar ancho máximo para que no quede muy grande */
   }
-  .cardAd .footerAd {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: .75rem;
-    background: #5ba861;
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
-  }
+}
+
+/* No permitir seleccionar texto en etiquetas y botones del filtro */
+.filtro-categorias label,
+.filtro-orden label,
+.active-filter-tag,
+.remove-btn,
+.cat-item {
+  user-select: none; /* estándar moderno */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+}
+
+
+

@@ -31,25 +31,79 @@
   </header>
 
   <main>
-    <div class="search-bar">
-      <input type="text" placeholder="Buscar…">
-      <button><img src="/img/icobuscar.png" alt="Buscar" width="45"></button>
-      <button><img src="/img/icofiltro.png" alt="Filtrar" width="45"></button>
-    </div>
+    <form id="searchForm" method="get" action="/anuncios.html">
+      <div class="search-bar">
+        <input type="text" name="busqueda" placeholder="Buscar…" th:value="${param.busqueda}" />
+        <button type="submit" title="Buscar">
+          <img src="/img/icobuscar.png" alt="Buscar" width="45" />
+        </button>
 
-    <div class="grid ads">
-      <div class="cardAd"><!-- Aquí la imagen --><div class="footerAd">Anuncio Recomendado 1</div></div>
-      <div class="cardAd"><div class="footerAd">Anuncio Recomendado 2</div></div>
-      <div class="cardAd"><div class="footerAd">Anuncio Recomendado 3</div></div>
-      <div class="cardAd"><div class="footerAd">Anuncio Recomendado 4</div></div>
-      <div class="cardAd"><div class="footerAd">Anuncio Recomendado 5</div></div>
-      <div class="cardAd"><div class="footerAd">Anuncio Recomendado 6</div></div>
-      <div class="cardAd"><div class="footerAd">Anuncio Recomendado 7</div></div>
-      <div class="cardAd"><div class="footerAd">Anuncio Recomendado 8</div></div>
+        <button id="btnFiltro" type="button" title="Mostrar filtros">
+          <img src="/img/icofiltro.png" alt="Filtrar" width="45" />
+        </button>
+      </div>
+
+      <!-- Contenedor para etiquetas de filtros activos -->
+      <div id="activeFilters" class="active-filters" th:attr="data-categorias=${categoriaSeleccionada}"></div>
+
+
+      <!-- Panel desplegable con filtros oculto inicialmente -->
+      <div id="filterDropdown" class="filter-dropdown">
+        <div class="filtro-categorias">
+          <h4>Categorías</h4>
+          <ul>
+            <li>
+              <label>
+                <input type="checkbox" name="categoriaId" value="all"
+                       th:checked="${categoriaSeleccionada == null or categoriaSeleccionada.isEmpty()}" />
+                Todas las Categorías
+              </label>
+            </li>
+
+            <li th:each="cat : ${categorias}">
+              <label>
+                <input type="checkbox" name="categoriaId" th:value="${cat.id}"
+                       th:checked="${categoriaSeleccionada != null and categoriaSeleccionada.contains(cat.id.toString())}" />
+                <span class="cat-item" th:text="${cat.nombre}"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+
+        <div class="filtro-orden">
+          <h4>Ordenar por</h4>
+          <label><input type="radio" name="orden" value="precio_asc" th:checked="${param.orden == 'precio_asc'}" /> Precio: Menor a Mayor</label><br />
+          <label><input type="radio" name="orden" value="precio_desc" th:checked="${param.orden == 'precio_desc'}" /> Precio: Mayor a Menor</label><br />
+          <label><input type="radio" name="orden" value="titulo_asc" th:checked="${param.orden == 'titulo_asc'}" /> Título: A a Z</label><br />
+          <label><input type="radio" name="orden" value="titulo_desc" th:checked="${param.orden == 'titulo_desc'}" /> Título: Z a A</label>
+        </div>
+
+        <div class="filter-buttons">
+          <button type="submit" class="btn-aplicar-filtro">Aplicar filtros</button>
+          <button type="button" id="btnBorrarFiltros" class="btn-borrar-filtro">Borrar filtros</button>
+          <button type="button" id="btnCerrarFiltro" class="btn-cerrar-filtro">Cerrar filtros</button>
+        </div>
+
+      </div>
+    </form>
+
+    <!-- Contenedor con scroll -->
+    <div class="grid ads" th:if="${anuncios}">
+      <a class="cardAd" th:each="anuncio : ${anuncios}"
+         th:href="@{/anuncio/{id}(id=${anuncio.id})}">
+        <div class="imageAd">
+          <img th:src="${#lists.isEmpty(anuncio.imagenes) ? '/img/default.jpg' : anuncio.imagenes.get(0).urlImagen}" alt="Imagen anuncio" />
+        </div>
+        <div class="footerAd" th:text="${anuncio.titulo}">Título Anuncio</div>
+        <div class="priceAd" th:text="${anuncio.precioFormateado}"></div>
+        <div class="locationAd" th:text="${anuncio.ubicacion}"></div>
+      </a>
     </div>
   </main>
 
   <footer class="footerSoli">©2025 PGM. Todos los derechos reservados</footer>
   <script src="/js/scripts.js"></script>
+  <script src="/js/anuncios.js"></script>
+
 </body>
 </html>

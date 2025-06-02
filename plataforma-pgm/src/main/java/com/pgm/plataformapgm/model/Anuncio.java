@@ -29,8 +29,6 @@ public class Anuncio {
 
     private String estado;
 
-    private Boolean destacado = false;
-
     @Column(name = "fecha_publicacion")
     private LocalDateTime fechaPublicacion;
 
@@ -47,5 +45,23 @@ public class Anuncio {
 
     @OneToOne(mappedBy = "anuncio", cascade = CascadeType.ALL)
     private Moderacion moderacion;
+
+    @Transient
+    private String precioFormateado;
+
+    public String getPrecioFormateado() {
+        if (precio == null) {
+            return null;
+        }
+        String moneda = "€"; // o si la moneda viene dinámica, adapta aquí
+        if (precio.stripTrailingZeros().scale() <= 0) {
+            // entero, sin decimales
+            return String.format("%d %s", precio.intValue(), moneda);
+        } else {
+            // con decimales
+            return String.format("%.2f %s", precio.doubleValue(), moneda);
+        }
+    }
+
 
 }

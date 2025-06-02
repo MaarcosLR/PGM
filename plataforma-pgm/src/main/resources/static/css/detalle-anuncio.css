@@ -1,0 +1,109 @@
+/* Texto negro en el contenido principal */
+main p,
+main strong,
+main span,
+main h1 {
+    color: black;
+}
+
+/* Botón "Volver a anuncios" */
+.back-link {
+    display: inline-block;
+    margin-top: 2rem;
+    background-color: #03690b; /* verde */
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.back-link:hover {
+    background-color: #0aa616; /* verde más claro */
+    text-decoration: none;
+}
+
+.imageAd-carousel {
+    position: relative;
+    width: 400px;       /* tamaño más grande */
+    height: 400px;      /* altura igual al ancho para que sea cuadrado */
+    margin: 0 auto 1rem auto;  /* centrado horizontal y margen abajo */
+    overflow: hidden;
+    border-radius: 15px;  /* bordes redondeados */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+
+.btn-favorito {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    color: #aaa;
+    transition: color 0.3s ease;
+    padding: 5px;
+}
+
+.btn-favorito:hover {
+    color: #ff4d4d;
+}
+
+.btn-favorito.active {
+    color: red;
+}
+
+.carousel-images {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    display: none;   /* todas ocultas por defecto, solo se muestra la activa */
+}
+
+.carousel-image.active {
+    display: block;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0,0,0,0.4);
+    border: none;
+    color: white;
+    font-size: 1.2rem;       /* flecha más pequeña */
+    width: 36px;             /* ancho fijo, igual alto */
+    height: 36px;            /* para que sea un círculo */
+    padding: 0;              /* quitar padding para evitar oval */
+    cursor: pointer;
+    border-radius: 50%;      /* círculo perfecto */
+    user-select: none;
+    z-index: 20;
+    display: flex;           /* para centrar contenido */
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(0,0,0,0.7);
+}
+
+.prev-btn {
+    left: 10px;
+}
+
+.next-btn {
+    right: 10px;
+}
