@@ -5,7 +5,7 @@
   window.usuarioLogueado = /*[[${usuario}]]*/ null;
   /*]]>*/
 </script>
-
+<!-- Menu Header -->
 <head>
   <meta charset="UTF-8">
   <title>PGM · Perfil</title>
@@ -41,6 +41,15 @@
     <section class="profile-menu">
       <button class="menu-btn active" data-section="publicados">Anuncios Publicados</button>
       <button class="menu-btn" data-section="solicitados">Anuncios Solicitados</button>
+      <button class="menu-btn" data-section="favoritos">Favoritos</button>
+      <button id="btn-notificaciones" class="menu-btn" data-section="notificaciones">
+        Notificaciones
+        <span class="badge">0</span>
+      </button>
+      <button id="btn-peticiones" class="menu-btn" data-section="peticiones">
+        Peticiones
+        <span class="badge">0</span>
+      </button>
       <button class="menu-btn" data-section="ajustes">Perfil de Usuario</button>
     </section>
 
@@ -54,6 +63,21 @@
       <div id="solicitados" class="content-section">
         <h2>Anuncios Solicitados</h2>
         <p>Aquí irán los anuncios que has solicitado y su estado.</p>
+      </div>
+
+      <div id="peticiones" class="content-section">
+        <h2>Peticiones de usuarios</h2>
+        <p>Aquí irán las peticiones de los anuncion (solo para administradores).</p>
+      </div>
+
+      <div id="favoritos" class="content-section">
+        <h2>Anuncios Favoritos</h2>
+        <p>Aquí irán los anuncios que los usuarios han marcado como favoritos.</p>
+      </div>
+
+      <div id="notificaciones" class="content-section">
+        <h2>Notificaciones</h2>
+        <p>Aquí irán las notificaciones.</p>
       </div>
 
       <div id="ajustes" class="content-section">
@@ -109,12 +133,11 @@
   </div>
 </main>
 
-
-
 <footer class="footerSoli">
   ©2025 PGM. Todos los derechos reservados
   <button id="btnTerms" class="btnTerms">TÉRMINOS Y CONDICIONES</button>
 </footer>
+
 <script src="/js/profile.js"></script>
 </body>
 </html>

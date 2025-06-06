@@ -1,10 +1,16 @@
+/* ===============================
+   Sección: Menú de perfil superior
+   =============================== */
 .profile-menu {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     margin: 10px 0;
     gap: 20px;
 }
 
+/* ===============================
+   Sección: Botones de menú (estado normal)
+   =============================== */
 .menu-btn {
     padding: 10px 20px;
     background: #f0f0f0;
@@ -15,18 +21,27 @@
     transition: background-color 0.3s;
 }
 
+/* ===============================
+   Sección: Botones de menú (hover y activo)
+   =============================== */
 .menu-btn.active,
 .menu-btn:hover {
     background: #007bff;
     color: white;
 }
 
+/* ===============================
+   Sección: Contenido principal del perfil
+   =============================== */
 .profile-content {
     max-width: 700px;
     margin: 0 auto 20px auto;
     padding: 0 20px;
 }
 
+/* ===============================
+   Sección: Content Sections (por defecto ocultas)
+   =============================== */
 .content-section {
     display: none;
 }
@@ -35,16 +50,21 @@
     display: block;
 }
 
+/* ===============================
+   Sección: Formulario de configuración de usuario
+   =============================== */
 #user-settings-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
+/* Etiquetas dentro del formulario */
 #user-settings-form label {
     font-weight: bold;
 }
 
+/* Inputs de texto, contraseña, teléfono y email */
 #user-settings-form input[type="text"],
 #user-settings-form input[type="password"],
 #user-settings-form input[type="tel"],
@@ -55,10 +75,12 @@
     border: 1px solid #ccc;
 }
 
+/* Input de tipo archivo */
 #user-settings-form input[type="file"] {
     padding: 5px 0;
 }
 
+/* Botones dentro del formulario */
 #user-settings-form button {
     width: fit-content;
     padding: 10px 15px;
@@ -67,27 +89,37 @@
     cursor: pointer;
 }
 
-.btnGCambios{
+/* ===============================
+   Sección: Botones específicos de form
+   =============================== */
+/* Botón “Guardar Cambios” (verde) */
+.btnGCambios {
     background-color: #28a745;
     color: white;
 }
 
+/* Botón “Eliminar Perfil” (rojo) */
 #delete-profile {
     background-color: #dc3545;
     color: white;
 }
 
+/* ===============================
+   Sección: Tarjeta principal (menu-card)
+   =============================== */
 .menu-card {
-    max-width: 600px;
+    max-width: 1000px;
     margin: 40px auto;
-    padding-top: 10px;
-    padding-bottom: 1px;
+    padding: 10px 20px 20px 20px;
     background: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     border-radius: 8px;
     font-family: Arial, sans-serif;
 }
 
+/* ===============================
+   Sección: Botones dentro de la tarjeta (estado normal)
+   =============================== */
 .menu-btn {
     display: inline-block;
     background: #f5f5f5;
@@ -102,6 +134,9 @@
     transition: background-color 0.3s;
 }
 
+/* ===============================
+   Sección: Botones dentro de la tarjeta (hover y activo)
+   =============================== */
 .menu-btn:hover {
     background: #ddd;
 }
@@ -111,6 +146,9 @@
     color: white;
 }
 
+/* ===============================
+   Sección: Content Sections dentro de la tarjeta
+   =============================== */
 .content-section {
     display: none;
     color: black;
@@ -120,6 +158,9 @@
     display: block;
 }
 
+/* ===============================
+   Sección: Contenedor de foto de perfil
+   =============================== */
 .profile-photo-wrapper {
     position: relative;
     width: 120px;
@@ -128,6 +169,9 @@
     cursor: pointer;
 }
 
+/* ===============================
+   Sección: Imagen de perfil
+   =============================== */
 .profile-photo {
     width: 100%;
     height: 100%;
@@ -137,6 +181,9 @@
     display: block;
 }
 
+/* ===============================
+   Sección: Overlay que aparece sobre la foto al hacer hover
+   =============================== */
 .photo-overlay {
     position: absolute;
     top: 0; left: 0;
@@ -154,11 +201,15 @@
     opacity: 1;
 }
 
+/* Tamaño del icono svg dentro del overlay */
 .photo-overlay svg {
     width: 30px;
     height: 30px;
 }
 
+/* ===============================
+   Sección: Menú emergente para cambiar la foto
+   =============================== */
 .photo-menu {
     position: absolute;
     background: white;
@@ -185,32 +236,36 @@
     background: #0056b3;
 }
 
+/* ===============================
+   Sección: Select dentro del formulario (estilo y focus)
+   =============================== */
 #user-settings-form select {
     padding: 8px;
     font-size: 1rem;
     border-radius: 5px;
     border: 1px solid #ccc;
     background-color: white;
-    /* Para que no tengan el fondo gris que suele tener el select */
-    appearance: none;  /* Quita el estilo nativo en navegadores modernos */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     cursor: pointer;
 }
 
-/* Opcional: un pequeño margen inferior para que no queden muy pegados */
+/* Margen inferior para separar el select de otros elementos */
 #user-settings-form label + select {
     margin-bottom: 10px;
 }
 
-/* Puedes agregar un hover o focus si quieres igual que inputs */
-
+/* Focus para el select */
 #user-settings-form select:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 3px #007bff;
 }
 
+/* ===============================
+   Sección: Campos de contraseña con botón de mostrar/ocultar
+   =============================== */
 .password-wrapper {
     display: flex;
     align-items: center;
@@ -241,11 +296,17 @@
     background-color: #0056b3;
 }
 
+/* ===============================
+   Sección: Campo “ciudad” deshabilitado
+   =============================== */
 #ciudad:disabled {
     cursor: not-allowed;
-    color: #888; /* Opcional: que el texto se vea "gris" para indicar deshabilitado */
+    color: #888; /* Gris para indicar que está inactivo */
 }
 
+/* ===============================
+   Sección: Botones de acción inferior (Guardar/Logout)
+   =============================== */
 .btnsGL {
     display: flex;
     justify-content: flex-end;
@@ -256,3 +317,53 @@
     background-color: #ff0000;
     color: black;
 }
+
+/* ============================================
+   BADGE: Círculo rojo en “Peticiones”
+   ============================================ */
+
+#btn-peticiones {
+    position: relative;
+}
+
+.badge {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: center;
+    user-select: none;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    padding: 0 5px;
+}
+
+#btn-notificaciones {
+    position: relative;
+}
+
+.badge {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: center;
+    user-select: none;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    padding: 0 5px;
+}
+
+
