@@ -1,6 +1,7 @@
 package com.pgm.plataformapgm.repository;
 
 import com.pgm.plataformapgm.model.Anuncio;
+import com.pgm.plataformapgm.model.ImagenAnuncio;
 import com.pgm.plataformapgm.model.Usuario;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 @Repository
 public interface AnuncioRepository extends JpaRepository<Anuncio, Long> {
     List<Anuncio> findByUsuarioAndEstado(Usuario usuario, String estado);
+    List<Anuncio> findByEstado(String estado);
 
     @Query("SELECT a FROM Anuncio a " +
             "WHERE (" +
@@ -23,4 +25,7 @@ public interface AnuncioRepository extends JpaRepository<Anuncio, Long> {
     List<Anuncio> buscarPorFiltro(
             @Param("texto") String texto,
             @Param("categoria") String categoria,
-            Sort sort);}
+            Sort sort);
+
+    List<Anuncio> findByIdIn(List<String> ids);
+}

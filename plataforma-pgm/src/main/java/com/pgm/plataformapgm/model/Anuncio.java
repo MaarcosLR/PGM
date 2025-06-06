@@ -1,5 +1,8 @@
 package com.pgm.plataformapgm.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,17 +37,25 @@ public class Anuncio {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonBackReference
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id", nullable = false)
+    @JsonBackReference
     private Categoria categoria;
 
     @OneToMany(mappedBy = "anuncio", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ImagenAnuncio> imagenes;
 
     @OneToOne(mappedBy = "anuncio", cascade = CascadeType.ALL)
     private Moderacion moderacion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_articulo_id", nullable = false)  // FK en tabla anuncios
+    @JsonIgnore
+    private EstadoArticulo estadoArticulo;
 
     @Transient
     private String precioFormateado;
@@ -62,6 +73,8 @@ public class Anuncio {
             return String.format("%.2f %s", precio.doubleValue(), moneda);
         }
     }
+
+
 
 
 }

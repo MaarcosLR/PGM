@@ -1,12 +1,9 @@
 package com.pgm.plataformapgm.repository;
 
-import com.pgm.plataformapgm.model.ImagenAnuncio;
+import com.pgm.plataformapgm.model.EstadoArticulo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface ImagenAnuncioRepository extends JpaRepository<ImagenAnuncio, Integer> {
-
+public interface EstadoArticuloRepository extends JpaRepository<EstadoArticulo, Integer> {
 }

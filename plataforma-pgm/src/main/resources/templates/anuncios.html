@@ -96,6 +96,7 @@
         </div>
         <div class="footerAd" th:text="${anuncio.titulo}">Título Anuncio</div>
         <div class="priceAd" th:text="${anuncio.precioFormateado}"></div>
+        <div class="statusAd" th:text="${anuncio.estadoArticulo != null ? anuncio.estadoArticulo.nombre : 'Sin estado'}"></div>
         <div class="locationAd" th:text="${anuncio.ubicacion}"></div>
       </a>
     </div>

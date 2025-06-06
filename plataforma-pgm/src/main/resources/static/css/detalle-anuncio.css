@@ -8,9 +8,10 @@ main h1 {
 
 /* Botón "Volver a anuncios" */
 .back-link {
-    display: inline-block;
-    margin-top: 2rem;
-    background-color: #03690b; /* verde */
+    display: block;
+    width: max-content; /* que ocupe solo lo necesario */
+    margin: 2rem auto 0 auto; /* arriba 2rem, auto a izquierda y derecha para centrar */
+    background-color: #03690b;
     color: white;
     padding: 0.5rem 1.25rem;
     border-radius: 20px;
@@ -20,6 +21,7 @@ main h1 {
     cursor: pointer;
 }
 
+
 .back-link:hover {
     background-color: #0aa616; /* verde más claro */
     text-decoration: none;
@@ -27,12 +29,13 @@ main h1 {
 
 .imageAd-carousel {
     position: relative;
-    width: 400px;       /* tamaño más grande */
-    height: 400px;      /* altura igual al ancho para que sea cuadrado */
+    width: 400px;       /* tamaño fijo ancho */
+    height: 400px;      /* tamaño fijo alto */
     margin: 0 auto 1rem auto;  /* centrado horizontal y margen abajo */
     overflow: hidden;
     border-radius: 15px;  /* bordes redondeados */
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background-color: #000; /* para evitar "flash" al cargar imagen */
 }
 
 
@@ -43,18 +46,34 @@ main h1 {
     background: transparent;
     border: none;
     cursor: pointer;
-    z-index: 10;
-    color: #aaa;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    color: #ccc; /* gris claro para no marcado */
     transition: color 0.3s ease;
-    padding: 5px;
+    z-index: 20; /* para que quede encima */
 }
 
+.btn-favorito[aria-pressed="true"] {
+    color: #e63946; /* rojo cuando está activo */
+}
+
+/* Opcional: agrandar un poco el icono al hacer hover */
 .btn-favorito:hover {
-    color: #ff4d4d;
+    color: #e63946;
+    transform: scale(1.1);
 }
 
-.btn-favorito.active {
-    color: red;
+.icon-heart {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2;
+    fill: none;
+}
+
+.btn-favorito[aria-pressed="true"] .icon-heart {
+    fill: currentColor; /* rellena con el color rojo */
+    stroke: currentColor;
 }
 
 .carousel-images {
@@ -66,15 +85,19 @@ main h1 {
 .carousel-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* o contain, según prefieras */
     border-radius: 15px;
-    display: none;   /* todas ocultas por defecto, solo se muestra la activa */
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .carousel-image.active {
     display: block;
 }
 
+/* Navegación */
 .carousel-btn {
     position: absolute;
     top: 50%;
@@ -82,15 +105,15 @@ main h1 {
     background-color: rgba(0,0,0,0.4);
     border: none;
     color: white;
-    font-size: 1.2rem;       /* flecha más pequeña */
-    width: 36px;             /* ancho fijo, igual alto */
-    height: 36px;            /* para que sea un círculo */
-    padding: 0;              /* quitar padding para evitar oval */
+    font-size: 1.2rem;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     cursor: pointer;
-    border-radius: 50%;      /* círculo perfecto */
+    border-radius: 50%;
     user-select: none;
     z-index: 20;
-    display: flex;           /* para centrar contenido */
+    display: flex;
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease;
@@ -107,3 +130,147 @@ main h1 {
 .next-btn {
     right: 10px;
 }
+
+
+.modal-carrusel {
+    display: none; /* oculto al inicio */
+    position: fixed;
+    z-index: 999;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex; /* para centrar */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    position: relative;
+    width: 600px;      /* ancho fijo */
+    height: 600px;     /* altura más alta */
+    max-width: 90%;
+    max-height: 90%;
+    background: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.modal-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    transition: transform 0.3s ease;
+    cursor: zoom-in;
+    position: relative;
+    z-index: 1;
+}
+
+/* Navegación dentro del área de la imagen */
+.modal-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+    padding: 0 1rem;
+}
+
+.modal-nav button {
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: background-color 0.3s ease;
+}
+
+.modal-nav button:hover {
+    background: rgba(255, 255, 255, 0.7);
+    color: black;
+}
+
+/* Zoom al hacer clic */
+.modal-content img.zoomed {
+    transform: scale(2);
+    cursor: zoom-out;
+}
+
+/* Botón de cerrar fuera del modal-content */
+.close-modal {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    z-index: 1100;
+    transition: background-color 0.3s ease;
+}
+
+.close-modal:hover {
+    background: rgba(255,255,255,0.8);
+    color: black;
+}
+
+.close-modal::after {
+    content: "×";
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Responsivo */
+@media (min-width: 768px) {
+    .modal-content {
+        width: 800px;
+        height: 700px; /* más alto también */
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    .modal-content img {
+        max-height: 100%;
+    }
+}
+
+#modalCarrusel {
+    display: none;
+}
+
+.tituloAnuncio {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.anuncioInfo {
+    margin-top: 2rem;
+    text-align: left;
+}
+

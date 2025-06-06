@@ -21,29 +21,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const profilePhoto = document.getElementById('profile-photo');
     const defaultPhoto = '/img/icoperfil.png';
 
-    if (!profilePhoto.src || profilePhoto.src === window.location.href) {
+    // Asignar imagen por defecto si no hay foto de perfil
+    if (!profilePhoto.getAttribute('src') || profilePhoto.src.endsWith('/null')) {
         profilePhoto.src = defaultPhoto;
     }
 
+    // Mostrar/ocultar menú contextual al hacer clic en la imagen
     profilePhotoWrapper.addEventListener('click', e => {
         e.stopPropagation();
-        if(photoMenu.style.display === 'block'){
-            photoMenu.style.display = 'none';
-        } else {
+        const isVisible = photoMenu.style.display === 'block';
+        photoMenu.style.display = isVisible ? 'none' : 'block';
+
+        if (!isVisible) {
             const rect = profilePhotoWrapper.getBoundingClientRect();
-            photoMenu.style.top = rect.bottom + window.scrollY + 5 + 'px';
-            photoMenu.style.left = rect.left + window.scrollX + 'px';
-            photoMenu.style.display = 'block';
+            photoMenu.style.top = `${rect.bottom + window.scrollY + 5}px`;
+            photoMenu.style.left = `${rect.left + window.scrollX}px`;
         }
     });
 
+    // Ocultar menú si haces clic fuera
     document.addEventListener('click', () => {
         photoMenu.style.display = 'none';
     });
 
+    // Cambiar foto de perfil: previsualizar imagen
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
-        if(file){
+        if (file) {
             const reader = new FileReader();
             reader.onload = e => {
                 profilePhoto.src = e.target.result;
@@ -52,21 +56,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Botón para cambiar la foto
     document.getElementById('change-photo-btn').addEventListener('click', () => {
         fileInput.click();
         photoMenu.style.display = 'none';
     });
 
+    // Botón para quitar la foto (restablecer a por defecto)
     document.getElementById('remove-photo-btn').addEventListener('click', () => {
         profilePhoto.src = defaultPhoto;
         fileInput.value = '';
+
+        // Si quieres notificar al backend que se debe eliminar la foto
+        const inputHiddenRemove = document.getElementById('removePhoto');
+        if (inputHiddenRemove) {
+            inputHiddenRemove.value = 'true';
+        }
+
         photoMenu.style.display = 'none';
     });
 
     // --------- País y ciudades ---------
     const ciudadesPorPais = {
         "España": [
-            "Selecciona una ciudad...","Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza",
+            "Selecciona una ciudad...", "Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza",
             "Málaga", "Murcia", "Palma", "Las Palmas de Gran Canaria", "Bilbao",
             "Alicante", "Córdoba", "Valladolid", "Vigo", "Gijón",
             "Hospitalet de Llobregat", "La Coruña", "Granada", "Elche", "Oviedo"
@@ -97,19 +110,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --------- Cargar datos usuario desde backend simulados ---------
-    // Simula que tienes el usuario en una variable global o inyectada desde backend:
-    // En Spring podrías inyectar con Thymeleaf:
-    // <script>const usuario = [[${usuario}]];</script>
     const usuario = window.usuarioLogueado || {
         nombre: '',
         correoElectronico: '',
         telefono: '',
         pais: '',
         ciudad: '',
-        fotoPerfil: '', // url o base64
+        fotoPerfil: '',
     };
 
-    // Rellenar campos del formulario
     document.getElementById('nombre').value = usuario.nombre || '';
     document.getElementById('correoElectronico').value = usuario.correoElectronico || '';
     document.getElementById('telefono').value = usuario.telefono || '';
@@ -130,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const form = e.target;
         const formData = new FormData(form);
 
-        // Agregar foto solo si hay archivo seleccionado
         const fileInput = document.getElementById('foto');
         if (fileInput.files.length > 0) {
             formData.append('foto', fileInput.files[0]);
@@ -139,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/usuario/actualizar', {
             method: 'POST',
             body: formData,
-            credentials: 'include'  // si usas sesión/cookies
+            credentials: 'include'
         })
             .then(resp => resp.json())
             .then(data => {
@@ -147,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Error: ' + data.error);
                 } else {
                     alert('Datos guardados correctamente');
-                    // Opcional: actualizar `window.usuarioLogueado` con data.usuario y refrescar UI
                     window.usuarioLogueado = data.usuario;
                 }
             })
@@ -161,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         fetch('/logout', {
             method: 'GET',
-            credentials: 'include' // Incluye cookies de sesión
+            credentials: 'include'
         })
             .then(response => {
                 if (response.redirected) {
@@ -175,5 +182,153 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
+    // --------- Bloque de moderación robusto ---------
+    try {
+        function agregarListenersModeracion() {
+            document.querySelectorAll('.btn-aprobar').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    fetch(`/${id}/aprobar`, {
+                        method: 'POST'
+                    })
+                        .then(res => {
+                            if (res.ok) {
+                                btn.closest('.anuncio-card')?.remove();
+                            } else {
+                                alert('Error al aprobar el anuncio');
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error al aprobar:', err);
+                            alert('Error al aprobar el anuncio');
+                        });
+                });
+            });
 
+            document.querySelectorAll('.btn-rechazar').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    fetch(`/${id}/rechazar`, {
+                        method: 'POST'
+                    })
+                        .then(res => {
+                            if (res.ok) {
+                                btn.closest('.anuncio-card')?.remove();
+                            } else {
+                                alert('Error al rechazar el anuncio');
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error al rechazar:', err);
+                            alert('Error al rechazar el anuncio');
+                        });
+                });
+            });
+        }
+
+        agregarListenersModeracion();
+    } catch (err) {
+        console.error('Error en sistema de moderación:', err);
+    }
+
+    // --------- Carrusel de imágenes ---------
+    const modal = document.getElementById('modalCarrusel');
+    const modalImg = document.getElementById('imagen-modal');
+    const closeBtn = modal.querySelector('.close-modal');
+    const prevBtn = document.getElementById('prev-img');
+    const nextBtn = document.getElementById('next-img');
+
+    let images = [];
+    let currentIndex = 0;
+    let zoomed = false;
+
+    document.querySelectorAll('.img-thumb').forEach(img => {
+        img.addEventListener('click', (e) => {
+            const clickedImg = e.target;
+            const anuncioDiv = clickedImg.closest('.anuncio-card');
+
+            images = Array.from(anuncioDiv.querySelectorAll('.img-thumb')).map(i => i.src);
+            currentIndex = images.indexOf(clickedImg.src);
+
+            modalImg.src = images[currentIndex];
+            modal.style.display = 'flex';
+
+            zoomed = false;
+            modalImg.classList.remove('zoomed');
+            resetZoom();
+        });
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (images.length === 0) return;
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        modalImg.src = images[currentIndex];
+
+        zoomed = false;
+        modalImg.classList.remove('zoomed');
+        resetZoom();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (images.length === 0) return;
+        currentIndex = (currentIndex + 1) % images.length;
+        modalImg.src = images[currentIndex];
+
+        zoomed = false;
+        modalImg.classList.remove('zoomed');
+        resetZoom();
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        modalImg.src = '';
+        images = [];
+        zoomed = false;
+        modalImg.classList.remove('zoomed');
+        resetZoom();
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            modalImg.src = '';
+            images = [];
+            zoomed = false;
+            modalImg.classList.remove('zoomed');
+            resetZoom();
+        }
+    });
+
+    modalImg.addEventListener('click', (e) => {
+        zoomed = !zoomed;
+        if (zoomed) {
+            modalImg.classList.add('zoomed');
+            moveZoom(e);
+        } else {
+            modalImg.classList.remove('zoomed');
+            resetZoom();
+        }
+    });
+
+    modalImg.addEventListener('mousemove', (e) => {
+        if (!zoomed) return;
+        moveZoom(e);
+    });
+
+    function moveZoom(e) {
+        const rect = modalImg.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+
+        modalImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+        modalImg.style.transform = 'scale(2)';
+    }
+
+    function resetZoom() {
+        modalImg.style.transformOrigin = 'center center';
+        modalImg.style.transform = 'scale(1)';
+    }
 });

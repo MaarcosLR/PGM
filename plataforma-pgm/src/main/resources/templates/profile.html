@@ -39,16 +39,17 @@
 <main>
   <div class="menu-card">
     <section class="profile-menu">
-      <button class="menu-btn active" data-section="publicados">Anuncios Publicados</button>
+      <button class="menu-btn active" data-section="aprobados">Anuncios Publicados</button>
       <button class="menu-btn" data-section="solicitados">Anuncios Solicitados</button>
       <button class="menu-btn" data-section="favoritos">Favoritos</button>
       <button id="btn-notificaciones" class="menu-btn" data-section="notificaciones">
         Notificaciones
         <span class="badge">0</span>
       </button>
-      <button id="btn-peticiones" class="menu-btn" data-section="peticiones">
+      <!-- Solo mostrar botón si es admin -->
+      <button id="btn-peticiones" class="menu-btn" data-section="peticiones" th:if="${esAdmin}">
         Peticiones
-        <span class="badge">0</span>
+        <span class="badge" th:text="${#lists.size(pendientes)}">0</span>
       </button>
       <button class="menu-btn" data-section="ajustes">Perfil de Usuario</button>
     </section>
@@ -65,11 +66,6 @@
         <p>Aquí irán los anuncios que has solicitado y su estado.</p>
       </div>
 
-      <div id="peticiones" class="content-section">
-        <h2>Peticiones de usuarios</h2>
-        <p>Aquí irán las peticiones de los anuncion (solo para administradores).</p>
-      </div>
-
       <div id="favoritos" class="content-section">
         <h2>Anuncios Favoritos</h2>
         <p>Aquí irán los anuncios que los usuarios han marcado como favoritos.</p>
@@ -78,6 +74,35 @@
       <div id="notificaciones" class="content-section">
         <h2>Notificaciones</h2>
         <p>Aquí irán las notificaciones.</p>
+      </div>
+
+      <div id="peticiones" class="content-section" th:if="${esAdmin}">
+        <h2>Peticiones de usuarios</h2>
+
+        <div class="anuncio-card" th:each="anuncio : ${pendientes}">
+          <div class="imagenes-collage">
+            <div class="img-grid">
+              <img th:each="imagen, iterStat : ${anuncio.imagenes}"
+                   th:if="${iterStat.count <= 6}"
+                   th:src="${imagen.urlImagen}" class="img-thumb"
+                   th:attr="data-index=${iterStat.index}, data-anuncio-id=${anuncio.id}"
+                   alt="Imagen de anuncio" />
+            </div>
+          </div>
+
+          <div class="info-anuncio">
+            <p><strong>Título:</strong> <span th:text="${anuncio.titulo}"></span></p>
+            <p><strong>Precio:</strong> <span th:text="${anuncio.precioFormateado}"></span></p>
+            <p><strong>Descripción:</strong> <span th:text="${anuncio.descripcion}"></span></p>
+            <p><strong>Ubicación:</strong> <span th:text="${anuncio.getUbicacion()}"></span></p>
+            <!-- Agrega más campos si quieres -->
+
+            <div class="acciones-anuncio">
+              <button class="btn-aprobar" th:attr="data-id=${anuncio.id}">✔ Aprobar</button>
+              <button class="btn-rechazar" th:attr="data-id=${anuncio.id}">✖ Rechazar</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div id="ajustes" class="content-section">
@@ -132,6 +157,17 @@
     </section>
   </div>
 </main>
+
+<div id="modalCarrusel" class="modal-carrusel">
+  <div class="modal-content">
+    <button class="close-modal"></button>
+    <img id="imagen-modal" src="" alt="Imagen grande" />
+    <div class="modal-nav">
+      <button id="prev-img">⟨</button>
+      <button id="next-img">⟩</button>
+    </div>
+  </div>
+</div>
 
 <footer class="footerSoli">
   ©2025 PGM. Todos los derechos reservados

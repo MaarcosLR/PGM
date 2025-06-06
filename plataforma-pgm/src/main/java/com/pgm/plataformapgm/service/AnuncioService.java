@@ -31,6 +31,14 @@ public class AnuncioService {
         return anuncioRepository.findByUsuarioAndEstado(usuario, estado);
     }
 
+    public List<Anuncio> findByEstado(String estado) {
+        return anuncioRepository.findByEstado(estado);
+    }
+
+
+
+
+
     public List<Anuncio> buscarAnuncios(String texto, List<String> categorias, String orden, String moneda) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Anuncio> query = cb.createQuery(Anuncio.class);
@@ -49,6 +57,9 @@ public class AnuncioService {
             // Aquí filtro para que categoria.nombre esté en la lista de categorias seleccionadas
             predicates.add(anuncio.get("categoria").get("id").in(categorias.stream().map(Long::valueOf).toList()));
         }
+
+        // Filtrar solo anuncios con estado 'aprobado'
+        predicates.add(cb.equal(anuncio.get("estado"), "aprobado"));
 
         query.where(predicates.toArray(new Predicate[0]));
 
@@ -107,5 +118,20 @@ public class AnuncioService {
         }
 
         return df.format(precio) + " " + moneda;
+    }
+
+    public Anuncio findById(Long id) {
+        return anuncioRepository.findById(id).orElse(null);
+    }
+
+    public void save(Anuncio anuncio) {
+        anuncioRepository.save(anuncio);
+    }
+
+    public List<Anuncio> buscarPorIds(List<String> favoritosIds) {
+        if (favoritosIds == null || favoritosIds.isEmpty()) {
+            return List.of(); // Devuelve lista vacía si no hay IDs
+        }
+        return anuncioRepository.findByIdIn(favoritosIds);
     }
 }

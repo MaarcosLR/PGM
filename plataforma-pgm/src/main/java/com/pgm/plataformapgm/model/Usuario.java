@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,6 +46,7 @@ public class Usuario {
 
     // Relaciones
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Anuncio> anuncios;
 
     @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)

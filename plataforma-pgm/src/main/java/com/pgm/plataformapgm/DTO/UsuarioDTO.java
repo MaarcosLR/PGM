@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pgm.plataformapgm.model.Usuario;
 import lombok.Getter;
 import lombok.Setter;

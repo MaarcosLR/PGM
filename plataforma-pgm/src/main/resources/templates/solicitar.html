@@ -37,17 +37,26 @@
         <h2>FORMULARIO DE PUBLICACIÓN</h2>
         <form id="solicitar-form">
           <div class="formulario-grid">
-
-            <!-- Columna derecha: datos del anuncio -->
             <div class="col">
               <div class="form-row">
                 <label for="titulo">Título del anuncio:</label>
-                <input type="text" id="titulo" name="titulo" required>
+                <input type="text" id="titulo" name="titulo" required />
               </div>
 
               <div class="form-row">
                 <label for="descripcion">Descripción:</label>
-                <textarea id="descripcion" name="descripcion" required></textarea>
+                <textarea id="descripcion" name="descripcion" maxlength="2000" required></textarea>
+                <div style="text-align: right; font-size: 12px; color: #ffffff;">
+                  <span id="char-count">0</span>/2000
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label for="categoriaId">Categoría:</label>
+                <select id="categoriaId" name="categoriaId" required>
+                  <option value="">Selecciona una categoría</option>
+                  <!-- Las opciones se cargarán dinámicamente -->
+                </select>
               </div>
 
               <div class="form-row">
@@ -111,34 +120,42 @@
 
               <div class="form-row">
                 <label for="precio">Precio:</label>
-                <input type="text" id="precio" name="precio" required>
+                <div style="display: flex; align-items: center; gap: 6px; width: 100%;">
+                  <input type="text" id="precio" name="precio" required style="flex: 1;">
+                  <select id="moneda" name="moneda" required style="width: 80px; text-align: center;">
+                    <option value="€" selected>€</option>
+                  </select>
+                </div>
               </div>
+
 
               <div class="form-row">
                 <label for="estado">Estado del producto:</label>
-                <select id="estado" name="estado" required>
+                <select id="estado" name="estadoArticuloId" required>
                   <option value="">Selecciona una opción</option>
-                  <option value="nuevo">Nuevo</option>
-                  <option value="usado">Usado</option>
-                  <option value="reacondicionado">Reacondicionado</option>
+                  <!-- Opciones se cargarán dinámicamente -->
                 </select>
               </div>
 
+
               <div class="form-row">
                 <label for="imagenes">Imágenes (máximo 6):</label>
-                <input type="file" id="imagenes" name="imagenes" accept="image/*" multiple required>
+                <input type="file" id="imagenes" name="imagenes" accept=".jpg,.jpeg,.png" multiple required />
+                <div style="font-size: 12px; color: #ffffff; margin-top: 4px;">
+                  Solo se permiten archivos .png y .jpg (máx. 6 imágenes, 2MB cada una)
+                </div>
+                <button type="button" id="btnClearImages" style="margin-top: 20px;">Quitar imágenes</button>
               </div>
 
               <div class="form-row">
                 <label for="altImagen">Texto alternativo para las imágenes:</label>
-                <input type="text" id="altImagen" name="altImagen" maxlength="150" placeholder="Descripción breve de la imagen">
+                <input type="text" id="altImagen" name="altImagen" maxlength="150" placeholder="Descripción breve de las imágenes" />
               </div>
             </div>
 
             <div class="form-row logo-container">
               <img src="/img/icologo.png" alt="Logo de la empresa" class="logo-responsive">
             </div>
-
           </div>
 
           <button type="submit" id="btnEnviar" class="btnEnviar">Enviar</button>
@@ -150,6 +167,6 @@
       <button id="btnTerms" class="btnTerms">TÉRMINOS Y CONDICIONES</button>
     </footer>
   </div>
-  <script src="/js/script.js"></script>
+  <script src ="/js/solicitar.js"></script>
 </body>
 </html>

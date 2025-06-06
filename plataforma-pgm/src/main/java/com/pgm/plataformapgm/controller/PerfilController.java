@@ -28,28 +28,33 @@ public class PerfilController {
 
     @GetMapping("/profile.html")
     public String perfil(HttpSession session, Model model) {
-        // Obtener usuario guardado en sesión
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-
         if (usuario == null) {
-            // No hay usuario en sesión => redirigir a login
             return "redirect:/login.html";
         }
 
-        // Puedes refrescar datos del usuario si quieres, por ejemplo:
         usuario = usuarioService.findById(usuario.getId());
 
-        // Obtener anuncios publicados y solicitados
-        List<Anuncio> publicados = anuncioService.findByUsuarioAndEstado(usuario, "publicado");
+        List<Anuncio> aprobados = anuncioService.findByUsuarioAndEstado(usuario, "aprobado");
         List<Anuncio> solicitados = anuncioService.findByUsuarioAndEstado(usuario, "solicitado");
 
-        // Pasar datos a la vista
+        boolean esAdmin = "admin".equalsIgnoreCase(usuario.getTipoCuenta());
+
+        // Solo si es admin, obtener anuncios pendientes
+        List<Anuncio> pendientes = null;
+        if (esAdmin) {
+            pendientes = anuncioService.findByEstado("pendiente");
+        }
+
         model.addAttribute("usuario", usuario);
-        model.addAttribute("publicados", publicados);
+        model.addAttribute("aprobados", aprobados);
         model.addAttribute("solicitados", solicitados);
+        model.addAttribute("esAdmin", esAdmin);
+        model.addAttribute("pendientes", pendientes);
 
         return "profile";
     }
+
 
     @PostMapping("/api/usuario/actualizar")
     @ResponseBody

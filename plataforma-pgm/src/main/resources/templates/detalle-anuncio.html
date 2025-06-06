@@ -27,51 +27,64 @@
     <a href="/profile.html" class="profile">
         <img src="/img/icoperfil.png" alt="Perfil" width="33">
     </a>
-
 </header>
 
 <main style="max-width: 800px; margin: 0 auto; padding: 2rem;">
-    <h1 th:text="${anuncio.titulo}">Título</h1>
-    <div class="imageAd-carousel" style="position: relative; width: 100%; height: 400px; overflow: hidden; margin-bottom: 1rem;">
+    <h1 class="tituloAnuncio" th:text="${anuncio.titulo}">Título</h1>
 
-        <!-- Botón Favoritos -->
-        <button id="btnFavorito" class="btn-favorito" title="Añadir a favoritos" type="button">
-            <svg id="iconHeart" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="28" height="28">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
-            </svg>
-        </button>
-
+    <div class="anuncio-card">
         <div class="imageAd-carousel">
+            <button id="btnFavorito" class="btn-favorito" title="Añadir a favoritos" type="button" aria-pressed="false" th:attr="data-anuncio-id=${anuncio.id}">
+                <svg class="icon-heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </button>
 
-        <!-- Contenedor de imágenes -->
-        <div class="carousel-images" style="height: 100%; position: relative;">
-            <img th:each="img,iterStat : ${anuncio.imagenes}"
-                 th:src="${img.urlImagen}"
-                 th:if="${iterStat.index < 6}"
-                 alt="Imagen anuncio"
-                 class="carousel-image"
-                 style="width: 100%; height: 100%; object-fit: cover; display: none;" />
-            <img th:if="${#lists.isEmpty(anuncio.imagenes)}" src="/img/default.jpg" alt="Imagen anuncio" class="carousel-image" style="display: block; width: 100%; height: 100%; object-fit: cover;" />
-        </div>
 
-        <!-- Botones Navegación -->
-        <button id="btnPrev" class="carousel-btn prev-btn" title="Imagen anterior" type="button">&#10094;</button>
-        <button id="btnNext" class="carousel-btn next-btn" title="Imagen siguiente" type="button">&#10095;</button>
+            <div class="carousel-images" style="height: 100%; position: relative;">
+                <img th:each="img,iterStat : ${anuncio.imagenes}"
+                     th:src="${img.urlImagen}"
+                     th:if="${iterStat.index < 6}"
+                     alt="Imagen anuncio"
+                     class="carousel-image img-thumb"
+                     th:classappend="${iterStat.index == 0} ? ' active' : ''"
+                     style="width: 100%; height: 100%; object-fit: cover;" />
+                <img th:if="${#lists.isEmpty(anuncio.imagenes)}" src="/img/default.jpg" alt="Imagen anuncio" class="carousel-image img-thumb active" style="width: 100%; height: 100%; object-fit: cover;" />
+            </div>
+
+            <button id="btnPrev" class="carousel-btn prev-btn" title="Imagen anterior" type="button">&#10094;</button>
+            <button id="btnNext" class="carousel-btn next-btn" title="Imagen siguiente" type="button">&#10095;</button>
         </div>
     </div>
 
-
+<div class="anuncioInfo">
     <p><strong>Precio:</strong> <span th:text="${anuncio.precioFormateado}"></span></p>
     <p><strong>Ubicación:</strong> <span th:text="${anuncio.ubicacion}"></span></p>
+    <p><strong>Estado:</strong> <span th:text="${anuncio.estadoArticulo != null ? anuncio.estadoArticulo.nombre : 'Sin estado'}"></span></p>
     <p><strong>Descripción:</strong></p>
     <p th:text="${anuncio.descripcion}">Descripción detallada del anuncio aquí</p>
+</div>
 
     <a href="/anuncios.html" class="back-link">← Volver a anuncios</a>
+
+    <div id="modalCarrusel" class="modal-carrusel">
+        <div class="modal-content">
+            <button class="close-modal"></button>
+            <img id="imagen-modal" src="" alt="Imagen grande" />
+            <div class="modal-nav">
+                <button id="prev-img">⟨</button>
+                <button id="next-img">⟩</button>
+            </div>
+        </div>
+    </div>
 </main>
 
 <footer class="footerSoli">
     ©2025 PGM. Todos los derechos reservados
     <button id="btnTerms" class="btnTerms">TÉRMINOS Y CONDICIONES</button>
 </footer>
+
+<script src="/js/detalle-anuncio.js"></script>
+
 </body>
 </html>
