@@ -62,8 +62,11 @@
 
       <div id="favoritos" class="content-section">
         <h2>Anuncios Favoritos</h2>
-        <p>Aquí irán los anuncios que los usuarios han marcado como favoritos.</p>
+        <div id="lista-favoritos">
+          <p>Cargando favoritos...</p>
+        </div>
       </div>
+
 
       <div id="notificaciones" class="content-section" th:data-user-id="${usuario.id}">
         <h2>Notificaciones</h2>

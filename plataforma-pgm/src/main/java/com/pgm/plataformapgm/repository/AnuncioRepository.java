@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AnuncioRepository extends JpaRepository<Anuncio, Long> {
+public interface AnuncioRepository extends JpaRepository<Anuncio, Integer> {
     List<Anuncio> findByUsuarioAndEstado(Usuario usuario, String estado);
     List<Anuncio> findByEstado(String estado);
 

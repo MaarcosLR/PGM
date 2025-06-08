@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.service;
 
+import com.pgm.plataformapgm.DTO.AnuncioDTO;
 import com.pgm.plataformapgm.model.Anuncio;
 import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.repository.AnuncioRepository;
@@ -100,7 +101,7 @@ public class AnuncioService {
         return anuncioRepository.findAll();
     }
 
-    public Anuncio buscarPorId(Long id) {
+    public Anuncio buscarPorId(Integer id) {
         return anuncioRepository.findById(id).orElse(null);
     }
 
@@ -120,7 +121,7 @@ public class AnuncioService {
         return df.format(precio) + " " + moneda;
     }
 
-    public Anuncio findById(Long id) {
+    public Anuncio findById(Integer id) {
         return anuncioRepository.findById(id).orElse(null);
     }
 
@@ -133,5 +134,16 @@ public class AnuncioService {
             return List.of(); // Devuelve lista vacía si no hay IDs
         }
         return anuncioRepository.findByIdIn(favoritosIds);
+    }
+
+    public AnuncioDTO toDTO(Anuncio anuncio) {
+        AnuncioDTO dto = new AnuncioDTO();
+        dto.setId(anuncio.getId());
+        dto.setTitulo(anuncio.getTitulo());
+        dto.setPrecioFormateado(anuncio.getPrecioFormateado());
+        dto.setDescripcion(anuncio.getDescripcion());
+        dto.setUbicacion(anuncio.getUbicacion());
+        dto.setImagenPrincipalUrl(anuncio.getImagenes().get(0).getUrlImagen());
+        return dto;
     }
 }

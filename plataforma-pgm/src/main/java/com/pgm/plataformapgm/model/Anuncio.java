@@ -73,8 +73,4 @@ public class Anuncio {
             return String.format("%.2f %s", precio.doubleValue(), moneda);
         }
     }
-
-
-
-
 }

@@ -72,7 +72,7 @@ public class AnuncioController {
     }
 
     @GetMapping("/anuncio/{id}")
-    public String detalleAnuncio(@PathVariable Long id, Model model) {
+    public String detalleAnuncio(@PathVariable Integer id, Model model) {
         Anuncio anuncio = anuncioService.buscarPorId(id);
         if (anuncio == null) {
             return "error/404";
@@ -82,7 +82,7 @@ public class AnuncioController {
     }
 
     @PostMapping("/{id}/aprobar")
-    public ResponseEntity<?> aprobar(@PathVariable Long id) {
+    public ResponseEntity<?> aprobar(@PathVariable Integer id) {
         Anuncio anuncio = anuncioService.findById(id);
         if (anuncio == null) return ResponseEntity.notFound().build();
 
@@ -101,7 +101,7 @@ public class AnuncioController {
     }
 
     @PostMapping("/{id}/rechazar")
-    public ResponseEntity<?> rechazar(@PathVariable Long id, @RequestBody Map<String, String> datos) {
+    public ResponseEntity<?> rechazar(@PathVariable Integer id, @RequestBody Map<String, String> datos) {
         Anuncio anuncio = anuncioService.findById(id);
         if (anuncio == null) return ResponseEntity.notFound().build();
 

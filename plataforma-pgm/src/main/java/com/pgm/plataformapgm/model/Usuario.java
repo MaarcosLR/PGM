@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -63,5 +65,11 @@ public class Usuario {
         }
         return "/img/icologo.png"; // foto por defecto
     }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuario_favoritos",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "anuncio_id"))
+    private Set<Anuncio> favoritos = new HashSet<>();
 }
 

@@ -137,35 +137,56 @@ function resetZoom() {
     modalImg.style.transform = 'scale(1)';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener("DOMContentLoaded", () => {
     const btnFavorito = document.getElementById('btnFavorito');
     const anuncioId = btnFavorito.getAttribute('data-anuncio-id');
 
-    // Cargar estado inicial
-    fetch('/favoritos')
-        .then(res => res.json())
-        .then(data => {
-            if (data.favoritos.includes(anuncioId)) {
-                btnFavorito.textContent = '♥';
-                btnFavorito.setAttribute('aria-pressed', 'true');
-            } else {
-                btnFavorito.textContent = '♡';
-                btnFavorito.setAttribute('aria-pressed', 'false');
-            }
-        });
+    // Consultar si es favorito para pintar el botón
+    fetch(`/api/favoritos/${anuncioId}/esFavorito`, { credentials: 'include' })
+        .then(res => {
+            if (!res.ok) throw new Error('No autorizado o error en consulta');
+            return res.json();
+        })
+        .then(isFav => {
+            isFavorito = isFav;  // <-- Aquí actualizas la variable
+            btnFavorito.classList.toggle('active', isFav);
+            btnFavorito.setAttribute('aria-pressed', isFav.toString());
+        })
+        .catch(console.error);
 
     btnFavorito.addEventListener('click', () => {
-        fetch(`/favoritos/toggle/${anuncioId}`, { method: 'POST' })
-            .then(res => res.json())
-            .then(data => {
-                if (data.favoritos.includes(anuncioId)) {
-                    btnFavorito.textContent = '♥';
-                    btnFavorito.setAttribute('aria-pressed', 'true');
-                } else {
-                    btnFavorito.textContent = '♡';
-                    btnFavorito.setAttribute('aria-pressed', 'false');
-                }
-            });
+        if (!isFavorito) {
+            fetch(`/api/favoritos/${anuncioId}`, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'include'
+            })
+                .then(res => {
+                    if (res.ok) {
+                        isFavorito = true;
+                        btnFavorito.classList.add('active');
+                        btnFavorito.setAttribute('aria-pressed', 'true');
+                    } else {
+                        alert('Error al añadir favorito');
+                    }
+                });
+        } else {
+            fetch(`/api/favoritos/${anuncioId}`, {
+                method: 'DELETE',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'include'
+            })
+                .then(res => {
+                    if (res.ok) {
+                        isFavorito = false;
+                        btnFavorito.classList.remove('active');
+                        btnFavorito.setAttribute('aria-pressed', 'false');
+                    } else {
+                        alert('Error al quitar favorito');
+                    }
+                });
+        }
     });
 });
 

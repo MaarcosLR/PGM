@@ -184,6 +184,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --------- Bloque de moderación robusto ---------
     try {
+        function actualizarContadorRestar() {
+            const badge = document.querySelector('#btn-peticiones .badge');
+            if (badge) {
+                let count = parseInt(badge.textContent, 10);
+                count = isNaN(count) ? 0 : count;
+                badge.textContent = Math.max(0, count - 1);
+            }
+        }
+
         function agregarListenersModeracion() {
             document.querySelectorAll('.btn-aprobar').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -194,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         .then(res => {
                             if (res.ok) {
                                 btn.closest('.anuncio-card')?.remove();
+                                actualizarContadorRestar();
                             } else {
                                 alert('Error al aprobar el anuncio');
                             }
@@ -209,11 +219,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.addEventListener('click', () => {
                     const id = btn.getAttribute('data-id');
 
-                    // Pedir motivo con prompt
                     const motivo = prompt('Por favor, escribe el motivo del rechazo:');
                     if (motivo === null || motivo.trim() === '') {
                         alert('Debe ingresar un motivo para rechazar.');
-                        return; // salir si no se pone motivo
+                        return;
                     }
 
                     fetch(`/${id}/rechazar`, {
@@ -226,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         .then(res => {
                             if (res.ok) {
                                 btn.closest('.anuncio-card')?.remove();
+                                actualizarContadorRestar();
                             } else {
                                 alert('Error al rechazar el anuncio');
                             }
@@ -236,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                 });
             });
-
         }
 
         agregarListenersModeracion();
@@ -410,5 +419,69 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error al cargar notificaciones:', err);
                 lista.innerHTML = '<li>Error al cargar notificaciones.</li>';
             });
+    });
+
+    function cargarFavoritos() {
+        const listaFavoritos = document.getElementById('lista-favoritos');
+        listaFavoritos.innerHTML = '<p>Cargando favoritos...</p>';
+
+        fetch('/api/favoritos', { credentials: 'include' })
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.error) {
+                    listaFavoritos.innerHTML = `<p>Error al cargar favoritos: ${data.error}</p>`;
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    listaFavoritos.innerHTML = '<p>No tienes anuncios favoritos aún.</p>';
+                    return;
+                }
+
+                listaFavoritos.innerHTML = ''; // Limpiar "Cargando..."
+
+                data.forEach(anuncio => {
+                    const anuncioDiv = document.createElement('div');
+                    anuncioDiv.classList.add('anuncio-card');
+
+                    // Construimos el contenido dentro de un <a> con display:flex para que se mantenga el layout
+                    anuncioDiv.innerHTML = `
+                    <a href="/anuncio/${anuncio.id}" class="anuncio-link" style="display: flex; text-decoration: none; color: inherit;">
+                        <div class="imagenes-collage" style="flex-shrink: 0;">
+                            <div class="img-grid">
+                                <img src="${anuncio.imagenPrincipalUrl || '/img/default.png'}" alt="Imagen de anuncio" class="img-thumb" />
+                            </div>
+                        </div>
+                        <div class="info-anuncio" style="margin-left: 1rem;">
+                            <p><strong>Título:</strong> ${anuncio.titulo}</p>
+                            <p><strong>Precio:</strong> ${anuncio.precioFormateado}</p>
+                            <p><strong>Descripción:</strong> ${anuncio.descripcion}</p>
+                            <p><strong>Ubicación:</strong> ${anuncio.ubicacion}</p>
+                        </div>
+                    </a>
+                `;
+
+                    listaFavoritos.appendChild(anuncioDiv);
+                });
+
+            })
+            .catch(err => {
+                listaFavoritos.innerHTML = `<p>Error al cargar favoritos: ${err.message}</p>`;
+            });
+    }
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+
+            btn.classList.add('active');
+            const section = document.getElementById(btn.dataset.section);
+            section.classList.add('active');
+
+            if (btn.dataset.section === 'favoritos') {
+                cargarFavoritos();
+            }
+        });
     });
 });
