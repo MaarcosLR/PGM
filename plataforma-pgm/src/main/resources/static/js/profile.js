@@ -534,4 +534,54 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    function cargarAnunciosPublicados() {
+        const contenedor = document.getElementById('anunciosPublicados');
+        contenedor.innerHTML = '<p>Cargando anuncios publicados...</p>';
+
+        fetch('/anuncios/aprobados/usuario', { credentials: 'include' })
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar anuncios');
+                return response.json();
+            })
+            .then(anuncios => {
+                contenedor.innerHTML = ''; // Limpiar mensaje de carga
+
+                if (!anuncios || anuncios.length === 0) {
+                    contenedor.innerHTML = '<p>No tienes anuncios publicados.</p>';
+                    return;
+                }
+
+                anuncios.forEach(anuncio => {
+                    const anuncioDiv = document.createElement('div');
+                    anuncioDiv.classList.add('anuncio-card');
+
+                    anuncioDiv.innerHTML = `
+                    <a href="/anuncio/${anuncio.id}" class="anuncio-link" style="display: flex; text-decoration: none; color: inherit;">
+                        <div class="imagenes-collage" style="flex-shrink: 0;">
+                            <div class="img-grid">
+                                <img src="${anuncio.imagenPrincipalUrl || '/img/default.png'}" alt="Imagen de anuncio" class="img-thumb" />
+                            </div>
+                        </div>
+                        <div class="info-anuncio" style="margin-left: 1rem;">
+                            <p><strong>Título:</strong> ${anuncio.titulo}</p>
+                            <p><strong>Precio:</strong> ${anuncio.precioFormateado}</p>
+                            <p><strong>Descripción:</strong> ${anuncio.descripcion}</p>
+                            <p><strong>Ubicación:</strong> ${anuncio.ubicacion}</p>
+                        </div>
+                    </a>
+                `;
+
+                    contenedor.appendChild(anuncioDiv);
+                });
+            })
+            .catch(error => {
+                contenedor.innerHTML = `<p>Error al cargar anuncios: ${error.message}</p>`;
+                console.error('Error al cargar anuncios:', error);
+            });
+    }
+
+    cargarAnunciosPublicados();
+
+
 });

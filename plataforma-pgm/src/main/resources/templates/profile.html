@@ -55,9 +55,9 @@
 
     <section class="profile-content" id="profile-content">
       <!-- Aquí irá el contenido dinámico según el menú -->
-      <div id="aprobados" class="content-section active">
+      <div id="aprobados" class="content-section active" data-user-id="${usuario.id}">
         <h2>Anuncios Publicados</h2>
-        <p>Aquí irán los anuncios que has publicado.</p>
+        <div id="anunciosPublicados"></div>
       </div>
 
       <div id="favoritos" class="content-section">

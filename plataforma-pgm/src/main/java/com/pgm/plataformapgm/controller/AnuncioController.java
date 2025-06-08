@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.controller;
 
+import com.pgm.plataformapgm.DTO.AnuncioDTO;
 import com.pgm.plataformapgm.model.*;
 import com.pgm.plataformapgm.service.*;
 import jakarta.servlet.http.HttpSession;
@@ -198,4 +199,34 @@ public class AnuncioController {
             return ResponseEntity.status(500).body("Error al crear anuncio: " + e.getMessage());
         }
     }
+
+    @GetMapping("/anuncios/aprobados/usuario")
+    @ResponseBody
+    public List<AnuncioDTO> anunciosAprobadosUsuarioLogueado(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuario == null) {
+            return List.of(); // Usuario no autenticado, devuelve lista vacía
+        }
+        List<Anuncio> anuncios = anuncioService.obtenerAprobadosPorUsuario(usuario.getId());
+        return anuncios.stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
+    public AnuncioDTO toDTO(Anuncio anuncio) {
+        AnuncioDTO dto = new AnuncioDTO();
+        dto.setId(anuncio.getId());
+        dto.setTitulo(anuncio.getTitulo());
+        dto.setPrecioFormateado(anuncio.getPrecioFormateado());
+        dto.setDescripcion(anuncio.getDescripcion());
+        dto.setUbicacion(anuncio.getUbicacion());
+        if (anuncio.getImagenes() != null && !anuncio.getImagenes().isEmpty()) {
+            dto.setImagenPrincipalUrl(anuncio.getImagenes().get(0).getUrlImagen());
+        } else {
+            dto.setImagenPrincipalUrl(null);
+        }
+        return dto;
+    }
+
+
 }

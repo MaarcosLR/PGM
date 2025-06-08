@@ -11,7 +11,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -146,4 +145,9 @@ public class AnuncioService {
         dto.setImagenPrincipalUrl(anuncio.getImagenes().get(0).getUrlImagen());
         return dto;
     }
+
+    public List<Anuncio> obtenerAprobadosPorUsuario(Integer usuarioId) {
+        return anuncioRepository.findByUsuarioIdAndEstadoOrderByFechaPublicacionDesc(usuarioId, "aprobado");
+    }
+
 }

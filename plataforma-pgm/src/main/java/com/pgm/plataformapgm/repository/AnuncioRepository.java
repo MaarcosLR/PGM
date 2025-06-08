@@ -28,4 +28,6 @@ public interface AnuncioRepository extends JpaRepository<Anuncio, Integer> {
             Sort sort);
 
     List<Anuncio> findByIdIn(List<String> ids);
+
+    List<Anuncio> findByUsuarioIdAndEstadoOrderByFechaPublicacionDesc(Integer usuarioId, String estado);
 }
