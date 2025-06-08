@@ -208,8 +208,20 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.btn-rechazar').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.getAttribute('data-id');
+
+                    // Pedir motivo con prompt
+                    const motivo = prompt('Por favor, escribe el motivo del rechazo:');
+                    if (motivo === null || motivo.trim() === '') {
+                        alert('Debe ingresar un motivo para rechazar.');
+                        return; // salir si no se pone motivo
+                    }
+
                     fetch(`/${id}/rechazar`, {
-                        method: 'POST'
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ motivo })
                     })
                         .then(res => {
                             if (res.ok) {
@@ -224,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                 });
             });
+
         }
 
         agregarListenersModeracion();
@@ -331,4 +344,71 @@ document.addEventListener('DOMContentLoaded', () => {
         modalImg.style.transformOrigin = 'center center';
         modalImg.style.transform = 'scale(1)';
     }
+
+    document.querySelectorAll('.btn-rechazar').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            const motivo = prompt("¿Por qué estás rechazando este anuncio?");
+            if (!motivo) return;
+
+            fetch(`/${id}/rechazar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ motivo })
+            })
+                .then(res => {
+                    if (res.ok) {
+                        btn.closest('.anuncio-card')?.remove();
+                        window.location.reload()
+                    } else {
+                        alert('Error al rechazar el anuncio');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error al rechazar:', err);
+                    alert('Error al rechazar el anuncio');
+                });
+        });
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const notificacionesDiv = document.getElementById('notificaciones');
+        const usuarioId = notificacionesDiv.getAttribute('data-user-id');
+        const lista = document.getElementById('lista-notificaciones');
+
+        if (!usuarioId) {
+            console.error('No se encontró el ID del usuario.');
+            lista.innerHTML = '<li>Error: usuario no identificado.</li>';
+            return;
+        }
+
+        fetch(`/notificaciones/usuario/${usuarioId}`)
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                lista.innerHTML = '';
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    lista.innerHTML = '<li>No hay notificaciones.</li>';
+                    return;
+                }
+
+                data.forEach(noti => {
+                    const item = document.createElement('li');
+                    item.innerHTML = `
+                    <strong>${new Date(noti.fechaEnvio).toLocaleString()}</strong><br>
+                    ${noti.contenido}
+                `;
+                    lista.appendChild(item);
+                });
+            })
+            .catch(err => {
+                console.error('Error al cargar notificaciones:', err);
+                lista.innerHTML = '<li>Error al cargar notificaciones.</li>';
+            });
+    });
 });

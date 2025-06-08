@@ -23,12 +23,14 @@ public class WebConfig implements WebMvcConfigurer {
                         "/img/**",
                         "/index.html",
                         "/login.html",
+                        "/uploads",
                         "/register.html",
+                        "/anuncios.html",
                         "/register",
                         "/login",
-                        "/upload",          // ruta para subir imágenes
-                        "/categorias",      // ruta para cargar categorías
-                        "/solicitar"        // ruta para enviar anuncios
+                        "/upload",
+                        "/categorias",
+                        "/solicitar"
                 );
     }
 

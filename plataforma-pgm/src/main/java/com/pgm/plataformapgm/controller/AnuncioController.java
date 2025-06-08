@@ -1,10 +1,7 @@
 package com.pgm.plataformapgm.controller;
 
 import com.pgm.plataformapgm.model.*;
-import com.pgm.plataformapgm.service.AnuncioService;
-import com.pgm.plataformapgm.service.CategoriaService;
-import com.pgm.plataformapgm.service.EstadoArticuloService;
-import com.pgm.plataformapgm.service.ImagenAnuncioService;
+import com.pgm.plataformapgm.service.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import net.coobird.thumbnailator.Thumbnails;
@@ -15,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -37,6 +31,11 @@ public class AnuncioController {
     @Autowired
     private EstadoArticuloService estadoArticuloService;
 
+    @Autowired
+    private NotificacionService notificacionService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private CategoriaService categoriaService;
@@ -85,24 +84,42 @@ public class AnuncioController {
     @PostMapping("/{id}/aprobar")
     public ResponseEntity<?> aprobar(@PathVariable Long id) {
         Anuncio anuncio = anuncioService.findById(id);
-        if (anuncio == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (anuncio == null) return ResponseEntity.notFound().build();
+
         anuncio.setEstado("aprobado");
         anuncioService.save(anuncio);
+
+        Usuario usuario = anuncio.getUsuario();
+        emailService.enviarCorreo(usuario.getCorreoElectronico(),
+                "Anuncio aprobado",
+                "Hola " + usuario.getNombre() + ", tu anuncio ha sido aprobado.");
+
+        String contenido = "Tu anuncio <strong>" + anuncio.getTitulo() + "</strong> fue aprobado.";
+        notificacionService.crear(contenido, "APROBACION", usuario);
+
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{id}/rechazar")
-    public ResponseEntity<?> rechazar(@PathVariable Long id) {
+    public ResponseEntity<?> rechazar(@PathVariable Long id, @RequestBody Map<String, String> datos) {
         Anuncio anuncio = anuncioService.findById(id);
-        if (anuncio == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (anuncio == null) return ResponseEntity.notFound().build();
+
+        String motivo = datos.getOrDefault("motivo", "No especificado");
         anuncio.setEstado("rechazado");
         anuncioService.save(anuncio);
+
+        Usuario usuario = anuncio.getUsuario();
+        emailService.enviarCorreo(usuario.getCorreoElectronico(),
+                "Anuncio rechazado",
+                "Hola " + usuario.getNombre() + ", tu anuncio fue rechazado. Motivo: " + motivo);
+
+        String contenido = "Tu anuncio <strong>" + anuncio.getTitulo() + "</strong> fue rechazado. Motivo: " + motivo;
+        notificacionService.crear(contenido, "RECHAZO", usuario);
+
         return ResponseEntity.ok().build();
     }
+
 
     @PostMapping(value = "/crearAnuncios", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Transactional

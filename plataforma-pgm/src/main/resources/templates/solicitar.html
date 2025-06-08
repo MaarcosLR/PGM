@@ -121,7 +121,7 @@
               <div class="form-row">
                 <label for="precio">Precio:</label>
                 <div style="display: flex; align-items: center; gap: 6px; width: 100%;">
-                  <input type="text" id="precio" name="precio" required style="flex: 1;">
+                  <input type="text" id="precio" name="precio" required pattern="^\d+(\.\d{1,2})?$" title="Ingrese un número válido, con hasta 2 decimales" style="flex: 1;">
                   <select id="moneda" name="moneda" required style="width: 80px; text-align: center;">
                     <option value="€" selected>€</option>
                   </select>

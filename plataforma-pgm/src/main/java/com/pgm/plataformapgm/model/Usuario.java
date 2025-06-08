@@ -53,6 +53,7 @@ public class Usuario {
     private List<Moderacion> moderaciones;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Notificacion> notificaciones;
 
     // Ajuste en getter

@@ -40,7 +40,6 @@
   <div class="menu-card">
     <section class="profile-menu">
       <button class="menu-btn active" data-section="aprobados">Anuncios Publicados</button>
-      <button class="menu-btn" data-section="solicitados">Anuncios Solicitados</button>
       <button class="menu-btn" data-section="favoritos">Favoritos</button>
       <button id="btn-notificaciones" class="menu-btn" data-section="notificaciones">
         Notificaciones
@@ -56,14 +55,9 @@
 
     <section class="profile-content" id="profile-content">
       <!-- Aquí irá el contenido dinámico según el menú -->
-      <div id="publicados" class="content-section active">
+      <div id="aprobados" class="content-section active">
         <h2>Anuncios Publicados</h2>
         <p>Aquí irán los anuncios que has publicado.</p>
-      </div>
-
-      <div id="solicitados" class="content-section">
-        <h2>Anuncios Solicitados</h2>
-        <p>Aquí irán los anuncios que has solicitado y su estado.</p>
       </div>
 
       <div id="favoritos" class="content-section">
@@ -71,13 +65,14 @@
         <p>Aquí irán los anuncios que los usuarios han marcado como favoritos.</p>
       </div>
 
-      <div id="notificaciones" class="content-section">
+      <div id="notificaciones" class="content-section" th:data-user-id="${usuario.id}">
         <h2>Notificaciones</h2>
-        <p>Aquí irán las notificaciones.</p>
+        <ul id="lista-notificaciones"></ul>
       </div>
 
       <div id="peticiones" class="content-section" th:if="${esAdmin}">
         <h2>Peticiones de usuarios</h2>
+        <p>Aquí irán los anuncios solicitados por los usuarios.</p>
 
         <div class="anuncio-card" th:each="anuncio : ${pendientes}">
           <div class="imagenes-collage">
