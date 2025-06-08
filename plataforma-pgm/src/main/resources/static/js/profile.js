@@ -386,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const notificacionesDiv = document.getElementById('notificaciones');
         const usuarioId = notificacionesDiv.getAttribute('data-user-id');
         const lista = document.getElementById('lista-notificaciones');
+        const badge = document.querySelector('#btn-notificaciones .badge');
 
         if (!usuarioId) {
             console.error('No se encontró el ID del usuario.');
@@ -393,33 +394,82 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Función para actualizar el badge con cantidad de no leídas
+        function actualizarBadge(notificaciones) {
+            const noLeidasCount = notificaciones.filter(n => !n.leida).length;
+            badge.textContent = noLeidasCount;
+            badge.style.display = noLeidasCount > 0 ? 'inline-block' : 'none';
+        }
+
+        // Función para marcar notificación como leída (y actualizar UI + backend)
+        function marcarComoLeida(noti, item, notificaciones) {
+            fetch(`/notificaciones/${noti.id}/leer`, {
+                method: 'POST'
+            })
+                .then(res => {
+                    if (res.ok) {
+                        noti.leida = true; // actualizar localmente
+                        item.classList.remove('noti-no-leida');
+                        // Opcional: ocultar el icono ojo
+                        const botonLeer = item.querySelector('.btn-marcar-leida');
+                        if (botonLeer) botonLeer.style.display = 'none';
+
+                        // Actualizar badge con nuevo conteo
+                        actualizarBadge(notificaciones);
+                    } else {
+                        alert('Error al marcar la notificación como leída');
+                    }
+                })
+                .catch(err => {
+                    console.error('Error al marcar notificación leída:', err);
+                    alert('Error al marcar la notificación como leída');
+                });
+        }
+
         fetch(`/notificaciones/usuario/${usuarioId}`)
             .then(res => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 return res.json();
             })
-            .then(data => {
+            .then(notificaciones => {
                 lista.innerHTML = '';
 
-                if (!Array.isArray(data) || data.length === 0) {
+                if (!Array.isArray(notificaciones) || notificaciones.length === 0) {
                     lista.innerHTML = '<li>No hay notificaciones.</li>';
+                    actualizarBadge([]);
                     return;
                 }
 
-                data.forEach(noti => {
+                actualizarBadge(notificaciones);
+
+                notificaciones.forEach(noti => {
                     const item = document.createElement('li');
+                    item.classList.add('notificacion-item');
+                    if (!noti.leida) {
+                        item.classList.add('noti-no-leida'); // para aplicar estilo especial
+                    }
+
                     item.innerHTML = `
-                    <strong>${new Date(noti.fechaEnvio).toLocaleString()}</strong><br>
-                    ${noti.contenido}
-                `;
+          <strong>${new Date(noti.fechaEnvio).toLocaleString()}</strong><br>
+          ${noti.contenido}
+          ${!noti.leida ? `<button class="btn-marcar-leida" title="Marcar como leída" style="margin-left:10px; cursor:pointer;">👁️</button>` : ''}
+        `;
+
+                    if (!noti.leida) {
+                        const btnLeer = item.querySelector('.btn-marcar-leida');
+                        btnLeer.addEventListener('click', () => marcarComoLeida(noti, item, notificaciones));
+                    }
+
                     lista.appendChild(item);
                 });
             })
             .catch(err => {
                 console.error('Error al cargar notificaciones:', err);
                 lista.innerHTML = '<li>Error al cargar notificaciones.</li>';
+                actualizarBadge([]);
             });
     });
+
 
     function cargarFavoritos() {
         const listaFavoritos = document.getElementById('lista-favoritos');

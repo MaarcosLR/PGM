@@ -3,13 +3,12 @@ package com.pgm.plataformapgm.controller;
 import com.pgm.plataformapgm.model.Notificacion;
 import com.pgm.plataformapgm.service.NotificacionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/notificaciones")
@@ -22,5 +21,18 @@ public class NotificacionController {
     public ResponseEntity<List<Notificacion>> obtenerPorUsuario(@PathVariable Integer id) {
         List<Notificacion> notificaciones = notificacionService.obtenerPorUsuario(id);
         return ResponseEntity.ok(notificaciones);
+    }
+
+    @PostMapping("/{id}/leer")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> marcarComoLeida(@PathVariable Integer id) {
+        Optional<Notificacion> optNotificacion = notificacionService.obtenerPorId(id);
+        if (optNotificacion.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Notificacion notificacion = optNotificacion.get();
+        notificacion.setLeida(true);
+        notificacionService.guardar(notificacion);
+        return ResponseEntity.noContent().build();
     }
 }
