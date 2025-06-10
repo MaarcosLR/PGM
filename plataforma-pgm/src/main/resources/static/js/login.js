@@ -20,7 +20,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         const mensajeElem = document.getElementById('loginMensaje');
 
         if (response.ok) {
-            mensajeElem.style.color = 'green';
+            mensajeElem.style.color = '#0079a6';
             mensajeElem.textContent = result.message || 'Inicio de sesión exitoso';
             // Redirigir tras 1.5s
             setTimeout(() => window.location.href = '/anuncios.html', 500);

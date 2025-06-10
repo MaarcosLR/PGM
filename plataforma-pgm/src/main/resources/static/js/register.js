@@ -19,7 +19,7 @@ document.getElementById('registroForm').addEventListener('submit', async functio
         if (response.ok) {
             // Aquí asumimos que backend responde con JSON con mensaje éxito
             const result = await response.json();
-            document.getElementById('mensaje').style.color = 'green';
+            document.getElementById('mensaje').style.color = '#0079a6';
             document.getElementById('mensaje').textContent = result.message || 'Usuario registrado correctamente';
             this.reset();
             setTimeout(() => window.location.href = '/login.html', 500);

@@ -12,7 +12,7 @@ main {
     font-weight: 700;
     margin-bottom: 2rem;
     text-align: center;
-    color: #03690b; /* verde oscuro */
+    color: #0079a6; /* verde oscuro */
 }
 
 /* Contenedor del formulario para centrar todo */
@@ -39,26 +39,26 @@ main {
 .form-group label {
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: #03690b;
+    color: #0079a6;
 }
 
 /* Inputs */
 .form-group input {
     padding: 10px 12px;
-    border: 2px solid #03690b;
+    border: 2px solid #0079a6;
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
 
 .form-group input:focus {
-    border-color: #5ba861; /* verde claro */
+    border-color: #00b0f1; /* verde claro */
     outline: none;
 }
 
 /* Botón Entrar grande y verde */
 .btn-entrar {
-    background-color: #03690b;
+    background-color: #0079a6;
     color: white;
     font-weight: 700;
     font-size: 1.3rem;
@@ -72,25 +72,25 @@ main {
 }
 
 .btn-entrar:hover {
-    background-color: #5ba861;
+    background-color: #00aae8;
 }
 
 /* Texto de registro debajo, centrado */
 .registro-texto {
     margin-top: 1.8rem;
     font-size: 1rem;
-    color: #03690b;
+    color: #0079a6;
     text-align: center;
 }
 
 .registro-texto a {
-    color: #5ba861;
+    color: #0079a6;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .registro-texto a:hover {
-    color: #03690b;
+    color: #0079a6;
     text-decoration: underline;
 }
