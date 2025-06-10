@@ -34,6 +34,14 @@ main {
   transition: all 0.3s ease;
 }
 
+.card-content:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
 /* Título */
 .card-title {
   font-size: 1.1rem;
@@ -73,21 +81,22 @@ main {
 
 /* Botón */
 .card-button {
-  background-color: #b3bdd8;
+  background-color: #0079a6;
   border: none;
   padding: 0.8rem 2rem;
   border-radius: 2rem;
   font-size: 22px;
   width: 18rem;
   height: 3rem;
-  color: #000000;
+  color: #ffffff;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.3s, font-size 0.3s, width 0.3s;
 }
 
 .card-button:hover {
-  background-color: #a1aac7;
+  background-color: #00aae8;
+
 }
 
 /* Responsive: cuando la ventana es menor a 850px */

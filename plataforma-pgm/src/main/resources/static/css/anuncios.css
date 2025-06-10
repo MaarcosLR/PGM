@@ -16,14 +16,14 @@ main {
   .search-bar input {
     width: 60%;
     padding: .75rem 1rem;
-    border: 4px solid #03690b;
+    border: 4px solid #0094ca;
     border-radius: 2rem;
     outline: none;
     font-size: 1rem;
   }
   .search-bar button {
     background: #FFF;
-    border: 4px solid #03690b;
+    border: 4px solid #0094ca;
     border-radius: 50%;
     width: 3rem;
     height: 3rem;
@@ -186,7 +186,7 @@ main {
 }
 
 .active-filter-tag {
-  background-color: #03690b;
+  background-color: #0094ca;
   color: white;
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
@@ -203,7 +203,7 @@ main {
 }
 
 .btn-aplicar-filtro{
-  background-color: #03690b;
+  background-color: #0094ca;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -214,7 +214,7 @@ main {
 }
 
 .btn-aplicar-filtro:hover {
-  background-color: #0aa616;
+  background-color: #00beff;
 }
 
 .btn-borrar-filtro{
@@ -233,7 +233,7 @@ main {
 }
 
 .btn-cerrar-filtro {
-  background-color: #03690b;
+  background-color: #0094ca;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -244,7 +244,7 @@ main {
 }
 
 .btn-cerrar-filtro:hover {
-  background-color: #0aa616;
+  background-color: #00beff;
 }
 
 .filter-buttons {

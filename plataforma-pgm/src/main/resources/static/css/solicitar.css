@@ -33,7 +33,7 @@ main {
 
 /* Secciones */
 .section {
-  background: #5ba861;
+  background: #0079a6;
   border-radius: 24px;
   padding: 24px;
   flex: 1;
@@ -45,7 +45,7 @@ main {
 #formulario {
   width: 100%;
   max-width: 900px;
-  background: #5ba861;
+  background: #0079a6;
   border-radius: 24px;
   padding: 32px;
   box-sizing: border-box;
@@ -120,12 +120,16 @@ input[type="file"] {
 .section button {
   margin-top: 24px;
   padding: 12px 32px;
-  background: #03690b;
+  background: #003a50;
   color: #fff;
   border: none;
   border-radius: 16px;
   cursor: pointer;
   font-size: 16px;
+}
+
+.section button:hover {
+  background-color: #00beff;
 }
 
 .btnEnviar {
