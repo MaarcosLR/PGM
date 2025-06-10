@@ -11,7 +11,7 @@ main h1 {
     display: block;
     width: max-content; /* que ocupe solo lo necesario */
     margin: 2rem auto 0 auto; /* arriba 2rem, auto a izquierda y derecha para centrar */
-    background-color: #03690b;
+    background-color: #0079;
     color: white;
     padding: 0.5rem 1.25rem;
     border-radius: 20px;
@@ -23,7 +23,7 @@ main h1 {
 
 
 .back-link:hover {
-    background-color: #0aa616; /* verde más claro */
+    background-color: #00b6f6; /* verde más claro */
     text-decoration: none;
 }
 

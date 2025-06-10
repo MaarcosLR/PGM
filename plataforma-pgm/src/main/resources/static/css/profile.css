@@ -94,14 +94,13 @@
    =============================== */
 /* Botón “Guardar Cambios” (verde) */
 .btnGCambios {
-    background-color: #28a745;
+    background-color: #0079a6;
     color: white;
 }
 
-/* Botón “Eliminar Perfil” (rojo) */
-#delete-profile {
-    background-color: #dc3545;
-    color: white;
+.btnGCambios:hover {
+    background-color: #00a7e6;
+
 }
 
 /* ===============================
@@ -311,8 +310,13 @@
 }
 
 .btnLogout {
-    background-color: #ff0000;
-    color: black;
+    background-color: #970000;
+    color: #ffffff;
+}
+
+.btnLogout:hover {
+    background-color: #e60000;
+    color: #000000;
 }
 
 /* ============================================
