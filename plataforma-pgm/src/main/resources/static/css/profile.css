@@ -164,7 +164,7 @@ h2 {
    Sección: Botones dentro de la tarjeta (hover y activo)
    =============================== */
 .menu-btn:hover {
-    background: #ddd;
+    background: #8c8c8c;
 }
 
 .menu-btn.active {
