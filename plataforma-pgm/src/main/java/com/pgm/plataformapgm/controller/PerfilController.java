@@ -5,17 +5,24 @@ import com.pgm.plataformapgm.model.Anuncio;
 import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.service.AnuncioService;
 import com.pgm.plataformapgm.service.UsuarioService;
-
 import jakarta.servlet.http.HttpSession;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class PerfilController {
@@ -25,6 +32,9 @@ public class PerfilController {
 
     @Autowired
     private AnuncioService anuncioService;
+
+    @Value("${upload.dir}") // Inyecta la ruta base de uploads desde application.properties
+    private String uploadDir;
 
     @GetMapping("/profile.html")
     public String perfil(HttpSession session, Model model) {
@@ -40,7 +50,6 @@ public class PerfilController {
 
         boolean esAdmin = "admin".equalsIgnoreCase(usuario.getTipoCuenta());
 
-        // Solo si es admin, obtener anuncios pendientes
         List<Anuncio> pendientes = null;
         if (esAdmin) {
             pendientes = anuncioService.findByEstado("pendiente");
@@ -54,7 +63,6 @@ public class PerfilController {
 
         return "profile";
     }
-
 
     @PostMapping("/api/usuario/actualizar")
     @ResponseBody
@@ -84,7 +92,6 @@ public class PerfilController {
             return response;
         }
 
-        // Actualizar campos
         usuarioSesion.setNombre(nombre);
         usuarioSesion.setCorreoElectronico(correoElectronico);
         usuarioSesion.setTelefono(telefono);
@@ -92,14 +99,18 @@ public class PerfilController {
         usuarioSesion.setCiudad(ciudad);
 
         if (foto != null && !foto.isEmpty()) {
-            // Aquí guardar el archivo y obtener nombre/ruta
-            String nombreFoto = guardarArchivoFoto(foto);
-            usuarioSesion.setFotoPerfil(nombreFoto);
+            try {
+                String nombreFotoAnterior = usuarioSesion.getFotoPerfil();
+                String nombreFotoNueva = guardarArchivoFoto(foto, usuarioSesion.getId(), nombreFotoAnterior);
+                usuarioSesion.setFotoPerfil(nombreFotoNueva);
+            } catch (IOException e) {
+                response.put("error", "Error guardando la foto: " + e.getMessage());
+                return response;
+            }
         }
 
         usuarioService.save(usuarioSesion);
 
-        // Actualizar sesión con usuario actualizado
         session.setAttribute("usuarioLogueado", usuarioSesion);
 
         response.put("success", true);
@@ -107,8 +118,80 @@ public class PerfilController {
         return response;
     }
 
-    private String guardarArchivoFoto(MultipartFile foto) {
-        // Implementa guardar archivo en servidor y retorna ruta/nombre
-        return "ruta_o_nombre_de_la_foto.jpg";
+    @DeleteMapping("/api/usuario/foto/eliminar")
+    @ResponseBody
+    public Map<String, Object> eliminarFotoPerfil(HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+
+        Usuario usuarioSesion = (Usuario) session.getAttribute("usuarioLogueado");
+        if (usuarioSesion == null) {
+            response.put("error", "Usuario no autenticado");
+            return response;
+        }
+
+        String fotoPerfil = usuarioSesion.getFotoPerfil();
+        if (fotoPerfil == null || fotoPerfil.isEmpty()) {
+            response.put("error", "No hay foto de perfil para eliminar");
+            return response;
+        }
+
+        try {
+            // Eliminar archivo físico
+            Path archivoFoto = Paths.get(uploadDir).resolve(fotoPerfil);
+            if (Files.exists(archivoFoto)) {
+                Files.delete(archivoFoto);
+            }
+
+            // Actualizar usuario para quitar foto
+            usuarioSesion.setFotoPerfil(null);
+            usuarioService.save(usuarioSesion);
+
+            // Actualizar sesión
+            session.setAttribute("usuarioLogueado", usuarioSesion);
+
+            response.put("success", true);
+            response.put("mensaje", "Foto de perfil eliminada correctamente");
+        } catch (IOException e) {
+            response.put("error", "Error eliminando la foto: " + e.getMessage());
+        }
+
+        return response;
+    }
+
+    // Actualizo guardarArchivoFoto para eliminar la anterior si existe
+    private String guardarArchivoFoto(MultipartFile foto, Integer usuarioId, String nombreFotoAnterior) throws IOException {
+        // Carpeta usuario
+        Path usuarioDir = Paths.get(uploadDir, "pfp", "Usuario_" + usuarioId);
+        if (!Files.exists(usuarioDir)) {
+            Files.createDirectories(usuarioDir);
+        }
+
+        // Eliminar foto anterior
+        if (nombreFotoAnterior != null && !nombreFotoAnterior.isEmpty()) {
+            Path archivoAnterior = Paths.get(uploadDir).resolve(nombreFotoAnterior);
+            if (Files.exists(archivoAnterior)) {
+                Files.delete(archivoAnterior);
+            }
+        }
+
+        String nombreOriginal = StringUtils.cleanPath(foto.getOriginalFilename());
+        String extension = "";
+
+        int i = nombreOriginal.lastIndexOf('.');
+        if (i > 0) {
+            extension = nombreOriginal.substring(i);
+        }
+
+        String nuevoNombre = "perfil_" + System.currentTimeMillis() + extension;
+        Path destino = usuarioDir.resolve(nuevoNombre);
+
+        // Optimizar y guardar
+        Thumbnails.of(foto.getInputStream())
+                .size(600, 600)
+                .outputQuality(0.75)
+                .toFile(destino.toFile());
+
+        // Retornar ruta relativa
+        return "pfp/Usuario_" + usuarioId + "/" + nuevoNombre;
     }
 }

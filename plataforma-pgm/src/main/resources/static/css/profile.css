@@ -245,9 +245,6 @@
     border-radius: 5px;
     border: 1px solid #ccc;
     background-color: white;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
     cursor: pointer;
 }
 

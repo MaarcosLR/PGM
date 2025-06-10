@@ -23,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/img/**",
                         "/index.html",
                         "/login.html",
-                        "/uploads",
+                        "/uploads/**",
                         "/register.html",
                         "/anuncios.html",
                         "/register",

@@ -62,18 +62,35 @@ document.addEventListener('DOMContentLoaded', () => {
         photoMenu.style.display = 'none';
     });
 
+    const removePhotoBtn = document.getElementById('remove-photo-btn');
+
     // Botón para quitar la foto (restablecer a por defecto)
-    document.getElementById('remove-photo-btn').addEventListener('click', () => {
-        profilePhoto.src = defaultPhoto;
-        fileInput.value = '';
+    removePhotoBtn.addEventListener('click', () => {
+        fetch('/api/usuario/foto/eliminar', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cambiar la foto al icono por defecto
+                    profilePhoto.src = defaultPhoto;
 
-        // Si quieres notificar al backend que se debe eliminar la foto
-        const inputHiddenRemove = document.getElementById('removePhoto');
-        if (inputHiddenRemove) {
-            inputHiddenRemove.value = 'true';
-        }
+                    // Opcional: limpiar input file si tienes uno para subir foto
+                    const fileInput = document.getElementById('foto-input');
+                    if (fileInput) fileInput.value = '';
 
-        photoMenu.style.display = 'none';
+                    alert('Foto de perfil eliminada correctamente');
+                } else if (data.error) {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error eliminando la foto:', error);
+                alert('Error eliminando la foto de perfil.');
+            });
     });
 
     // --------- País y ciudades ---------
