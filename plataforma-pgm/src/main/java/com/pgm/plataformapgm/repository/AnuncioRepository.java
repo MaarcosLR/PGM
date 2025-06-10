@@ -1,14 +1,12 @@
 package com.pgm.plataformapgm.repository;
 
 import com.pgm.plataformapgm.model.Anuncio;
-import com.pgm.plataformapgm.model.ImagenAnuncio;
 import com.pgm.plataformapgm.model.Usuario;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository

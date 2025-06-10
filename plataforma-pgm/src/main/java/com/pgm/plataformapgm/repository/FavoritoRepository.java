@@ -4,7 +4,6 @@ import com.pgm.plataformapgm.model.Favorito;
 import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.model.Anuncio;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import java.util.Optional;
 

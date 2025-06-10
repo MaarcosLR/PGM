@@ -49,9 +49,6 @@ public class Anuncio {
     @JsonManagedReference
     private List<ImagenAnuncio> imagenes;
 
-    @OneToOne(mappedBy = "anuncio", cascade = CascadeType.ALL)
-    private Moderacion moderacion;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_articulo_id", nullable = false)  // FK en tabla anuncios
     @JsonIgnore

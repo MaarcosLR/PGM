@@ -12,8 +12,11 @@ import java.util.Optional;
 @Service
 public class NotificacionService {
 
-    @Autowired
-    private NotificacionRepository notificacionRepository;
+    private final NotificacionRepository notificacionRepository;
+
+    public NotificacionService(NotificacionRepository notificacionRepository) {
+        this.notificacionRepository = notificacionRepository;
+    }
 
     public void crear(String contenido, String tipoNotificacion, Usuario usuario) {
         Notificacion notificacion = new Notificacion();
@@ -22,7 +25,6 @@ public class NotificacionService {
         notificacion.setUsuario(usuario);
         notificacion.setLeida(false);
         notificacion.setFechaEnvio(LocalDateTime.now());
-
         notificacionRepository.save(notificacion);
     }
 

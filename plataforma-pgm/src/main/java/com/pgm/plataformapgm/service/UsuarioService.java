@@ -21,7 +21,6 @@ public class UsuarioService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-
     public void registrarUsuario(RegistroUsuarioDTO dto) {
         if (usuarioRepository.findByCorreoElectronico(dto.getCorreoElectronico()).isPresent()) {
             throw new RuntimeException("Correo ya registrado");

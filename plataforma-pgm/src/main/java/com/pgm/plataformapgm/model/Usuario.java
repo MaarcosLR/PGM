@@ -51,9 +51,6 @@ public class Usuario {
     @JsonManagedReference
     private List<Anuncio> anuncios;
 
-    @OneToMany(mappedBy = "administrador", cascade = CascadeType.ALL)
-    private List<Moderacion> moderaciones;
-
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Notificacion> notificaciones;

@@ -15,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,26 +25,29 @@ import java.util.*;
 @Controller
 public class AnuncioController {
 
-    @Autowired
-    private AnuncioService anuncioService;
+    private final AnuncioService anuncioService;
 
-    @Autowired
-    private EstadoArticuloService estadoArticuloService;
+    private final EstadoArticuloService estadoArticuloService;
 
-    @Autowired
-    private NotificacionService notificacionService;
+    private final NotificacionService notificacionService;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    @Autowired
-    private CategoriaService categoriaService;
+    private final CategoriaService categoriaService;
 
-    @Autowired
-    private ImagenAnuncioService imagenAnuncioService;
+    private final ImagenAnuncioService imagenAnuncioService;
 
     @Value("${upload.dir}")
     private String uploadDir;
+
+    public AnuncioController(AnuncioService anuncioService, EstadoArticuloService estadoArticuloService, NotificacionService notificacionService, EmailService emailService, CategoriaService categoriaService, ImagenAnuncioService imagenAnuncioService) {
+        this.anuncioService = anuncioService;
+        this.estadoArticuloService = estadoArticuloService;
+        this.notificacionService = notificacionService;
+        this.emailService = emailService;
+        this.categoriaService = categoriaService;
+        this.imagenAnuncioService = imagenAnuncioService;
+    }
 
     @GetMapping("/anuncios.html")
     public String anuncios(
