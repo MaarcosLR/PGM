@@ -1,0 +1,174 @@
+/* terminos.css */
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body */
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    background: #fff;
+    line-height: 1.6;
+}
+
+/* ======================
+   HEADER & NAVIGACIÓN
+   ====================== */
+.nav-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /* Ajuste para que el header quede estrecho y centrado */
+    width: 40%;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    padding: 1rem 2rem;
+    background: #03690b;
+    border-bottom-left-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem;
+}
+
+.nav-links a.indicator {
+    font-weight: bold;
+    border-bottom: 2px solid #5ba861;
+}
+
+.logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4rem;
+    height: 4rem;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.nav-links-right {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-links-right a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem;
+}
+
+.profile img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    padding: 0.5rem;
+    background: #013005;
+}
+
+/* ======================
+   MAIN CONTENT
+   ====================== */
+main {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+h1, h2 {
+    color: #03690b;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin: 1.5rem 0 0.5rem;
+}
+
+p, ul {
+    margin-bottom: 1rem;
+}
+
+ul {
+    list-style: disc inside;
+}
+
+/* ======================
+   FOOTER
+   ====================== */
+footer {
+    background: #03690b;
+    padding: 1rem;
+    text-align: center;
+    color: #fff;
+    margin-top: 2rem;
+}
+
+.btnTerms {
+    display: inline-block;
+    color: #fff;
+    text-decoration: underline;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
+/* ======================
+   RESPONSIVE
+   ====================== */
+@media (max-width: 1200px) {
+    .nav-wrapper {
+        width: 60%;    /* ajustar progresivamente */
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .nav-wrapper {
+        width: 90%;    /* ocupa casi todo en móvil */
+        padding: 0.75rem 1rem;
+        border-radius: 0;
+    }
+    .logo {
+        width: 3rem;
+        height: 3rem;
+    }
+    .profile img {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    .nav-links, .nav-links-right {
+        gap: 0.75rem;
+    }
+    main {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+    }
+}
