@@ -15,26 +15,6 @@ body {
     line-height: 1.6;
 }
 
-/* ======================
-   HEADER & NAVIGACIÓN
-   ====================== */
-.nav-wrapper {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    /* Ajuste para que el header quede estrecho y centrado */
-    width: 40%;
-    max-width: 1200px;
-    margin: 0 auto;
-
-    padding: 1rem 2rem;
-    background: #03690b;
-    border-bottom-left-radius: 2rem;
-    border-bottom-right-radius: 2rem;
-}
-
 .nav-links {
     display: flex;
     gap: 1.5rem;
