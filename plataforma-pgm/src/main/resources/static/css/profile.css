@@ -616,6 +616,9 @@ h2 {
    =============================== */
 @media (max-width: 767px) {
 
+    h2 {
+        margin-top: 20px;
+    }
     /* Centrar y hacer scroll horizontal si es necesario */
     .profile-menu {
         flex-wrap: wrap;
