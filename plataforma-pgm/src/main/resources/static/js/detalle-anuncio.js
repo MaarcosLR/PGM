@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         btnFavorito.classList.add('active');
                         btnFavorito.setAttribute('aria-pressed', 'true');
                     } else {
-                        alert('Error al añadir favorito');
+                        mostrarModal('Error al añadir favorito');
                     }
                 });
         } else {
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         btnFavorito.classList.remove('active');
                         btnFavorito.setAttribute('aria-pressed', 'false');
                     } else {
-                        alert('Error al quitar favorito');
+                        mostrarModal('Error al quitar favorito');
                     }
                 });
         }

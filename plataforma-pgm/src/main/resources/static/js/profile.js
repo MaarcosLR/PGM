@@ -82,14 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const fileInput = document.getElementById('foto-input');
                     if (fileInput) fileInput.value = '';
 
-                    alert('Foto de perfil eliminada correctamente');
+                    mostrarModal('Foto de perfil eliminada correctamente');
                 } else if (data.error) {
-                    alert('Error: ' + data.error);
+                    mostrarModal('Error: ' + data.error);
                 }
             })
             .catch(error => {
                 console.error('Error eliminando la foto:', error);
-                alert('Error eliminando la foto de perfil.');
+                mostrarModal('Error eliminando la foto de perfil.');
             });
     });
 
@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
         profilePhoto.src = defaultPhoto;
     }
 
-    // --------- Envío formulario ---------
-    document.getElementById('user-settings-form').addEventListener('submit', e => {
+// --------- Envío formulario ---------
+    document.getElementById('user-settings-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const form = e.target;
@@ -161,23 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('foto', fileInput.files[0]);
         }
 
-        fetch('/api/usuario/actualizar', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include'
-        })
-            .then(resp => resp.json())
-            .then(data => {
-                if (data.error) {
-                    alert('Error: ' + data.error);
-                } else {
-                    alert('Datos guardados correctamente');
-                    window.usuarioLogueado = data.usuario;
-                }
-            })
-            .catch(err => {
-                alert('Error guardando datos: ' + err.message);
+        try {
+            const resp = await fetch('/api/usuario/actualizar', {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
             });
+            const data = await resp.json();
+
+            if (data.error) {
+                await mostrarModal('Error: ' + data.error);
+            } else {
+                await mostrarModal('Datos guardados correctamente');
+                window.usuarioLogueado = data.usuario;
+                location.reload();  // Recarga la página tras cerrar el modal
+            }
+        } catch (err) {
+            await mostrarModal('Error guardando datos: ' + err.message);
+        }
     });
 
     document.getElementById('btnLogout').addEventListener('click', (e) => {
@@ -221,13 +222,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (res.ok) {
                                 btn.closest('.anuncio-card')?.remove();
                                 actualizarContadorRestar();
+                                mostrarModal('Anuncio aprobado correctamente');
                             } else {
-                                alert('Error al aprobar el anuncio');
+                                mostrarModal('Error al aprobar el anuncio');
                             }
                         })
                         .catch(err => {
                             console.error('Error al aprobar:', err);
-                            alert('Error al aprobar el anuncio');
+                            mostrarModal('Error al aprobar el anuncio');
                         });
                 });
             });
@@ -238,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const motivo = prompt('Por favor, escribe el motivo del rechazo:');
                     if (motivo === null || motivo.trim() === '') {
-                        alert('Debe ingresar un motivo para rechazar.');
+                        mostrarModal('Debe ingresar un motivo para rechazar.');
                         return;
                     }
 
@@ -254,12 +256,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 btn.closest('.anuncio-card')?.remove();
                                 actualizarContadorRestar();
                             } else {
-                                alert('Error al rechazar el anuncio');
+                                mostrarModal('Error al rechazar el anuncio');
                             }
                         })
                         .catch(err => {
                             console.error('Error al rechazar:', err);
-                            alert('Error al rechazar el anuncio');
+                            mostrarModal('Error al rechazar el anuncio');
                         });
                 });
             });
@@ -401,12 +403,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (botonLeer) botonLeer.style.display = 'none';
                         actualizarBadge(notificaciones);
                     } else {
-                        alert('Error al marcar la notificación como leída');
+                        mostrarModal('Error al marcar la notificación como leída');
                     }
                 })
                 .catch(err => {
                     console.error('Error al marcar notificación leída:', err);
-                    alert('Error al marcar la notificación como leída');
+                    mostrarModal('Error al marcar la notificación como leída');
                 });
         }
 

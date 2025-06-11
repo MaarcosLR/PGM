@@ -25,19 +25,19 @@ imagenesInput.addEventListener("change", () => {
     const allowed    = ["image/jpeg","image/png","image/jpg"];
 
     if (files.length > maxFiles) {
-        alert(`Solo puedes subir un máximo de ${maxFiles} imágenes.`);
+        mostrarModal(`Solo puedes subir un máximo de ${maxFiles} imágenes.`);
         imagenesInput.value = "";
         return;
     }
 
     for (const file of files) {
         if (!allowed.includes(file.type)) {
-            alert(`"${file.name}" no es un formato permitido (.jpg, .png, .jpeg).`);
+            mostrarModal(`"${file.name}" no es un formato permitido (.jpg, .png, .jpeg).`);
             imagenesInput.value = "";
             return;
         }
         if (file.size > maxSize) {
-            alert(`"${file.name}" supera los 2 MB.`);
+            mostrarModal(`"${file.name}" supera los 2 MB.`);
             imagenesInput.value = "";
             return;
         }
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     } catch {
         console.error("Error cargando categorías");
-        alert("No se pudieron cargar las categorías");
+        mostrarModal("No se pudieron cargar las categorías");
     }
 
     // --- Estados del artículo ---
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     } catch {
         console.error("Error cargando estados");
-        alert("No se pudieron cargar los estados");
+        mostrarModal("No se pudieron cargar los estados");
     }
 });
 
@@ -95,16 +95,16 @@ document.getElementById("solicitar-form").addEventListener("submit", async funct
 
     // Validaciones básicas
     if (imagenesInput.files.length === 0) {
-        alert("Selecciona al menos una imagen");
+        await mostrarModal("Selecciona al menos una imagen");
         return;
     }
     if (imagenesInput.files.length > 6) {
-        alert("Máximo 6 imágenes permitidas");
+        await mostrarModal("Máximo 6 imágenes permitidas");
         return;
     }
     const estadoValor = document.getElementById("estado").value;
     if (!estadoValor) {
-        alert("Selecciona el estado del producto");
+        await mostrarModal("Selecciona el estado del producto");
         return;
     }
 
@@ -120,14 +120,14 @@ document.getElementById("solicitar-form").addEventListener("submit", async funct
         });
 
         if (resp.ok) {
-            alert("Anuncio enviado correctamente.");
+            await mostrarModal("Anuncio enviado correctamente.");
             window.location.href = "/anuncios.html";
         } else {
-            const err = await resp.text();
-            alert("Error al enviar el anuncio: " + err);
+            const err = resp.text();
+            await mostrarModal("Error al enviar el anuncio: " + err);
         }
     } catch (err) {
         console.error("Error:", err);
-        alert("Ocurrió un error al enviar el formulario.");
+        await mostrarModal("Ocurrió un error al enviar el formulario.");
     }
 });
