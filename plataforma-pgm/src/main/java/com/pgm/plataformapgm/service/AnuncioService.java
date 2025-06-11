@@ -36,9 +36,7 @@ public class AnuncioService {
     }
 
 
-    public List<Anuncio> obtenerTodos() {
-        return anuncioRepository.findByEstado("aprobado");
-    }
+
 
 
     public List<Anuncio> buscarAnuncios(String texto, List<String> categorias, String orden, String moneda) {
