@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copia el archivo JAR generado al contenedor
-COPY target/miapp-0.0.1-SNAPSHOT.jar app.jar
+COPY target/plataforma-pgm-0.0.1-SNAPSHOT.jar
 
 # Expón el puerto en el que corre Spring Boot (por defecto 8080)
 EXPOSE 8080
