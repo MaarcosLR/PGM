@@ -612,3 +612,86 @@ h2 {
     background-color: #f0f8ff; /* azul clarito */
     font-weight: bold;
 }
+
+/* ===============================
+   Responsive para pantallas pequeñas
+   =============================== */
+@media (max-width: 767px) {
+
+    /* Centrar y hacer scroll horizontal si es necesario */
+    .profile-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 10px;
+    }
+
+    .menu-btn {
+        flex: 1 1 auto;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+    }
+
+    .menu-card {
+        overflow-x: auto;
+        padding: 0 10px;
+    }
+
+    .content-section {
+        width: 100%;
+        padding: 10px;
+        /* No pongas display aquí */
+    }
+
+    .content-section.active {
+        display: block;
+    }
+
+    #user-settings-form {
+        padding: 0 10px;
+    }
+
+    .profile-photo-wrapper {
+        width: 100px;
+        height: 100px;
+    }
+
+    .modal-content {
+        width: 95%;
+        height: 80%;
+    }
+
+    .anuncio-card {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .imagenes-collage {
+        max-width: 100%;
+    }
+
+    .img-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .info-anuncio {
+        width: 100%;
+    }
+
+    .btnsGL {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+    }
+
+    .btnLogout,
+    .btnGCambios {
+        width: 100%;
+    }
+
+    .photo-menu {
+        right: auto;
+        left: auto;
+    }
+}
