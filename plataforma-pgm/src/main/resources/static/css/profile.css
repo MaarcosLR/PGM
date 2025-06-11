@@ -63,6 +63,10 @@
     padding-left: 40px;
 }
 
+#lista-notificaciones {
+    padding-top: 10px;
+}
+
 h2 {
     margin-bottom: 10px;
 }
