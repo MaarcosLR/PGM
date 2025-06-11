@@ -371,34 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modalImg.style.transform = 'scale(1)';
     }
 
-    document.querySelectorAll('.btn-rechazar').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = btn.getAttribute('data-id');
-            const motivo = prompt("¿Por qué estás rechazando este anuncio?");
-            if (!motivo) return;
-
-            fetch(`/${id}/rechazar`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ motivo })
-            })
-                .then(res => {
-                    if (res.ok) {
-                        btn.closest('.anuncio-card')?.remove();
-                        window.location.reload()
-                    } else {
-                        alert('Error al rechazar el anuncio');
-                    }
-                })
-                .catch(err => {
-                    console.error('Error al rechazar:', err);
-                    alert('Error al rechazar el anuncio');
-                });
-        });
-    });
-
     window.addEventListener('DOMContentLoaded', () => {
         const notificacionesDiv = document.getElementById('notificaciones');
         const usuarioId = notificacionesDiv.getAttribute('data-user-id');
