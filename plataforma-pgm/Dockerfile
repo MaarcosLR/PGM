@@ -1,5 +1,5 @@
 # Etapa 1: Build con Maven y JDK 17
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3.8.6-jdk-17 AS build
 
 WORKDIR /app
 
