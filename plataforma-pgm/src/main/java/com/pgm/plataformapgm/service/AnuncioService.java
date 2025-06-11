@@ -24,8 +24,11 @@ public class AnuncioService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private AnuncioRepository anuncioRepository;
+    private final AnuncioRepository anuncioRepository;
+
+    public AnuncioService(AnuncioRepository anuncioRepository) {
+        this.anuncioRepository = anuncioRepository;
+    }
 
     public List<Anuncio> findByUsuarioAndEstado(Usuario usuario, String estado) {
         return anuncioRepository.findByUsuarioAndEstado(usuario, estado);
@@ -36,7 +39,9 @@ public class AnuncioService {
     }
 
 
-
+    public List<Anuncio> obtenerAnunciosAprobados() {
+        return anuncioRepository.findByEstado("aprobado");
+    }
 
 
     public List<Anuncio> buscarAnuncios(String texto, List<String> categorias, String orden, String moneda) {
