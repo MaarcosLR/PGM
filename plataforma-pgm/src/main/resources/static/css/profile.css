@@ -4,9 +4,8 @@
 .profile-menu {
     display: flex;
     justify-content: center; /* ← Esto centra el contenido */
-    margin: 10px 0;
     gap: 20px;
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 
@@ -46,7 +45,6 @@
    =============================== */
 .content-section {
     display: none;
-    padding: 20px;
 }
 
 /* Mostrar solo la activa */
@@ -59,14 +57,14 @@
 #lista-favoritos,
 #lista-notificaciones,
 #peticiones .anuncio-card-container {
-    max-height: 600px; /* ajusta según lo que necesites */
+    max-height: 540px; /* ajusta según lo que necesites */
     overflow-y: auto;
     padding-right: 40px;
     padding-left: 40px;
 }
 
 h2 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .content-section.active {
@@ -623,7 +621,6 @@ h2 {
         flex-wrap: wrap;
         justify-content: center;
         gap: 10px;
-        padding: 0 10px;
     }
 
     .menu-btn {
@@ -640,8 +637,6 @@ h2 {
 
     .content-section {
         width: 100%;
-        padding: 10px;
-        /* No pongas display aquí */
     }
 
     .content-section.active {

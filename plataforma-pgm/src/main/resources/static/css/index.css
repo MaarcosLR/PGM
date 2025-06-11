@@ -31,14 +31,13 @@ main {
   width: 100%;
   max-width: 400px;
   min-width: 300px;     /* evita que se achiquen demasiado */
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 .card-content:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0,0,0,0.25);
   z-index: 10;
-  transition: all 0.3s ease;
 }
 
 /* Título */
@@ -62,6 +61,7 @@ main {
   padding: 2rem 1rem; /* más padding para separación */
   box-sizing: border-box;
   overflow: hidden;
+  transition: all 0.3s ease-in-out;
 }
 
 .card-image1 {
