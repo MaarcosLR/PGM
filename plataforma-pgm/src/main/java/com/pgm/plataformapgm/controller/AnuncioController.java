@@ -116,7 +116,7 @@ public class AnuncioController {
                 "Anuncio rechazado",
                 "Hola " + usuario.getNombre() + ", tu anuncio fue rechazado. Motivo: " + motivo);
 
-        String contenido = "Tu anuncio <strong>" + anuncio.getTitulo() + "</strong> fue rechazado. Motivo: " + motivo;
+        String contenido = "Tu anuncio <strong>" + anuncio.getTitulo() + "</strong> fue rechazado.\nMotivo: " + motivo;
         notificacionService.crear(contenido, "RECHAZO", usuario);
 
         return ResponseEntity.ok().build();

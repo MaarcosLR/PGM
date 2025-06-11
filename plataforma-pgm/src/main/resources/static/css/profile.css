@@ -611,6 +611,71 @@ h2 {
     font-weight: bold;
 }
 
+.notificacion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12px 16px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 10px;
+    max-height: 150px;
+    overflow: auto;
+    white-space: normal;
+    word-break: break-word;
+    position: relative;
+}
+
+.notificacion-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.noti-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+}
+
+.noti-body span {
+    flex: 1;
+    white-space: pre-wrap;
+}
+
+.btn-marcar-leida {
+    position: absolute;
+    top: 50%;            /* vertical center */
+    right: 16px;         /* espacio a la derecha */
+    transform: translateY(-50%); /* centrar exactamente vertical */
+
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.4);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+}
+
+.btn-marcar-leida:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 86, 179, 0.6);
+}
+
+.btn-marcar-leida:active {
+    background-color: #004085;
+    box-shadow: none;
+}
+
 /* ===============================
    Responsive para pantallas pequeñas
    =============================== */

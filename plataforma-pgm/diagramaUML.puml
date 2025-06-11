@@ -1,0 +1,74 @@
+@startuml clases_modelo
+
+hide methods
+hide stereotypes
+skinparam classAttributeIconSize 0
+
+' Clases principales
+class Anuncio {
+  Integer id
+  String titulo
+  String descripcion
+  BigDecimal precio
+  String ubicacion
+  String estado
+  LocalDateTime fechaPublicacion
+  String precioFormateado
+}
+
+class Categoria {
+  Integer id
+  String nombre
+  String descripcion
+}
+
+class EstadoArticulo {
+  Integer id
+  String nombre
+}
+
+class ImagenAnuncio {
+  Integer id
+  String urlImagen
+  Integer orden
+}
+
+class Notificacion {
+  Integer id
+  String contenido
+  String tipoNotificacion
+  Boolean leida
+  LocalDateTime fechaEnvio
+}
+
+class Usuario {
+  Integer id
+  String nombre
+  String correoElectronico
+  String contrasena
+  String tipoCuenta
+  LocalDateTime fechaRegistro
+  String fotoPerfil
+  String pais
+  String ciudad
+  String telefono
+}
+
+class Favorito {
+  Long id
+}
+
+' Relaciones
+Anuncio --> Usuario : pertenece a
+Anuncio --> Categoria : clasificado en
+Anuncio --> EstadoArticulo : tiene estado
+Anuncio --> ImagenAnuncio : contiene *
+Usuario --> Anuncio : publica *
+Usuario --> Notificacion : recibe *
+Favorito --> Usuario : pertenece a
+Favorito --> Anuncio : guarda el id del
+Categoria --> Anuncio : contienen *
+ImagenAnuncio --> Anuncio : pertenece a
+Notificacion --> Usuario : dirigida a
+
+@enduml

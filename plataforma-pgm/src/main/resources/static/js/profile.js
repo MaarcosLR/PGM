@@ -411,27 +411,22 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Función para actualizar el badge con cantidad de no leídas
         function actualizarBadge(notificaciones) {
             const noLeidasCount = notificaciones.filter(n => !n.leida).length;
             badge.textContent = noLeidasCount;
             badge.style.display = noLeidasCount > 0 ? 'inline-block' : 'none';
         }
 
-        // Función para marcar notificación como leída (y actualizar UI + backend)
         function marcarComoLeida(noti, item, notificaciones) {
             fetch(`/notificaciones/${noti.id}/leer`, {
                 method: 'POST'
             })
                 .then(res => {
                     if (res.ok) {
-                        noti.leida = true; // actualizar localmente
+                        noti.leida = true;
                         item.classList.remove('noti-no-leida');
-                        // Opcional: ocultar el icono ojo
                         const botonLeer = item.querySelector('.btn-marcar-leida');
                         if (botonLeer) botonLeer.style.display = 'none';
-
-                        // Actualizar badge con nuevo conteo
                         actualizarBadge(notificaciones);
                     } else {
                         alert('Error al marcar la notificación como leída');
@@ -463,14 +458,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     const item = document.createElement('li');
                     item.classList.add('notificacion-item');
                     if (!noti.leida) {
-                        item.classList.add('noti-no-leida'); // para aplicar estilo especial
+                        item.classList.add('noti-no-leida');
                     }
 
-                    item.innerHTML = `
-          <strong>${new Date(noti.fechaEnvio).toLocaleString()}</strong><br>
-          ${noti.contenido}
-          ${!noti.leida ? `<button class="btn-marcar-leida" title="Marcar como leída" style="margin-left:10px; cursor:pointer;">👁️</button>` : ''}
-        `;
+                    // Detectar tipo de notificación para aplicar color
+                    let color = '#333';
+                    if (noti.tipo === 'APROBACION') color = 'green';
+                    if (noti.tipo === 'RECHAZO') color = 'red';
+
+                    const contenido = `
+                        <div class="noti-header">
+                            <strong>${new Date(noti.fechaEnvio).toLocaleString()}</strong>
+                        </div>
+                        <div class="noti-body">
+                            <span style="color:${color};">${noti.contenido}</span>
+                            ${!noti.leida ? `<button class="btn-marcar-leida" title="Marcar como leída">👁️</button>` : ''}
+                        </div>
+                    `;
+
+                    item.innerHTML = contenido;
 
                     if (!noti.leida) {
                         const btnLeer = item.querySelector('.btn-marcar-leida');
@@ -486,6 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 actualizarBadge([]);
             });
     });
+
 
 
     function cargarFavoritos() {
