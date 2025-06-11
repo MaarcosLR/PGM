@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/js/**",
                         "/img/**",
                         "/index.html",
+                        "swagger-ui.html",
                         "/login.html",
                         "/uploads/**",
                         "/register.html",
