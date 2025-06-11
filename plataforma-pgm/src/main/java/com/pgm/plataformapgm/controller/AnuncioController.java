@@ -229,13 +229,5 @@ public class AnuncioController {
         return dto;
     }
 
-    @GetMapping("/anuncios/aprobados")
-    @ResponseBody
-    public List<AnuncioDTO> obtenerAnunciosAprobados() {
-        List<Anuncio> anunciosAprobados = anuncioService.obtenerAnunciosAprobados();
-        return anunciosAprobados.stream()
-                .map(this::toDTO)
-                .toList();
-    }
 
 }
