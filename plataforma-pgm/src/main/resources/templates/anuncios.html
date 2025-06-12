@@ -52,7 +52,7 @@
       <div id="filterDropdown" class="filter-dropdown">
         <div class="filtro-categorias">
           <h4>Categorías</h4>
-          <ul>
+          <ul id="listaCategorias">
             <li>
               <label>
                 <input type="checkbox" name="categoriaId" value="all"
@@ -60,7 +60,6 @@
                 Todas las Categorías
               </label>
             </li>
-
             <li th:each="cat : ${categorias}">
               <label>
                 <input type="checkbox" name="categoriaId" th:value="${cat.id}"
