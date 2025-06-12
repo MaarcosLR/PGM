@@ -35,21 +35,23 @@ main {
 
 /* GRID DE ANUNCIOS: 4 columnas */
 .grid.ads {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* columnas flexibles */
   gap: 1rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 1rem 0;
-  max-width: 100%;
-  width: 100%;
-  scroll-snap-type: x mandatory; /* opcional: scroll por tarjeta */
+  justify-content: center;
+  margin: 0 auto 2rem auto;
+  padding-bottom: 1rem;
+  max-width: 1200px;
+  width: 90%; /* o 80%, según prefieras */
+
+  /* Evitar corte y scroll */
+  max-height: none;
+  overflow: visible;
 }
 
 
+
 .tarjetaAnuncio {
-  scroll-snap-align: start;
-  flex: 0 0 auto; /* evita que se estiren */
   width: 220px;
   background: #f9f9f9;
   border-radius: 1rem;
