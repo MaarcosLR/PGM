@@ -45,7 +45,7 @@ public class Anuncio {
     @JsonBackReference
     private Categoria categoria;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "anuncio")
+    @OneToMany(mappedBy = "anuncio", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ImagenAnuncio> imagenes;
 
