@@ -88,19 +88,7 @@
       </div>
     </form>
 
-    <!-- Contenedor con scroll -->
-    <div class="grid ads" th:if="${anuncios}">
-      <a class="cardAd" th:each="anuncio : ${anuncios}"
-         th:href="@{/anuncio/{id}(id=${anuncio.id})}">
-        <div class="imageAd">
-          <img th:src="${#lists.isEmpty(anuncio.imagenes) ? '/img/default.jpg' : anuncio.imagenes.get(0).urlImagen}" alt="Imagen anuncio" />
-        </div>
-        <div class="footerAd" th:text="${anuncio.titulo}">Título Anuncio</div>
-        <div class="priceAd" th:text="${anuncio.precioFormateado}"></div>
-        <div class="statusAd" th:text="${anuncio.estadoArticulo != null ? anuncio.estadoArticulo.nombre : 'Sin estado'}"></div>
-        <div class="locationAd" th:text="${anuncio.ubicacion}"></div>
-      </a>
-    </div>
+    <div class="grid ads"></div>
   </main>
 
   <footer class="footerSoli">

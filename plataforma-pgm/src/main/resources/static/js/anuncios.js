@@ -1,4 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    fetch('/api/anuncios')
+        .then(response => response.json())
+        .then(anuncios => {
+            const container = document.querySelector('.grid.ads');
+            container.innerHTML = ''; // Limpia contenido
+
+            anuncios.forEach(anuncio => {
+                const card = document.createElement('a');
+                card.classList.add('cardAd');
+                card.href = `/anuncio/${anuncio.id}`;
+                card.innerHTML = `
+          <div class="imageAd">
+            <img src="${anuncio.imagenes.length ? anuncio.imagenes[0].urlImagen : '/img/default.jpg'}" alt="Imagen anuncio" />
+          </div>
+          <div class="footerAd">${anuncio.titulo}</div>
+          <div class="priceAd">${anuncio.precioFormateado}</div>
+          <div class="statusAd">${anuncio.estadoArticulo ? anuncio.estadoArticulo.nombre : 'Sin estado'}</div>
+          <div class="locationAd">${anuncio.ubicacion}</div>
+        `;
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar anuncios:', error);
+        });
+
     const btnFiltro = document.getElementById("btnFiltro");
     const filterDropdown = document.getElementById("filterDropdown");
     const activeFiltersContainer = document.getElementById("activeFilters");
@@ -127,33 +154,5 @@ document.addEventListener("DOMContentLoaded", () => {
     // Inicializar estado al cargar página
     manageCheckboxes();
     updateActiveFilters();
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('/api/anuncios')
-        .then(response => response.json())
-        .then(anuncios => {
-            const container = document.querySelector('.grid.ads');
-            container.innerHTML = ''; // Limpia contenido
-
-            anuncios.forEach(anuncio => {
-                const card = document.createElement('a');
-                card.classList.add('cardAd');
-                card.href = `/anuncio/${anuncio.id}`;
-                card.innerHTML = `
-          <div class="imageAd">
-            <img src="${anuncio.imagenes.length ? anuncio.imagenes[0].urlImagen : '/img/default.jpg'}" alt="Imagen anuncio" />
-          </div>
-          <div class="footerAd">${anuncio.titulo}</div>
-          <div class="priceAd">${anuncio.precioFormateado}</div>
-          <div class="statusAd">${anuncio.estadoArticulo ? anuncio.estadoArticulo.nombre : 'Sin estado'}</div>
-          <div class="locationAd">${anuncio.ubicacion}</div>
-        `;
-                container.appendChild(card);
-            });
-        })
-        .catch(error => {
-            console.error('Error al cargar anuncios:', error);
-        });
 });
 
