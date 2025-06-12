@@ -45,27 +45,7 @@ public class AnuncioController {
     }
 
     @GetMapping("/anuncios.html")
-    public String anuncios(
-            @RequestParam(required = false) List<String> categoriaId,
-            @RequestParam(required = false) String busqueda,
-            @RequestParam(required = false) String orden,
-            @RequestParam(required = false, defaultValue = "€") String moneda,
-            Model model) {
-
-        if (categoriaId == null || categoriaId.isEmpty() || (categoriaId.size() == 1 && "all".equals(categoriaId.get(0)))) {
-            categoriaId = null;
-        }
-
-        List<Anuncio> anuncios = anuncioService.buscarAnuncios(busqueda, categoriaId, orden, moneda);
-        List<Categoria> categorias = categoriaService.findAll();
-
-        model.addAttribute("anuncios", anuncios);
-        model.addAttribute("categorias", categorias);
-        model.addAttribute("categoriaSeleccionada", categoriaId);
-        model.addAttribute("busqueda", busqueda);
-        model.addAttribute("moneda", moneda);
-        model.addAttribute("orden", orden);
-
+    public String anuncios(){
         return "anuncios";
     }
 
@@ -206,5 +186,5 @@ public class AnuncioController {
         return dto;
     }
 
-    
+
 }
