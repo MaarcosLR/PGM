@@ -171,16 +171,15 @@
       </a>
     </footer>
   </div>
-  <script>
-    fetch('/components/modal.html')
-            .then(res => res.text())
-            .then(html => {
-              document.body.insertAdjacentHTML('beforeend', html);
-              const script = document.createElement('script');
-              script.src = '/js/modal-loader.js';
-              document.body.appendChild(script);
-            });
-  </script>
   <script src ="/js/solicitar.js"></script>
+  <script src ="/js/modalMensaje.js"></script>
+  <!-- Modal global reutilizable -->
+  <div id="modalMensaje" class="modal-mensaje" style="display:none;">
+    <div class="modal-mensaje-content">
+      <p id="modalMensaje-text"></p>
+      <button id="modalMensaje-close">Cerrar</button>
+    </div>
+  </div>
+
 </body>
 </html>

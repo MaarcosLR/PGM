@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
             .then(response => response.json())
-            .then(data => {
+            .then(async data => {
                 if (data.success) {
                     // Cambiar la foto al icono por defecto
                     profilePhoto.src = defaultPhoto;
@@ -82,14 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     const fileInput = document.getElementById('foto-input');
                     if (fileInput) fileInput.value = '';
 
-                    mostrarModal('Foto de perfil eliminada correctamente');
+                    await mostrarModalMensaje('Foto de perfil eliminada correctamente');
                 } else if (data.error) {
-                    mostrarModal('Error: ' + data.error);
+                    await mostrarModalMensaje('Error: ' + data.error);
                 }
             })
-            .catch(error => {
+            .catch(async error => {
                 console.error('Error eliminando la foto:', error);
-                mostrarModal('Error eliminando la foto de perfil.');
+                await mostrarModalMensaje('Error eliminando la foto de perfil.');
             });
     });
 
@@ -162,53 +162,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const resp = await fetch('/api/usuario/actualizar', {
+            const resp =  fetch('/api/usuario/actualizar', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
             });
-            const data = await resp.json();
+            const data =  resp.json();
 
             if (data.error) {
-                await mostrarModal('Error: ' + data.error);
+                 await mostrarModalMensaje('Error: ' + data.error);
             } else {
-                await mostrarModal('Datos guardados correctamente');
+                 await mostrarModalMensaje('Datos guardados correctamente');
                 window.usuarioLogueado = data.usuario;
                 location.reload();  // Recarga la página tras cerrar el modal
             }
         } catch (err) {
-            await mostrarModal('Error guardando datos: ' + err.message);
+             await mostrarModalMensaje('Error guardando datos: ' + err.message);
         }
     });
 
-    document.getElementById('btnLogout').addEventListener('click', async (e) => {
+    document.getElementById('btnLogout').addEventListener('click', (e) => {
         e.preventDefault();
 
-        // Pedir confirmación con modal tipo confirm
-        const confirmado = await mostrarModal('¿Estás seguro que quieres cerrar sesión?', { type: 'confirm' });
+        fetch('/logout', {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(async response => {
+                if (response.redirected) {
+                    await mostrarModalMensaje("Se ha cerrado su sesión")
+                    window.location.href = response.url;
 
-        if (!confirmado) {
-            // Usuario canceló, no hacemos nada más
-            return;
-        }
-
-        try {
-            const response = await fetch('/logout', {
-                method: 'GET',
-                credentials: 'include'
+                } else {
+                    await mostrarModalMensaje("Se ha cerrado su sesión")
+                }
+            })
+            .catch(async error => {
+                await mostrarModalMensaje("Error al cerrar sesión:", error);
             });
-
-            if (response.redirected) {
-                await mostrarModal("Se ha cerrado su sesión");
-                window.location.href = response.url;
-            } else {
-                await mostrarModal("Se ha cerrado su sesión");
-            }
-        } catch (error) {
-            await mostrarModal("Error al cerrar sesión: " + error.message);
-        }
     });
-
 
     // --------- Bloque de moderación robusto ---------
     try {
@@ -225,21 +217,21 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.btn-aprobar').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.getAttribute('data-id');
-                    await fetch(`/${id}/aprobar`, {
+                     fetch(`/${id}/aprobar`, {
                         method: 'POST'
                     })
                         .then(async res => {
                             if (res.ok) {
                                 btn.closest('.anuncio-card')?.remove();
                                 actualizarContadorRestar();
-                                await mostrarModal('Anuncio aprobado correctamente');
+                                 await mostrarModalMensaje('Anuncio aprobado correctamente');
                             } else {
-                                await mostrarModal('Error al aprobar el anuncio');
+                                 await mostrarModalMensaje('Error al aprobar el anuncio');
                             }
                         })
                         .catch(async err => {
                             console.error('Error al aprobar:', err);
-                            await mostrarModal('Error al aprobar el anuncio');
+                             await mostrarModalMensaje('Error al aprobar el anuncio');
                         });
                 });
             });
@@ -248,13 +240,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 btn.addEventListener('click', async () => {
                     const id = btn.getAttribute('data-id');
 
-                    const motivo = await mostrarModal('Por favor, escribe el motivo del rechazo:', true);
+                    const motivo =  await mostrarModalMensaje('Por favor, escribe el motivo del rechazo:', true);
                     if (!motivo) {
-                        await mostrarModal('Debe ingresar un motivo para rechazar.');
+                         await mostrarModalMensaje('Debe ingresar un motivo para rechazar.');
                         return;
                     }
 
-                    await fetch(`/${id}/rechazar`, {
+                     fetch(`/${id}/rechazar`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -265,14 +257,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (res.ok) {
                                 btn.closest('.anuncio-card')?.remove();
                                 actualizarContadorRestar();
-                                await mostrarModal('Anuncio rechazado correctamente.');
+                                 await mostrarModalMensaje('Anuncio rechazado correctamente.');
                             } else {
-                                await mostrarModal('Error al rechazar el anuncio');
+                                 await mostrarModalMensaje('Error al rechazar el anuncio');
                             }
                         })
                         .catch(async err => {
                             console.error('Error al rechazar:', err);
-                            await mostrarModal('Error al rechazar el anuncio');
+                             await mostrarModalMensaje('Error al rechazar el anuncio');
                         });
                 });
             });
@@ -406,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fetch(`/notificaciones/${noti.id}/leer`, {
                 method: 'POST'
             })
-                .then(res => {
+                .then(async res => {
                     if (res.ok) {
                         noti.leida = true;
                         item.classList.remove('noti-no-leida');
@@ -414,12 +406,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (botonLeer) botonLeer.style.display = 'none';
                         actualizarBadge(notificaciones);
                     } else {
-                        mostrarModal('Error al marcar la notificación como leída');
+                        await mostrarModalMensaje('Error al marcar la notificación como leída');
                     }
                 })
-                .catch(err => {
+                .catch(async err => {
                     console.error('Error al marcar notificación leída:', err);
-                    mostrarModal('Error al marcar la notificación como leída');
+                    await mostrarModalMensaje('Error al marcar la notificación como leída');
                 });
         }
 
