@@ -1,6 +1,7 @@
 package com.pgm.plataformapgm.DTO;
 
 import com.pgm.plataformapgm.model.Anuncio;
+import com.pgm.plataformapgm.model.EstadoArticulo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,23 +13,27 @@ public class AnuncioDTO {
     private String titulo;
     private String descripcion;
     private String precioFormateado;
+    private String estadoArticuloNombre;
     private String ubicacion;
     private String imagenPrincipalUrl;
-
+    
     public AnuncioDTO(Anuncio anuncio) {
         this.id = anuncio.getId();
         this.titulo = anuncio.getTitulo();
         this.descripcion = anuncio.getDescripcion();
-        this.precioFormateado = anuncio.getPrecioFormateado();
         this.ubicacion = anuncio.getUbicacion();
+        this.precioFormateado = anuncio.getPrecioFormateado();
 
-        // Obtener la URL de la imagen principal (la primera en la lista)
         if (anuncio.getImagenes() != null && !anuncio.getImagenes().isEmpty()) {
-            this.imagenPrincipalUrl = anuncio.getImagenes().get(0).getUrlImagen(); // Asumiendo que ImagenAnuncio tiene método getUrl()
-        } else {
-            this.imagenPrincipalUrl = "/images/default-anuncio.png"; // ruta a imagen por defecto si no tiene imagen
+            this.imagenPrincipalUrl = anuncio.getImagenes().get(0).getUrlImagen();
+        }
+
+        // Aquí está la clave:
+        if (anuncio.getEstadoArticulo() != null) {
+            this.estadoArticuloNombre = anuncio.getEstadoArticulo().getNombre();
         }
     }
+
 
     public AnuncioDTO() {
 

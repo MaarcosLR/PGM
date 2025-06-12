@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                         <div class="pieAnuncio">${anuncio.titulo}</div>
                         <div class="precioAnuncio">${anuncio.precioFormateado}</div>
-                        <div class="estadoAnuncio">${anuncio.estadoArticulo ? anuncio.estadoArticulo.nombre : 'Sin estado'}</div>
+                        <div class="estadoAnuncio">${anuncio.estadoArticulo.nombre}</div>
                         <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
                     `;
                     container.appendChild(card);
