@@ -29,26 +29,26 @@ btnClearImages.addEventListener("click", () => {
     imagenesInput.value = "";
 });
 
-imagenesInput.addEventListener("change", () => {
-    const files      = imagenesInput.files;
-    const maxFiles   = 6;
-    const maxSize    = 2 * 1024 * 1024;      // 2 MB
-    const allowed    = ["image/jpeg","image/png","image/jpg"];
+imagenesInput.addEventListener("change", async () => {
+    const files = imagenesInput.files;
+    const maxFiles = 6;
+    const maxSize = 2 * 1024 * 1024;      // 2 MB
+    const allowed = ["image/jpeg", "image/png", "image/jpg"];
 
     if (files.length > maxFiles) {
-        mostrarModal(`Solo puedes subir un máximo de ${maxFiles} imágenes.`);
+        await mostrarModalMensaje(`Solo puedes subir un máximo de ${maxFiles} imágenes.`, false);
         imagenesInput.value = "";
         return;
     }
 
     for (const file of files) {
         if (!allowed.includes(file.type)) {
-            mostrarModal(`"${file.name}" no es un formato permitido (.jpg, .png, .jpeg).`);
+            await mostrarModalMensaje(`"${file.name}" no es un formato permitido (.jpg, .png, .jpeg).`, false);
             imagenesInput.value = "";
             return;
         }
         if (file.size > maxSize) {
-            mostrarModal(`"${file.name}" supera los 2 MB.`);
+            await mostrarModalMensaje(`"${file.name}" supera los 2 MB.`, false);
             imagenesInput.value = "";
             return;
         }
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     } catch {
         console.error("Error cargando categorías");
-        mostrarModal("No se pudieron cargar las categorías");
+        await mostrarModalMensaje("No se pudieron cargar las categorías", false);
     }
 
     // --- Estados del artículo ---
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     } catch {
         console.error("Error cargando estados");
-        mostrarModal("No se pudieron cargar los estados");
+        await mostrarModalMensaje("No se pudieron cargar los estados", false);
     }
 });
 
@@ -106,16 +106,16 @@ document.getElementById("solicitar-form").addEventListener("submit", async funct
 
     // Validaciones básicas
     if (imagenesInput.files.length === 0) {
-        await mostrarModal("Selecciona al menos una imagen");
+        await mostrarModalMensaje("Selecciona al menos una imagen", false);
         return;
     }
     if (imagenesInput.files.length > 6) {
-        await mostrarModal("Máximo 6 imágenes permitidas");
+        await mostrarModalMensaje("Máximo 6 imágenes permitidas", false);
         return;
     }
     const estadoValor = document.getElementById("estado").value;
     if (!estadoValor) {
-        await mostrarModal("Selecciona el estado del producto");
+        await mostrarModalMensaje("Selecciona el estado del producto", false);
         return;
     }
 
@@ -131,14 +131,14 @@ document.getElementById("solicitar-form").addEventListener("submit", async funct
         });
 
         if (resp.ok) {
-            await mostrarModal("Anuncio enviado correctamente.");
+            await mostrarModalMensaje("Anuncio enviado correctamente.", false);
             window.location.href = "/anuncios.html";
         } else {
             const err = resp.text();
-            await mostrarModal("Error al enviar el anuncio: " + err);
+            await mostrarModalMensaje("Error al enviar el anuncio: " + err, false);
         }
     } catch (err) {
         console.error("Error:", err);
-        await mostrarModal("Ocurrió un error al enviar el formulario.");
+        await mostrarModalMensaje("Ocurrió un error al enviar el formulario.", false);
     }
 });
