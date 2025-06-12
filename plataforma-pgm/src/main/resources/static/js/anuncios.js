@@ -36,36 +36,59 @@ document.addEventListener("DOMContentLoaded", () => {
         if (orden) params.append('orden', orden);
         params.append('moneda', moneda);
 
-        fetch(`/api/anuncios/buscar?${params.toString()}`)
-            .then(response => response.json())
-            .then(anuncios => {
-                container.innerHTML = '';
+        function mostrarAnunciosEnUI(anuncios) {
+            container.innerHTML = '';
 
-                if (!anuncios.length) {
-                    container.innerHTML = '<p>No se encontraron anuncios.</p>';
-                    return;
-                }
+            if (!anuncios.length) {
+                container.innerHTML = '<p>No se encontraron anuncios.</p>';
+                return;
+            }
 
-                anuncios.forEach(anuncio => {
-                    const card = document.createElement('a');
-                    card.classList.add('tarjetaAnuncio');
-                    card.href = `/anuncio/${anuncio.id}`;
-                    card.innerHTML = `
-                        <div class="imagenAnuncio">
-                            <img src="${anuncio.imagenes?.[0]?.urlImagen || '/img/default.jpg'}" alt="Imagen anuncio" />
-                        </div>
-                        <div class="pieAnuncio">${anuncio.titulo}</div>
-                        <div class="precioAnuncio">${anuncio.precioFormateado}</div>
-                        <div class="estadoAnuncio">${anuncio.estadoArticulo?.nombre || 'Sin estado'}</div>
-                        <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
-                    `;
-                    container.appendChild(card);
-                });
-            })
-            .catch(error => {
-                console.error('Error al cargar anuncios:', error);
-                container.innerHTML = '<p>Error al cargar los anuncios.</p>';
+            anuncios.forEach(anuncio => {
+                const card = document.createElement('a');
+                card.classList.add('tarjetaAnuncio');
+                card.href = `/anuncio/${anuncio.id}`;
+                card.innerHTML = `
+            <div class="imagenAnuncio">
+                <img src="${anuncio.imagenes?.[0]?.urlImagen || '/img/default.jpg'}" alt="Imagen anuncio" />
+            </div>
+            <div class="pieAnuncio">${anuncio.titulo}</div>
+            <div class="precioAnuncio">${anuncio.precioFormateado}</div>
+            <div class="estadoAnuncio">${anuncio.estadoArticulo?.nombre || 'Sin estado'}</div>
+            <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
+        `;
+                container.appendChild(card);
             });
+        }
+
+        // Función para cargar anuncios, usa el endpoint adecuado según filtros
+        function cargarAnuncios({ busqueda, categorias, orden, moneda } = {}) {
+            // Detectar si hay algún filtro para usar /buscar
+            const tieneFiltros = busqueda || (categorias && categorias.length) || orden || moneda;
+
+            let url;
+            if (tieneFiltros) {
+                const params = new URLSearchParams();
+                if (busqueda) params.append('busqueda', busqueda);
+                if (categorias && categorias.length) categorias.forEach(cat => params.append('categorias', cat));
+                if (orden) params.append('orden', orden);
+                if (moneda) params.append('moneda', moneda);
+                url = `/api/anuncios/buscar?${params.toString()}`;
+            } else {
+                url = '/api/anuncios/mostrarAnuncios';
+            }
+
+            fetch(url)
+                .then(response => response.json())
+                .then(anuncios => {
+                    mostrarAnunciosEnUI(anuncios);
+                })
+                .catch(error => {
+                    console.error('Error al cargar anuncios:', error);
+                    container.innerHTML = '<p>Error al cargar los anuncios.</p>';
+                });
+        }
+
     }
 
     function updateActiveFilters() {
