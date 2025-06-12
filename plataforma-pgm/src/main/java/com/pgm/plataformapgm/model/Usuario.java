@@ -58,9 +58,9 @@ public class Usuario {
     // Ajuste en getter
     public String getFotoPerfil() {
         if (fotoPerfil != null && !fotoPerfil.isEmpty()) {
-            return "/uploads/" + fotoPerfil; // o la ruta donde guardes la foto
+            return fotoPerfil; // URL absoluta de Cloudinary
         }
-        return "/img/icologo.png"; // foto por defecto
+        return "/img/icologo.png"; // Imagen por defecto local
     }
 
     @ManyToMany(fetch = FetchType.EAGER)

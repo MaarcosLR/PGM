@@ -5,19 +5,14 @@ import com.pgm.plataformapgm.model.*;
 import com.pgm.plataformapgm.service.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
-import net.coobird.thumbnailator.Thumbnails;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,27 +20,28 @@ import java.util.*;
 public class AnuncioController {
 
     private final AnuncioService anuncioService;
-
     private final EstadoArticuloService estadoArticuloService;
-
     private final NotificacionService notificacionService;
-
     private final EmailService emailService;
-
     private final CategoriaService categoriaService;
-
     private final ImagenAnuncioService imagenAnuncioService;
+    private final CloudinaryService cloudinaryService;
 
-    @Value("${upload.dir}")
-    private String uploadDir;
-
-    public AnuncioController(AnuncioService anuncioService, EstadoArticuloService estadoArticuloService, NotificacionService notificacionService, EmailService emailService, CategoriaService categoriaService, ImagenAnuncioService imagenAnuncioService) {
+    public AnuncioController(
+            AnuncioService anuncioService,
+            EstadoArticuloService estadoArticuloService,
+            NotificacionService notificacionService,
+            EmailService emailService,
+            CategoriaService categoriaService,
+            ImagenAnuncioService imagenAnuncioService,
+            CloudinaryService cloudinaryService) {
         this.anuncioService = anuncioService;
         this.estadoArticuloService = estadoArticuloService;
         this.notificacionService = notificacionService;
         this.emailService = emailService;
         this.categoriaService = categoriaService;
         this.imagenAnuncioService = imagenAnuncioService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     @GetMapping("/anuncios.html")
@@ -122,7 +118,6 @@ public class AnuncioController {
         return ResponseEntity.ok().build();
     }
 
-
     @PostMapping(value = "/crearAnuncios", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Transactional
     public ResponseEntity<?> crearAnuncio(
@@ -150,46 +145,28 @@ public class AnuncioController {
             anuncio.setFechaPublicacion(LocalDateTime.now());
             anuncio.setUsuario(usuario);
 
-            // Buscar y asignar categoría
             Categoria categoria = categoriaService.findById(categoriaId)
                     .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
             anuncio.setCategoria(categoria);
 
-            // Buscar y asignar estado del artículo
             EstadoArticulo estadoArticulo = estadoArticuloService.findById(estadoArticuloId)
                     .orElseThrow(() -> new RuntimeException("Estado del artículo no encontrado"));
             anuncio.setEstadoArticulo(estadoArticulo);
 
-            // Guardar el anuncio
             anuncioService.save(anuncio);
 
-            // Procesar imágenes si se enviaron
             if (imagenes != null && imagenes.length > 0) {
-                Path anuncioDir = Paths.get(uploadDir, "Anuncio_" + anuncio.getId());
-                if (!Files.exists(anuncioDir)) {
-                    Files.createDirectories(anuncioDir);
-                }
-
                 int orden = 1;
                 for (MultipartFile imagen : imagenes) {
-                    String originalFilename = StringUtils.cleanPath(Objects.requireNonNull(imagen.getOriginalFilename()));
-                    String extension = originalFilename.substring(originalFilename.lastIndexOf('.'));
-                    String nuevoNombre = UUID.randomUUID() + extension;
+                    if (!imagen.isEmpty()) {
+                        String urlImagen = cloudinaryService.subirImagen(imagen);
 
-                    Path destino = anuncioDir.resolve(nuevoNombre);
-
-                    Thumbnails.of(imagen.getInputStream())
-                            .size(1024, 1024)
-                            .outputQuality(0.8)
-                            .toFile(destino.toFile());
-
-                    String urlImagen = "/uploads/Anuncio_" + anuncio.getId() + "/" + nuevoNombre;
-
-                    ImagenAnuncio img = new ImagenAnuncio();
-                    img.setAnuncio(anuncio);
-                    img.setUrlImagen(urlImagen);
-                    img.setOrden(orden++);
-                    imagenAnuncioService.save(img);
+                        ImagenAnuncio img = new ImagenAnuncio();
+                        img.setAnuncio(anuncio);
+                        img.setUrlImagen(urlImagen);
+                        img.setOrden(orden++);
+                        imagenAnuncioService.save(img);
+                    }
                 }
             }
 
@@ -228,6 +205,4 @@ public class AnuncioController {
         }
         return dto;
     }
-
-
 }

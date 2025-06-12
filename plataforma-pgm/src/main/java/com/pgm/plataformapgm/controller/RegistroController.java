@@ -2,7 +2,6 @@ package com.pgm.plataformapgm.controller;
 
 import com.pgm.plataformapgm.DTO.RegistroUsuarioDTO;
 import com.pgm.plataformapgm.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +12,11 @@ import java.util.Map;
 @Controller
 public class RegistroController {
 
-    @Autowired
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+
+    public RegistroController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
 
     // Mostrar el formulario de registro
     @GetMapping("/register.html")
