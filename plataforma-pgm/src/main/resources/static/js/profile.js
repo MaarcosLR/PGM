@@ -181,18 +181,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+<<<<<<< HEAD
 
     document.getElementById('btnLogout').addEventListener('click', async (e) => {
         e.preventDefault();
 
         const confirmar = await window.mostrarConfirmacion('¿Seguro que quieres cerrar sesión?');
         if (!confirmar) return; // Usuario canceló
+=======
+    document.getElementById('btnLogout').addEventListener('click', (e) => {
+        e.preventDefault();
 
-        try {
-            const response = await fetch('/logout', {
-                method: 'GET',
-                credentials: 'include'
+        fetch('/logout', {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(async response => {
+                if (response.redirected) {
+                    await mostrarModal("Se ha cerrado su sesión")
+                    window.location.href = response.url;
+>>>>>>> parent of e7de919 (- Modal principal revertido)
+
+                } else {
+                    await mostrarModal("Se ha cerrado su sesión")
+                }
+            })
+            .catch(async error => {
+                await mostrarModal("Error al cerrar sesión:", error);
             });
+<<<<<<< HEAD
 
             if (response.redirected) {
                 await window.mostrarMensaje('Has cerrado sesión correctamente.');
@@ -207,6 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error al cerrar sesión:", error);
             await window.mostrarMensaje('Error al cerrar sesión. Inténtalo de nuevo.');
         }
+=======
+>>>>>>> parent of e7de919 (- Modal principal revertido)
     });
 
     // --------- Bloque de moderación robusto ---------
@@ -224,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.btn-aprobar').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.getAttribute('data-id');
+<<<<<<< HEAD
                     try {
                         const res = await fetch(`/${id}/aprobar`, { method: 'POST' });
                         if (res.ok) {
@@ -237,21 +257,68 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.error('Error al aprobar:', err);
                         await window.mostrarMensaje('Error al aprobar el anuncio');
                     }
+=======
+                    await fetch(`/${id}/aprobar`, {
+                        method: 'POST'
+                    })
+                        .then(async res => {
+                            if (res.ok) {
+                                btn.closest('.anuncio-card')?.remove();
+                                actualizarContadorRestar();
+                                await mostrarModal('Anuncio aprobado correctamente');
+                            } else {
+                                await mostrarModal('Error al aprobar el anuncio');
+                            }
+                        })
+                        .catch(async err => {
+                            console.error('Error al aprobar:', err);
+                            await mostrarModal('Error al aprobar el anuncio');
+                        });
+>>>>>>> parent of e7de919 (- Modal principal revertido)
                 });
             });
 
             document.querySelectorAll('.btn-rechazar').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.getAttribute('data-id');
+<<<<<<< HEAD
                     const motivo = await window.pedirMotivo('Por favor, indica el motivo del rechazo:');
+=======
+>>>>>>> parent of e7de919 (- Modal principal revertido)
 
-                    if (motivo === null) return;
+                    const motivo = await mostrarModal('Por favor, escribe el motivo del rechazo:', true);
+                    if (!motivo) {
+                        await mostrarModal('Debe ingresar un motivo para rechazar.');
+                        return;
+                    }
 
+<<<<<<< HEAD
                     try {
                         const res = await fetch(`/${id}/rechazar`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ motivo })
+=======
+                    await fetch(`/${id}/rechazar`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({motivo})
+                    })
+                        .then(async res => {
+                            if (res.ok) {
+                                btn.closest('.anuncio-card')?.remove();
+                                actualizarContadorRestar();
+                                await mostrarModal('Anuncio rechazado correctamente.');
+                            } else {
+                                await mostrarModal('Error al rechazar el anuncio');
+                            }
+                        })
+                        .catch(async err => {
+                            console.error('Error al rechazar:', err);
+                            await mostrarModal('Error al rechazar el anuncio');
+>>>>>>> parent of e7de919 (- Modal principal revertido)
                         });
 
                         if (res.ok) {
