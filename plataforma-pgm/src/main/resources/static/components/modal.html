@@ -1,6 +1,54 @@
-<div id="modal-overlay" class="modal-overlay hidden">
-  <div id="modal" class="modal">
-    <div id="modal-message" class="modal-message"></div>
-    <button id="modal-close-btn" class="modal-close-btn">Cerrar</button>
-  </div>
-</div>
+function mostrarModal(mensaje, conInput = false) {
+return new Promise((resolve) => {
+modalMessage.innerHTML = ''; // Limpiar antes de insertar
+
+if (conInput) {
+// Crear mensaje y campo de texto
+const msg = document.createElement('p');
+msg.textContent = mensaje;
+
+const input = document.createElement('textarea');
+input.id = 'modal-textarea';
+input.placeholder = 'Escribe aquí...';
+input.classList.add('modal-textarea');
+
+const confirmBtn = document.createElement('button');
+confirmBtn.textContent = 'Confirmar';
+confirmBtn.classList.add('modal-confirm-btn');
+
+modalMessage.appendChild(msg);
+modalMessage.appendChild(input);
+modalMessage.appendChild(confirmBtn);
+
+confirmBtn.addEventListener('click', () => {
+const value = input.value.trim();
+if (value) {
+cerrar();
+resolve(value);
+} else {
+alert('Debe ingresar un motivo.'); // O puedes mostrarlo dentro del modal
+}
+});
+} else {
+modalMessage.textContent = mensaje;
+}
+
+modalOverlay.classList.remove('hidden');
+
+function cerrar() {
+modalOverlay.classList.add('hidden');
+modalCloseBtn.removeEventListener('click', cerrar);
+modalOverlay.removeEventListener('click', overlayClick);
+}
+
+function overlayClick(e) {
+if (e.target === modalOverlay) {
+cerrar();
+resolve(null);
+}
+}
+
+modalCloseBtn.addEventListener('click', cerrar);
+modalOverlay.addEventListener('click', overlayClick);
+});
+}
