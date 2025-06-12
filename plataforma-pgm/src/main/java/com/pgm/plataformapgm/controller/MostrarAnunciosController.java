@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.controller;
 
+import com.pgm.plataformapgm.DTO.AnuncioDTO;
 import com.pgm.plataformapgm.model.Anuncio;
 import com.pgm.plataformapgm.service.AnuncioService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,16 +20,25 @@ public class MostrarAnunciosController {
     }
 
     @GetMapping("/mostrarAnuncios")
-    public List<Anuncio> listarAnuncios(
+    public List<AnuncioDTO> listarAnuncios(
             @RequestParam(value = "busqueda", required = false) String busqueda,
             @RequestParam(value = "categoriaId", required = false) List<String> categoriaIds,
             @RequestParam(value = "orden", required = false) String orden,
             @RequestParam(value = "moneda", required = false, defaultValue = "EUR") String moneda
     ) {
-        // Si no se envía ninguna categoría, asumir "all"
         if (categoriaIds == null || categoriaIds.isEmpty()) {
             categoriaIds = List.of("all");
         }
-        return anuncioService.buscarAnuncios(busqueda, categoriaIds, orden, moneda);
+
+        List<Anuncio> anuncios = anuncioService.buscarAnuncios(busqueda, categoriaIds, orden, moneda);
+
+        // ⚠️ Convertir a DTOs y forzar carga de imágenes antes de cerrar sesión
+        return anuncios.stream()
+                .map(anuncio -> {
+                    // Forzar la carga de las imágenes (evita problemas con LAZY)
+                    anuncio.getImagenes().size();
+                    return new AnuncioDTO(anuncio);
+                })
+                .toList();
     }
 }

@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (busqueda) params.append('busqueda', busqueda);
         if (categoriasSeleccionadas.length > 0) {
-            categoriasSeleccionadas.forEach(cat => params.append('categorias', cat));
+            categoriasSeleccionadas.forEach(cat => params.append('categoriasId', cat));
         } else {
             // Si no hay categorías seleccionadas, enviamos 'all' para que backend entienda que es todo
             params.append('categorias', 'all');
