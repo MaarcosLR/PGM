@@ -41,18 +41,18 @@
 <main>
   <div class="menu-card">
     <section class="profile-menu">
-      <button class="menu-btn active" data-section="aprobados">Anuncios Publicados</button>
-      <button class="menu-btn" data-section="favoritos">Favoritos</button>
-      <button id="btn-notificaciones" class="menu-btn" data-section="notificaciones">
+      <button class="menu-btn active" data-section="aprobados" th:unless="${esAdmin}">Anuncios Publicados</button>
+      <button class="menu-btn" data-section="favoritos" th:unless="${esAdmin}">Favoritos</button>
+      <button id="btn-notificaciones" class="menu-btn" data-section="notificaciones" th:unless="${esAdmin}">
         Notificaciones
         <span class="badge">0</span>
       </button>
       <!-- Solo mostrar botón si es admin -->
       <button id="btn-peticiones" class="menu-btn" data-section="peticiones" th:if="${esAdmin}">
         Peticiones
-        <span class="badge" th:text="${#lists.size(pendientes)}">0</span>
+        <span class="badge" th:text="${#lists.size(pendientes)}" th:unless="${esAdmin}">0</span>
       </button>
-      <button class="menu-btn" data-section="ajustes">Perfil de Usuario</button>
+      <button class="menu-btn" data-section="ajustes" th:unless="${esAdmin}">Perfil de Usuario</button>
     </section>
 
     <section class="profile-content" id="profile-content">
@@ -94,7 +94,7 @@
             <p><strong>Precio:</strong> <span th:text="${anuncio.precioFormateado}"></span></p>
             <p><strong>Descripción:</strong> <span th:text="${anuncio.descripcion}"></span></p>
             <p><strong>Ubicación:</strong> <span th:text="${anuncio.getUbicacion()}"></span></p>
-            <p><strong>Estado:</strong> <span th:text="${anuncio.estadoArticulo}"></span></p>
+            <p><strong>Estado:</strong> <span th:text="${anuncio.estadoArticulo.nombre}"></span></p>
             <!-- Agrega más campos si quieres -->
 
             <div class="acciones-anuncio">
