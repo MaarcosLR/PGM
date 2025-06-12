@@ -190,10 +190,12 @@ document.addEventListener('DOMContentLoaded', () => {
         })
             .then(async response => {
                 if (response.redirected) {
-                    window.location.href = response.url;
                     await mostrarModal("Se ha cerrado su sesión")
+                    window.location.href = response.url;
+
                 } else {
-                    await mostrarModal("Se ha cerrado su sesión")                }
+                    await mostrarModal("Se ha cerrado su sesión")
+                }
             })
             .catch(async error => {
                 await mostrarModal("Error al cerrar sesión:", error);

@@ -1,6 +1,7 @@
 package com.pgm.plataformapgm.controller;
 
 import com.pgm.plataformapgm.DTO.RegistroUsuarioDTO;
+import com.pgm.plataformapgm.service.EmailService;
 import com.pgm.plataformapgm.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,24 +14,22 @@ import java.util.Map;
 public class RegistroController {
 
     private final UsuarioService usuarioService;
+    private final EmailService emailService;
 
-    public RegistroController(UsuarioService usuarioService) {
+    public RegistroController(UsuarioService usuarioService, EmailService emailService) {
         this.usuarioService = usuarioService;
+        this.emailService = emailService;
     }
 
-    // Mostrar el formulario de registro
-    @GetMapping("/register.html")
-    public String mostrarFormulario(Model model) {
-        model.addAttribute("registroUsuarioDTO", new RegistroUsuarioDTO());
-        return "register.html"; // nombre de la plantilla Thymeleaf
-    }
-
-    // Procesar el formulario
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")
     @ResponseBody
     public ResponseEntity<?> procesarRegistroJSON(@RequestBody RegistroUsuarioDTO dto) {
         try {
             usuarioService.registrarUsuario(dto);
+
+            // Enviar correo de confirmación
+            emailService.enviarCorreoRegistroExitoso(dto.getCorreoElectronico(), dto.getNombre());
+
             return ResponseEntity.ok(Map.of("message", "Usuario registrado correctamente"));
         } catch (RuntimeException e) {
             return ResponseEntity
@@ -38,7 +37,6 @@ public class RegistroController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
-
-
 }
+
 

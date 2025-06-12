@@ -1,9 +1,12 @@
+const modalMessage = document.getElementById('modal-message');
+const modalOverlay = document.getElementById('modal-overlay');
+const modalCloseBtn = document.getElementById('modal-close-btn');
+
 function mostrarModal(mensaje, conInput = false) {
     return new Promise((resolve) => {
-        modalMessage.innerHTML = ''; // Limpiar antes de insertar
+        modalMessage.innerHTML = ''; // Clear before inserting
 
         if (conInput) {
-// Crear mensaje y campo de texto
             const msg = document.createElement('p');
             msg.textContent = mensaje;
 
@@ -26,7 +29,7 @@ function mostrarModal(mensaje, conInput = false) {
                     cerrar();
                     resolve(value);
                 } else {
-                    alert('Debe ingresar un motivo.'); // O puedes mostrarlo dentro del modal
+                    alert('Debe ingresar un motivo.');
                 }
             });
         } else {
