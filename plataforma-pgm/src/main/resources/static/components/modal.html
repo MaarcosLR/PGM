@@ -1,24 +1,12 @@
-<!-- Modal Overlay -->
-<div id="modal-overlay" class="hidden" style="
-  position: fixed; top:0; left:0; width:100vw; height:100vh;
-  background: rgba(0,0,0,0.5); display:flex; justify-content:center; align-items:center;
-  z-index: 9999;
-">
-  <!-- Modal Content -->
-  <div class="modal-content" style="
-    background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    position: relative;
-  ">
-    <!-- Aquí va el mensaje o textarea -->
-    <div id="modal-message" style="margin-bottom: 20px; white-space: pre-wrap;"></div>
-
-    <!-- Botones del modal -->
-    <div class="modal-buttons" style="text-align: right;">
-      <button id="modal-confirm-btn" class="hidden" style="margin-right: 10px;">Sí</button>
-      <button id="modal-cancel-btn" class="hidden" style="margin-right: 10px;">No</button>
-      <button id="modal-send-btn" class="hidden" style="margin-right: 10px;">Enviar</button>
-      <button id="modal-close-btn-simple" class="hidden">Cerrar</button>
-    </div>
+<div id="modal-overlay" class="modal-overlay hidden">
+  <div class="modal">
+    <div id="modal-message"></div>
+    <textarea id="modal-textarea" class="modal-textarea hidden"></textarea>
+    <button id="modal-confirm-btn" class="modal-confirm-btn hidden">Sí</button>
+    <button id="modal-cancel-btn" class="modal-cancel-btn hidden">No</button>
+    <button id="modal-send-btn" class="modal-send-btn hidden">Enviar</button>
+    <button id="modal-close-btn-simple" class="modal-close-btn hidden">Cerrar</button>
   </div>
 </div>
+
+<script src ="/js/modal-loader.js"></script>
