@@ -21,7 +21,7 @@ public class MostrarAnunciosController {
     @GetMapping("/mostrarAnuncios")
     public List<Anuncio> listarAnuncios() {
         // Devuelve lista de anuncios como JSON
-        return anuncioService.obtenerTodosLosAnunciosAprobados();
+        return anuncioService.obtenerTodosLosAnuncios();
     }
 }
 
