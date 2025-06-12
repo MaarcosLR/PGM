@@ -1,29 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    fetch("/api/usuario/info")
-        .then(resp => resp.json())
-        .then(usuario => {
-            if (usuario.tipoCuenta === "admin") {
-                // Ocultar secciones no permitidas para admin
-                const seccionesOcultas = [
-                    "#btn-aprobados",
-                    "#btn-notificaciones",
-                    "#btn-favoritos"
-                ];
-
-                seccionesOcultas.forEach(selector => {
-                    const el = document.querySelector(selector);
-                    if (el) el.style.display = "none";
-                });
-
-                // Opcional: activar 'peticiones' como sección por defecto
-                const btnPeticiones = document.querySelector("#btn-peticiones");
-                if (btnPeticiones) btnPeticiones.classList.add("active");
-            }
-        })
-        .catch(err => console.error("Error al validar perfil admin:", err));
-});
-
-
 document.addEventListener('DOMContentLoaded', () => {
     // --------- Manejo menú secciones ---------
     const buttons = document.querySelectorAll('.menu-btn');

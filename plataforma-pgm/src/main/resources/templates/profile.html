@@ -41,7 +41,7 @@
 <main>
   <div class="menu-card">
     <section class="profile-menu">
-      <button class="menu-btn active" data-section="aprobados" th:unless="${esAdmin}">Anuncios Publicados</button>
+      <button class="menu-btn" data-section="aprobados" th:unless="${esAdmin}">Anuncios Publicados</button>
       <button class="menu-btn" data-section="favoritos" th:unless="${esAdmin}">Favoritos</button>
       <button id="btn-notificaciones" class="menu-btn" data-section="notificaciones" th:unless="${esAdmin}">
         Notificaciones
@@ -52,12 +52,12 @@
         Peticiones
         <span class="badge" th:text="${#lists.size(pendientes)}" th:unless="${esAdmin}">0</span>
       </button>
-      <button class="menu-btn" data-section="ajustes" th:unless="${esAdmin}">Perfil de Usuario</button>
+      <button class="menu-btn active" data-section="ajustes">Perfil de Usuario</button>
     </section>
 
     <section class="profile-content" id="profile-content">
       <!-- Aquí irá el contenido dinámico según el menú -->
-      <div id="aprobados" class="content-section active" data-user-id="${usuario.id}">
+      <div id="aprobados" class="content-section" data-user-id="${usuario.id}">
         <h2>Anuncios Publicados</h2>
         <div id="anunciosPublicados"></div>
       </div>
@@ -105,7 +105,7 @@
         </div>
       </div>
 
-      <div id="ajustes" class="content-section">
+      <div id="ajustes" class="content-section active">
         <h2>Perfil de Usuario</h2>
 
         <div class="profile-photo-wrapper">
