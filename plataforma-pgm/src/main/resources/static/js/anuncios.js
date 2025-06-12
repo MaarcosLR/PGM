@@ -18,32 +18,39 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch('/categorias')
             .then(response => response.json())
             .then(categorias => {
-                filterDropdown.innerHTML = '';
+                const lista = document.getElementById("listaCategorias");
+                if (!lista) {
+                    console.error("No se encontró el contenedor de categorías (#listaCategorias)");
+                    return;
+                }
 
-                // Crear opción "Todas"
-                const labelAll = document.createElement("label");
-                labelAll.innerHTML = `
-                    <input type="checkbox" name="categoriaId" value="all" checked />
-                    Todas
-                `;
-                filterDropdown.appendChild(labelAll);
+                // Obtener los IDs ya presentes en el HTML para no duplicar
+                const idsExistentes = new Set(
+                    Array.from(lista.querySelectorAll('input[name="categoriaId"]'))
+                        .map(input => input.value)
+                );
 
-                // Agregar categorías dinámicas
+                // Añadir solo categorías que no estén ya en el HTML
                 categorias.forEach(cat => {
-                    const label = document.createElement("label");
-                    label.innerHTML = `
-                        <input type="checkbox" name="categoriaId" value="${cat.id}" />
-                        ${cat.nombre}
+                    if (!idsExistentes.has(String(cat.id))) {
+                        const li = document.createElement("li");
+                        li.innerHTML = `
+                        <label>
+                            <input type="checkbox" name="categoriaId" value="${cat.id}" />
+                            <span class="cat-item">${cat.nombre}</span>
+                        </label>
                     `;
-                    filterDropdown.appendChild(label);
+                        lista.appendChild(li);
+                    }
                 });
 
-                initFiltros();
+                initFiltros(); // para enlazar eventos a las nuevas categorías
             })
             .catch(err => {
                 console.error("Error al cargar categorías:", err);
             });
     }
+
 
     // Inicializa listeners y estados después de cargar categorías
     function initFiltros() {
@@ -51,19 +58,25 @@ document.addEventListener("DOMContentLoaded", () => {
         allCheckbox = filterDropdown.querySelector('input[name="categoriaId"][value="all"]');
 
         checkboxes.forEach(input => {
-            input.addEventListener("change", () => {
-                if (input.value === "all" && input.checked) {
-                    checkboxes.forEach(cb => {
-                        if (cb.value !== "all") cb.checked = false;
-                    });
-                } else if (input.value !== "all" && input.checked) {
-                    allCheckbox.checked = false;
-                }
+            // Evita añadir múltiples listeners
+            if (!input.dataset.listenerAttached) {
+                input.addEventListener("change", () => {
+                    if (input.value === "all" && input.checked) {
+                        checkboxes.forEach(cb => {
+                            if (cb.value !== "all") cb.checked = false;
+                        });
+                    } else if (input.value !== "all" && input.checked) {
+                        allCheckbox.checked = false;
+                    }
 
-                manageCheckboxes();
-                updateActiveFilters();
-                cargarAnuncios();
-            });
+                    manageCheckboxes();
+                    updateActiveFilters();
+                    cargarAnuncios();
+                });
+
+                // Marcar para no volver a enlazar
+                input.dataset.listenerAttached = "true";
+            }
         });
 
         manageCheckboxes();
@@ -137,16 +150,19 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const catMap = {};
-        checkboxes.forEach(cb => {
-            if (cb.value !== "all") catMap[cb.value] = cb.nextSibling.textContent.trim();
-        });
-
         categoriasSeleccionadas.forEach(id => {
             if (id === "all") return;
+
+            const input = filterDropdown.querySelector(`input[name="categoriaId"][value="${id}"]`);
+            if (!input) return;
+
+            // Obtener el texto del label asociado
+            const label = input.closest("label");
+            const nombreCategoria = label?.querySelector("span")?.textContent || label?.textContent.trim() || id;
+
             const tag = document.createElement("div");
             tag.className = "active-filter-tag";
-            tag.textContent = catMap[id] || id;
+            tag.textContent = nombreCategoria;
 
             const removeBtn = document.createElement("span");
             removeBtn.className = "remove-btn";
@@ -154,19 +170,17 @@ document.addEventListener("DOMContentLoaded", () => {
             removeBtn.title = "Quitar filtro";
 
             removeBtn.addEventListener("click", () => {
-                const input = filterDropdown.querySelector(`input[name="categoriaId"][value="${id}"]`);
-                if (input) {
-                    input.checked = false;
-                    manageCheckboxes();
-                    updateActiveFilters();
-                    cargarAnuncios();
-                }
+                input.checked = false;
+                manageCheckboxes();
+                updateActiveFilters();
+                cargarAnuncios();
             });
 
             tag.appendChild(removeBtn);
             activeFiltersContainer.appendChild(tag);
         });
     }
+
 
     // Maneja la lógica de selección "Todas" vs específicas
     function manageCheckboxes() {
