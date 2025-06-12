@@ -181,30 +181,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btnLogout').addEventListener('click', async (e) => {
+    document.getElementById('btnLogout').addEventListener('click', (e) => {
         e.preventDefault();
 
-        const confirmado = await mostrarConfirmacion('¿Estás seguro de que deseas cerrar sesión?');
-        if (!confirmado) return;
+        fetch('/logout', {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(async response => {
+                if (response.redirected) {
+                    await mostrarModal("Se ha cerrado su sesión")
+                    window.location.href = response.url;
 
-        try {
-            const response = await fetch('/logout', {
-                method: 'GET',
-                credentials: 'include'
+                } else {
+                    await mostrarModal("Se ha cerrado su sesión")
+                }
+            })
+            .catch(async error => {
+                await mostrarModal("Error al cerrar sesión:", error);
             });
-
-            if (response.redirected) {
-                await mostrarMensaje('Sesión cerrada correctamente.');
-                window.location.href = response.url;
-            } else {
-                await mostrarMensaje('Sesión cerrada correctamente.');
-            }
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-            await mostrarMensaje('Hubo un error al cerrar la sesión.');
-        }
     });
-
 
     // --------- Bloque de moderación robusto ---------
     try {
@@ -219,23 +215,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function agregarListenersModeracion() {
             document.querySelectorAll('.btn-aprobar').forEach(btn => {
-                btn.addEventListener('click', () => {
+                btn.addEventListener('click', async () => {
                     const id = btn.getAttribute('data-id');
-                    fetch(`/${id}/aprobar`, {
+                    await fetch(`/${id}/aprobar`, {
                         method: 'POST'
                     })
-                        .then(res => {
+                        .then(async res => {
                             if (res.ok) {
                                 btn.closest('.anuncio-card')?.remove();
                                 actualizarContadorRestar();
-                                mostrarModal('Anuncio aprobado correctamente');
+                                await mostrarModal('Anuncio aprobado correctamente');
                             } else {
-                                mostrarModal('Error al aprobar el anuncio');
+                                await mostrarModal('Error al aprobar el anuncio');
                             }
                         })
-                        .catch(err => {
+                        .catch(async err => {
                             console.error('Error al aprobar:', err);
-                            mostrarModal('Error al aprobar el anuncio');
+                            await mostrarModal('Error al aprobar el anuncio');
                         });
                 });
             });
@@ -243,33 +239,35 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.btn-rechazar').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.getAttribute('data-id');
-                    const motivo = await window.mostrarModalTexto();
 
-                    if (motivo === null) return;
+                    const motivo = await mostrarModal('Por favor, escribe el motivo del rechazo:', true);
+                    if (!motivo) {
+                        await mostrarModal('Debe ingresar un motivo para rechazar.');
+                        return;
+                    }
 
-                    fetch(`/${id}/rechazar`, {
+                    await fetch(`/${id}/rechazar`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ motivo })
+                        body: JSON.stringify({motivo})
                     })
                         .then(async res => {
                             if (res.ok) {
                                 btn.closest('.anuncio-card')?.remove();
                                 actualizarContadorRestar();
-                                await mostrarModal('Anuncio rechazado correctamente')
+                                await mostrarModal('Anuncio rechazado correctamente.');
                             } else {
                                 await mostrarModal('Error al rechazar el anuncio');
                             }
                         })
-                        .catch(err => {
+                        .catch(async err => {
                             console.error('Error al rechazar:', err);
-                            window.mostrarModal('Error al rechazar el anuncio');
+                            await mostrarModal('Error al rechazar el anuncio');
                         });
                 });
             });
-
         }
 
         agregarListenersModeracion();
