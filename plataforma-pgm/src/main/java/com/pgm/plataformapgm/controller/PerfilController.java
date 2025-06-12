@@ -123,18 +123,20 @@ public class PerfilController {
             return response;
         }
 
-        if (usuarioSesion.getFotoPerfil() == null || usuarioSesion.getFotoPerfil().isEmpty()) {
-            response.put("error", "No hay foto de perfil para eliminar");
-            return response;
+        try {
+            if (usuarioSesion.getFotoPerfil() != null && !usuarioSesion.getFotoPerfil().isEmpty()) {
+                cloudinaryService.eliminarImagen(usuarioSesion.getFotoPerfil());
+            }
+            usuarioSesion.setFotoPerfil(null);
+            usuarioService.save(usuarioSesion);
+            session.setAttribute("usuarioLogueado", usuarioSesion);
+
+            response.put("success", true);
+            response.put("mensaje", "Foto de perfil eliminada correctamente");
+        } catch (IOException e) {
+            response.put("error", "Error eliminando la foto: " + e.getMessage());
         }
-
-        // Nota: No se borra en Cloudinary aquí, solo se quita del usuario
-        usuarioSesion.setFotoPerfil(null);
-        usuarioService.save(usuarioSesion);
-        session.setAttribute("usuarioLogueado", usuarioSesion);
-
-        response.put("success", true);
-        response.put("mensaje", "Foto de perfil eliminada correctamente");
         return response;
     }
+
 }
