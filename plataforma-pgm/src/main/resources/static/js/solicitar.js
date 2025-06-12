@@ -1,6 +1,17 @@
 // ========================
 // 1) CONTADOR DE CARACTERES
 // ========================
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("solicitar-form");
+    const btn = document.getElementById("btnEnviar");
+
+    form.addEventListener("submit", function (e) {
+        // Deshabilita el botón para evitar múltiples envíos
+        btn.disabled = true;
+        btn.textContent = "Enviando..."; // Opcional: cambia el texto
+    });
+});
+
 const descripcion = document.getElementById("descripcion");
 const charCount   = document.getElementById("char-count");
 
