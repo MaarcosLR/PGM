@@ -13,7 +13,7 @@
     <nav class="nav-wrapper">
       <div class="nav-links">
         <a href="index.html">INICIO</a>
-        <a href="anuncios.html" class="indicator" th:unless="${esAdmin}">ANUNCIOS</a>
+        <a href="anuncios.html" class="indicator">ANUNCIOS</a>
       </div>
     </nav>
 
@@ -22,7 +22,7 @@
     </div>
 
       <div class="nav-link-solicitar">
-        <a href="solicitar.html">SOLICITAR</a>
+        <a href="solicitar.html" th:unless="${esAdmin}">SOLICITAR</a>
       </div>
 
     <a href="profile.html" class="profile">
