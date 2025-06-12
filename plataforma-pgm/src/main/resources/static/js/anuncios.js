@@ -8,16 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             anuncios.forEach(anuncio => {
                 const card = document.createElement('a');
-                card.classList.add('cardAd');
+                card.classList.add('tarjetaAnuncio');
                 card.href = `/anuncio/${anuncio.id}`;
                 card.innerHTML = `
-          <div class="imageAd">
+          <div class="imagenAnuncio">
             <img src="${anuncio.imagenes.length ? anuncio.imagenes[0].urlImagen : '/img/default.jpg'}" alt="Imagen anuncio" />
           </div>
-          <div class="footerAd">${anuncio.titulo}</div>
-          <div class="priceAd">${anuncio.precioFormateado}</div>
-          <div class="statusAd">${anuncio.estadoArticulo ? anuncio.estadoArticulo.nombre : 'Sin estado'}</div>
-          <div class="locationAd">${anuncio.ubicacion}</div>
+          <div class="pieAnuncio">${anuncio.titulo}</div>
+          <div class="precioAnuncio">${anuncio.precioFormateado}</div>
+          <div class="estadoAnuncio">${anuncio.estadoArticulo ? anuncio.estadoArticulo.nombre : 'Sin estado'}</div>
+          <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
         `;
                 container.appendChild(card);
             });
