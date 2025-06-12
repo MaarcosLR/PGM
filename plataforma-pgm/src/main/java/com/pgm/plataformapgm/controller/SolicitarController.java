@@ -17,7 +17,7 @@ public class SolicitarController {
         }
 
         if ("admin".equalsIgnoreCase(usuario.getTipoCuenta())) {
-            return "redirect:/anuncios.html"; // redirecciona si es admin
+            return "redirect:/inicio.html"; // redirecciona si es admin
         }
 
         return "solicitar";

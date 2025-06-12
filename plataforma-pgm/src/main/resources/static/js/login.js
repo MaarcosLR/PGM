@@ -23,7 +23,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             mensajeElem.style.color = '#0079a6';
             mensajeElem.textContent = result.message || 'Inicio de sesión exitoso';
             // Redirigir tras 1.5s
-            setTimeout(() => window.location.href = '/anuncios.html', 500);
+            setTimeout(() => window.location.href = '/index.html', 500);
         } else {
             mensajeElem.style.color = 'red';
             mensajeElem.textContent = result.message || 'Error al iniciar sesión';
