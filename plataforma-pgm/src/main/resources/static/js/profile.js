@@ -193,11 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = response.url;
                     await mostrarModal("Se ha cerrado su sesión")
                 } else {
-                    console.log("Sesión cerrada");
-                }
+                    await mostrarModal("Se ha cerrado su sesión")                }
             })
-            .catch(error => {
-                console.error("Error al cerrar sesión:", error);
+            .catch(async error => {
+                await mostrarModal("Error al cerrar sesión:", error);
             });
     });
 
