@@ -685,6 +685,23 @@ h2 {
    =============================== */
 @media (max-width: 767px) {
 
+    /* Ajustar imagenes del collage en peticiones */
+    .imagenes-collage {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .img-grid {
+        grid-template-columns: repeat(3, 1fr); /* mantén 3 o ajusta a 2 */
+        gap: 4px;
+    }
+
+    .img-thumb {
+        height: 60px; /* reducir un poco la altura */
+        border-radius: 3px;
+    }
+
+
     h2 {
         margin-top: 20px;
     }
