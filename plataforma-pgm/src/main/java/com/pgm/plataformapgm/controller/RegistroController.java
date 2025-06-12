@@ -5,7 +5,6 @@ import com.pgm.plataformapgm.service.EmailService;
 import com.pgm.plataformapgm.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -19,6 +18,11 @@ public class RegistroController {
     public RegistroController(UsuarioService usuarioService, EmailService emailService) {
         this.usuarioService = usuarioService;
         this.emailService = emailService;
+    }
+
+    @GetMapping("/register.html")
+    public String mostrarFormularioRegistro() {
+        return "register";
     }
 
     @PostMapping(value = "/register", consumes = "application/json", produces = "application/json")

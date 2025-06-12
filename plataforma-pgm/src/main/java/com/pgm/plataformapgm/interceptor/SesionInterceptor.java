@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.interceptor;
 
+import com.pgm.plataformapgm.model.Usuario;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,6 +15,15 @@ public class SesionInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession(false);
         String uri = request.getRequestURI();
+
+        if (uri.startsWith("/solicitar") || uri.startsWith("/crearAnuncios")) {
+            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+            if (usuario != null && "admin".equalsIgnoreCase(usuario.getTipoCuenta())) {
+                response.sendRedirect("/anuncios.html");
+                return false;
+            }
+        }
+
 
         // Permitir acceso a recursos estáticos (css, js, imágenes)
         if (uri.startsWith("/css/") || uri.startsWith("/js/") || uri.startsWith("/img/")) {

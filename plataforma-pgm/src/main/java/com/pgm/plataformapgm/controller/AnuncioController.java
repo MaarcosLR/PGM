@@ -115,6 +115,10 @@ public class AnuncioController {
             return ResponseEntity.status(401).body("Usuario no autenticado");
         }
 
+        if ("admin".equalsIgnoreCase(usuario.getTipoCuenta())) {
+            return ResponseEntity.status(403).body("Los administradores no pueden crear anuncios");
+        }
+
         try {
             Anuncio anuncio = new Anuncio();
             anuncio.setTitulo(titulo);
