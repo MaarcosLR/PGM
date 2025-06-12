@@ -1,57 +1,36 @@
-const modalMessage = document.getElementById('modal-message');
-const modalOverlay = document.getElementById('modal-overlay');
-const modalCloseBtn = document.getElementById('modal-close-btn');
+fetch('/components/modal.html')
+    .then(res => res.text())
+    .then(html => {
+        document.body.insertAdjacentHTML('beforeend', html);
 
-function mostrarModal(mensaje, conInput = false) {
-    return new Promise((resolve) => {
-        modalMessage.innerHTML = ''; // Clear before inserting
+        const modalOverlay = document.getElementById('info-modal-overlay');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
 
-        if (conInput) {
-            const msg = document.createElement('p');
-            msg.textContent = mensaje;
+        function mostrarModal(mensaje) {
+            return new Promise((resolve) => {
+                modalMessage.textContent = mensaje;
+                modalOverlay.classList.remove('hidden');
 
-            const input = document.createElement('textarea');
-            input.id = 'modal-textarea';
-            input.placeholder = 'Escribe aquí...';
-            input.classList.add('modal-textarea');
-
-            const confirmBtn = document.createElement('button');
-            confirmBtn.textContent = 'Confirmar';
-            confirmBtn.classList.add('modal-confirm-btn');
-
-            modalMessage.appendChild(msg);
-            modalMessage.appendChild(input);
-            modalMessage.appendChild(confirmBtn);
-
-            confirmBtn.addEventListener('click', () => {
-                const value = input.value.trim();
-                if (value) {
-                    cerrar();
-                    resolve(value);
-                } else {
-                    alert('Debe ingresar un motivo.');
+                function cerrar() {
+                    modalOverlay.classList.add('hidden');
+                    modalCloseBtn.removeEventListener('click', cerrar);
+                    modalOverlay.removeEventListener('click', overlayClick);
+                    resolve();  // Resolvemos la promesa cuando se cierre
                 }
+
+                function overlayClick(e) {
+                    if (e.target === modalOverlay) {
+                        cerrar();
+                    }
+                }
+
+                modalCloseBtn.addEventListener('click', cerrar);
+                modalOverlay.addEventListener('click', overlayClick);
             });
-        } else {
-            modalMessage.textContent = mensaje;
         }
 
-        modalOverlay.classList.remove('hidden');
-
-        function cerrar() {
-            modalOverlay.classList.add('hidden');
-            modalCloseBtn.removeEventListener('click', cerrar);
-            modalOverlay.removeEventListener('click', overlayClick);
-        }
-
-        function overlayClick(e) {
-            if (e.target === modalOverlay) {
-                cerrar();
-                resolve(null);
-            }
-        }
-
-        modalCloseBtn.addEventListener('click', cerrar);
-        modalOverlay.addEventListener('click', overlayClick);
-    });
-}
+        // Hacemos global la función para que pueda usarse con await
+        window.mostrarModal = mostrarModal;
+    })
+    .catch(err => console.error('Error cargando modal:', err));
