@@ -1,5 +1,6 @@
 package com.pgm.plataformapgm.controller;
 
+import com.pgm.plataformapgm.DTO.AnuncioDTO;
 import com.pgm.plataformapgm.model.Anuncio;
 import com.pgm.plataformapgm.service.AnuncioService;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +28,15 @@ public class MostrarAnunciosController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<Anuncio>> buscarAnuncios(
+    public ResponseEntity<List<AnuncioDTO>> buscarAnuncios(
             @RequestParam(required = false) String busqueda,
             @RequestParam(required = false) List<String> categorias,
             @RequestParam(required = false) String orden,
             @RequestParam(required = false, defaultValue = "EUR") String moneda // Por defecto
     ) {
         List<Anuncio> anuncios = anuncioService.buscarAnuncios(busqueda, categorias, orden, moneda);
-        return ResponseEntity.ok(anuncios);
+        List<AnuncioDTO> anunciosDTO = anuncios.stream().map(AnuncioDTO::new).toList();
+        return ResponseEntity.ok(anunciosDTO);
     }
 
 }
