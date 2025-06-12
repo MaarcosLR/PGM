@@ -3,13 +3,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnFiltro = document.getElementById("btnFiltro");
     const filterDropdown = document.getElementById("filterDropdown");
     const activeFiltersContainer = document.getElementById("activeFilters");
-    const checkboxes = filterDropdown.querySelectorAll('input[name="categoriaId"]');
-    const allCheckbox = filterDropdown.querySelector('input[name="categoriaId"][value="all"]');
     const btnCerrarFiltro = document.getElementById("btnCerrarFiltro");
     const btnBorrarFiltros = document.getElementById("btnBorrarFiltros");
     const searchForm = document.getElementById("searchForm");
     const searchInput = searchForm.querySelector('input[name="busqueda"]');
     const ordenRadios = searchForm.querySelectorAll('input[name="orden"]');
+
+    const categoriasContainer = filterDropdown.querySelector('.filtro-categorias ul');
+
+    // Variables que se actualizarán tras cargar categorías
+    let checkboxes = filterDropdown.querySelectorAll('input[name="categoriaId"]');
+    let allCheckbox = filterDropdown.querySelector('input[name="categoriaId"][value="all"]');
 
     function getSelectedOrden() {
         const selected = Array.from(ordenRadios).find(r => r.checked);
@@ -29,14 +33,14 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.add('tarjetaAnuncio');
             card.href = `/anuncio/${anuncio.id}`;
             card.innerHTML = `
-        <div class="imagenAnuncio">
-          <img src="${anuncio.imagenPrincipalUrl || '/img/default.jpg'}" alt="Imagen anuncio" />
-        </div>
-        <div class="pieAnuncio">${anuncio.titulo}</div>
-        <div class="precioAnuncio">${anuncio.precioFormateado}</div>
-        <div class="estadoAnuncio">${anuncio.estadoArticulo?.nombre || 'Sin estado'}</div>
-        <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
-      `;
+                <div class="imagenAnuncio">
+                  <img src="${anuncio.imagenPrincipalUrl || '/img/default.jpg'}" alt="Imagen anuncio" />
+                </div>
+                <div class="pieAnuncio">${anuncio.titulo}</div>
+                <div class="precioAnuncio">${anuncio.precioFormateado}</div>
+                <div class="estadoAnuncio">${anuncio.estadoArticulo?.nombre || 'Sin estado'}</div>
+                <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
+            `;
             container.appendChild(card);
         });
     }
@@ -50,14 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const orden = getSelectedOrden();
         const moneda = "EUR";
 
-        // Determinar si hay filtros
         const tieneFiltros = busqueda || categoriasSeleccionadas.length > 0 || orden;
 
         let url = '';
         let params = new URLSearchParams();
 
         if (tieneFiltros) {
-            // Endpoint /buscar con params
             if (busqueda) params.append('busqueda', busqueda);
             categoriasSeleccionadas.forEach(cat => params.append('categorias', cat));
             if (orden) params.append('orden', orden);
@@ -65,7 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             url = `/api/anuncios/buscar?${params.toString()}`;
         } else {
-            // Endpoint para cargar todos sin filtros
             url = '/api/anuncios/mostrarAnuncios';
         }
 
@@ -129,21 +130,57 @@ document.addEventListener("DOMContentLoaded", () => {
         allCheckbox.checked = checked.length === 0;
     }
 
-    checkboxes.forEach(input => {
-        input.addEventListener("change", () => {
-            if (input.value === "all" && input.checked) {
-                checkboxes.forEach(cb => {
-                    if (cb.value !== "all") cb.checked = false;
-                });
-            } else if (input.value !== "all" && input.checked) {
-                allCheckbox.checked = false;
-            }
+    // Esta función enlaza los eventos change a todos los checkboxes
+    function inicializarCheckboxes() {
+        checkboxes.forEach(input => {
+            input.addEventListener("change", () => {
+                if (input.value === "all" && input.checked) {
+                    checkboxes.forEach(cb => {
+                        if (cb.value !== "all") cb.checked = false;
+                    });
+                } else if (input.value !== "all" && input.checked) {
+                    allCheckbox.checked = false;
+                }
 
-            manageCheckboxes();
-            updateActiveFilters();
-            cargarAnuncios();
+                manageCheckboxes();
+                updateActiveFilters();
+                cargarAnuncios();
+            });
         });
-    });
+    }
+
+    // Cargar categorías desde backend y generar checkbox dinámicamente
+    function cargarCategorias() {
+        fetch('/categorias')
+            .then(res => res.json())
+            .then(categorias => {
+                // Limpiar los <li> menos el primero ("Todas las Categorías")
+                while (categoriasContainer.children.length > 1) {
+                    categoriasContainer.removeChild(categoriasContainer.lastChild);
+                }
+
+                categorias.forEach(cat => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <label>
+                            <input type="checkbox" name="categoriaId" value="${cat.id}" />
+                            <span class="cat-item">${cat.nombre}</span>
+                        </label>
+                    `;
+                    categoriasContainer.appendChild(li);
+                });
+
+                // Actualizar variables globales y enlazar eventos
+                checkboxes = filterDropdown.querySelectorAll('input[name="categoriaId"]');
+                allCheckbox = filterDropdown.querySelector('input[name="categoriaId"][value="all"]');
+                inicializarCheckboxes();
+                manageCheckboxes();
+                updateActiveFilters();
+            })
+            .catch(err => {
+                console.error('Error al cargar categorías:', err);
+            });
+    }
 
     btnBorrarFiltros.addEventListener("click", () => {
         checkboxes.forEach(cb => cb.checked = cb.value === "all");
@@ -162,8 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnFiltro.addEventListener("click", () => filterDropdown.classList.toggle("open"));
     btnCerrarFiltro.addEventListener("click", () => filterDropdown.classList.remove("open"));
 
-    // Inicializar
-    manageCheckboxes();
-    updateActiveFilters();
+    // Cargar categorías y luego anuncios e inicializar controles
+    cargarCategorias();
     cargarAnuncios();
 });
