@@ -1,57 +1,115 @@
 const modalMessage = document.getElementById('modal-message');
 const modalOverlay = document.getElementById('modal-overlay');
-const modalCloseBtn = document.getElementById('modal-close-btn');
+const btnConfirm = document.getElementById('modal-confirm-btn');
+const btnCancel = document.getElementById('modal-cancel-btn');
+const btnSend = document.getElementById('modal-send-btn');
+const btnCloseSimple = document.getElementById('modal-close-btn-simple');
 
-function mostrarModal(mensaje, conInput = false) {
+function mostrarModal(mensaje, options = {}) {
     return new Promise((resolve) => {
-        modalMessage.innerHTML = ''; // Clear before inserting
+        // Reset modal content and hide all buttons
+        modalMessage.innerHTML = '';
+        [btnConfirm, btnCancel, btnSend, btnCloseSimple].forEach(btn => btn.classList.add('hidden'));
 
-        if (conInput) {
+        // Remove previous event listeners by cloning buttons (simple trick)
+        const cleanBtn = (btn) => {
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            return newBtn;
+        };
+
+        // Re-assign cleaned buttons with no listeners
+        const btnConfirmClean = cleanBtn(btnConfirm);
+        const btnCancelClean = cleanBtn(btnCancel);
+        const btnSendClean = cleanBtn(btnSend);
+        const btnCloseSimpleClean = cleanBtn(btnCloseSimple);
+
+        modalOverlay.classList.remove('hidden');
+
+        // Función para cerrar modal y limpiar
+        function cerrar() {
+            modalOverlay.classList.add('hidden');
+        }
+
+        // Caso con textarea + botón enviar
+        if (options.conInput) {
             const msg = document.createElement('p');
             msg.textContent = mensaje;
-
-            const input = document.createElement('textarea');
-            input.id = 'modal-textarea';
-            input.placeholder = 'Escribe aquí...';
-            input.classList.add('modal-textarea');
-
-            const confirmBtn = document.createElement('button');
-            confirmBtn.textContent = 'Confirmar';
-            confirmBtn.classList.add('modal-confirm-btn');
+            const textarea = document.createElement('textarea');
+            textarea.id = 'modal-textarea';
+            textarea.placeholder = options.placeholder || 'Escribe aquí...';
+            textarea.classList.add('modal-textarea');
 
             modalMessage.appendChild(msg);
-            modalMessage.appendChild(input);
-            modalMessage.appendChild(confirmBtn);
+            modalMessage.appendChild(textarea);
 
-            confirmBtn.addEventListener('click', () => {
-                const value = input.value.trim();
+            btnSendClean.classList.remove('hidden');
+            btnSendClean.onclick = () => {
+                const value = textarea.value.trim();
                 if (value) {
                     cerrar();
                     resolve(value);
                 } else {
                     alert('Debe ingresar un motivo.');
                 }
-            });
-        } else {
-            modalMessage.textContent = mensaje;
-        }
+            };
 
-        modalOverlay.classList.remove('hidden');
-
-        function cerrar() {
-            modalOverlay.classList.add('hidden');
-            modalCloseBtn.removeEventListener('click', cerrar);
-            modalOverlay.removeEventListener('click', overlayClick);
-        }
-
-        function overlayClick(e) {
-            if (e.target === modalOverlay) {
+            btnCancelClean.classList.remove('hidden');
+            btnCancelClean.onclick = () => {
                 cerrar();
                 resolve(null);
-            }
+            };
+
+            // Cerrar con clic fuera del modal
+            modalOverlay.onclick = (e) => {
+                if (e.target === modalOverlay) {
+                    cerrar();
+                    resolve(null);
+                }
+            };
+
+            return; // termina aquí el flujo con textarea
         }
 
-        modalCloseBtn.addEventListener('click', cerrar);
-        modalOverlay.addEventListener('click', overlayClick);
+        // Caso confirm (Sí/No)
+        if (options.type === 'confirm') {
+            modalMessage.textContent = mensaje;
+            btnConfirmClean.classList.remove('hidden');
+            btnCancelClean.classList.remove('hidden');
+
+            btnConfirmClean.onclick = () => {
+                cerrar();
+                resolve(true);
+            };
+
+            btnCancelClean.onclick = () => {
+                cerrar();
+                resolve(false);
+            };
+
+            modalOverlay.onclick = (e) => {
+                if (e.target === modalOverlay) {
+                    cerrar();
+                    resolve(false);
+                }
+            };
+
+            return;
+        }
+
+        // Caso mensaje simple con botón cerrar
+        modalMessage.textContent = mensaje;
+        btnCloseSimpleClean.classList.remove('hidden');
+        btnCloseSimpleClean.onclick = () => {
+            cerrar();
+            resolve();
+        };
+
+        modalOverlay.onclick = (e) => {
+            if (e.target === modalOverlay) {
+                cerrar();
+                resolve();
+            }
+        };
     });
 }
