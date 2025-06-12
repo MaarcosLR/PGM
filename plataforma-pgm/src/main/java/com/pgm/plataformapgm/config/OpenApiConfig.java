@@ -7,13 +7,11 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
-
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("PGM-API")
+                .info(new Info().title("PGM API")
                         .version("1.0")
-                        .description("Documentación de la API"));
+                        .description("Documentación de la API de PGM"));
     }
 }
-
