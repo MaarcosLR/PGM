@@ -26,8 +26,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/login",
                         "/upload",
                         "/categorias",
-                        "/solicitar"
+                        "/solicitar",
+                        "/api/anuncios/mostrarAnuncios"
                 );
-
     }
 }

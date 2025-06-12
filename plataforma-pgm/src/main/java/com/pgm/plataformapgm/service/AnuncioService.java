@@ -36,8 +36,8 @@ public class AnuncioService {
     }
 
 
-    public List<Anuncio> obtenerTodosLosAnuncios() {
-        return anuncioRepository.findAll();
+    public List<Anuncio> obtenerTodosLosAnunciosAprobados() {
+        return anuncioRepository.findByEstado("aprobado");
     }
 
 

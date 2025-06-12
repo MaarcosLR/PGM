@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    fetch('/api/anuncios')
+    fetch('/api/anuncios/mostrarAnuncios')
         .then(response => response.json())
         .then(anuncios => {
             const container = document.querySelector('.grid.ads');

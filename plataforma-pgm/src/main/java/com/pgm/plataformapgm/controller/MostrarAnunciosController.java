@@ -18,10 +18,10 @@ public class MostrarAnunciosController {
         this.anuncioService = anuncioService;
     }
 
-    @GetMapping
+    @GetMapping("/mostrarAnuncios")
     public List<Anuncio> listarAnuncios() {
         // Devuelve lista de anuncios como JSON
-        return anuncioService.obtenerTodosLosAnuncios();
+        return anuncioService.obtenerTodosLosAnunciosAprobados();
     }
 }
 
