@@ -87,8 +87,16 @@
         TÉRMINOS Y CONDICIONES
     </a>
 </footer>
-
+<script>
+    fetch('/components/modal.html')
+        .then(res => res.text())
+        .then(html => {
+            document.body.insertAdjacentHTML('beforeend', html);
+            const script = document.createElement('script');
+            script.src = '/js/modal-loader.js';
+            document.body.appendChild(script);
+        });
+</script>
 <script src="/js/detalle-anuncio.js"></script>
-<script src ="/js/modal-loader.js"></script>
 </body>
 </html>
