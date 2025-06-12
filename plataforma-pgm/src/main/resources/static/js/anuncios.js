@@ -1,28 +1,85 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const container = document.querySelector('.grid.ads');
     const btnFiltro = document.getElementById("btnFiltro");
     const filterDropdown = document.getElementById("filterDropdown");
     const activeFiltersContainer = document.getElementById("activeFilters");
-    const checkboxes = filterDropdown.querySelectorAll('input[name="categoriaId"]');
-    const allCheckbox = filterDropdown.querySelector('input[name="categoriaId"][value="all"]');
     const btnCerrarFiltro = document.getElementById("btnCerrarFiltro");
     const btnBorrarFiltros = document.getElementById("btnBorrarFiltros");
     const searchForm = document.getElementById("searchForm");
     const searchInput = searchForm.querySelector('input[name="busqueda"]');
     const ordenRadios = searchForm.querySelectorAll('input[name="orden"]');
-    const moneda = 'EUR'; // Cambia si necesitas otra moneda o dinámica
+    const moneda = 'EUR';
 
-    // Carga anuncios con filtros
+    let checkboxes = [];
+    let allCheckbox;
+
+    // Carga dinámicamente las categorías desde el backend
+    function cargarCategorias() {
+        fetch('/categorias')
+            .then(response => response.json())
+            .then(categorias => {
+                filterDropdown.innerHTML = '';
+
+                // Crear opción "Todas"
+                const labelAll = document.createElement("label");
+                labelAll.innerHTML = `
+                    <input type="checkbox" name="categoriaId" value="all" checked />
+                    Todas
+                `;
+                filterDropdown.appendChild(labelAll);
+
+                // Agregar categorías dinámicas
+                categorias.forEach(cat => {
+                    const label = document.createElement("label");
+                    label.innerHTML = `
+                        <input type="checkbox" name="categoriaId" value="${cat.id}" />
+                        ${cat.nombre}
+                    `;
+                    filterDropdown.appendChild(label);
+                });
+
+                initFiltros();
+            })
+            .catch(err => {
+                console.error("Error al cargar categorías:", err);
+            });
+    }
+
+    // Inicializa listeners y estados después de cargar categorías
+    function initFiltros() {
+        checkboxes = filterDropdown.querySelectorAll('input[name="categoriaId"]');
+        allCheckbox = filterDropdown.querySelector('input[name="categoriaId"][value="all"]');
+
+        checkboxes.forEach(input => {
+            input.addEventListener("change", () => {
+                if (input.value === "all" && input.checked) {
+                    checkboxes.forEach(cb => {
+                        if (cb.value !== "all") cb.checked = false;
+                    });
+                } else if (input.value !== "all" && input.checked) {
+                    allCheckbox.checked = false;
+                }
+
+                manageCheckboxes();
+                updateActiveFilters();
+                cargarAnuncios();
+            });
+        });
+
+        manageCheckboxes();
+        updateActiveFilters();
+        cargarAnuncios();
+    }
+
+    // Carga anuncios desde el backend con filtros
     function cargarAnuncios() {
-        // Obtener categorías seleccionadas excepto "all"
         const categoriasSeleccionadas = Array.from(checkboxes)
             .filter(cb => cb.checked && cb.value !== "all")
             .map(cb => cb.value);
 
         const busqueda = searchInput.value.trim();
-
         let orden = null;
+
         ordenRadios.forEach(radio => {
             if (radio.checked) orden = radio.value;
         });
@@ -31,10 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (busqueda) params.append('busqueda', busqueda);
         if (categoriasSeleccionadas.length > 0) {
-            categoriasSeleccionadas.forEach(cat => params.append('categoriasId', cat));
+            categoriasSeleccionadas.forEach(cat => params.append('categoriaId', cat));
         } else {
-            // Si no hay categorías seleccionadas, enviamos 'all' para que backend entienda que es todo
-            params.append('categorias', 'all');
+            params.append('categoriaId', 'all');
         }
         if (orden) params.append('orden', orden);
         if (moneda) params.append('moneda', moneda);
@@ -65,17 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
     }
 
-    // Toggle panel filtros
-    btnFiltro.addEventListener("click", () => {
-        filterDropdown.classList.toggle("open");
-    });
-
-    // Cerrar panel filtros
-    btnCerrarFiltro.addEventListener("click", () => {
-        filterDropdown.classList.remove("open");
-    });
-
-    // Actualiza etiquetas de filtros activos
+    // Muestra los filtros activos como etiquetas
     function updateActiveFilters() {
         activeFiltersContainer.innerHTML = "";
 
@@ -93,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const catMap = {};
         checkboxes.forEach(cb => {
-            if (cb.value !== "all") catMap[cb.value] = cb.nextElementSibling.textContent;
+            if (cb.value !== "all") catMap[cb.value] = cb.nextSibling.textContent.trim();
         });
 
         categoriasSeleccionadas.forEach(id => {
@@ -122,48 +168,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Gestiona selección/deselección de checkboxes categorías
+    // Maneja la lógica de selección "Todas" vs específicas
     function manageCheckboxes() {
         const checked = Array.from(checkboxes).filter(cb => cb.checked && cb.value !== "all");
-
-        if (checked.length > 0) {
-            allCheckbox.checked = false;
-        } else {
-            allCheckbox.checked = true;
-        }
+        allCheckbox.checked = checked.length === 0;
     }
 
-    // Escucha cambios en checkboxes y aplica lógica + recarga anuncios
-    checkboxes.forEach(input => {
-        input.addEventListener("change", () => {
-            if (input.value === "all" && input.checked) {
-                checkboxes.forEach(cb => {
-                    if (cb.value !== "all") cb.checked = false;
-                });
-            } else if (input.value !== "all" && input.checked) {
-                allCheckbox.checked = false;
-            }
-
-            manageCheckboxes();
-            updateActiveFilters();
-            cargarAnuncios();
-        });
+    // Panel de filtros: abrir/cerrar
+    btnFiltro.addEventListener("click", () => {
+        filterDropdown.classList.toggle("open");
     });
 
-    // Escuchar submit del formulario de búsqueda para cargar anuncios sin recargar
+    btnCerrarFiltro.addEventListener("click", () => {
+        filterDropdown.classList.remove("open");
+    });
+
+    // Buscar sin recargar
     searchForm.addEventListener("submit", e => {
         e.preventDefault();
         cargarAnuncios();
     });
 
-    // Escuchar cambios de orden para recargar anuncios
+    // Orden
     ordenRadios.forEach(radio => {
         radio.addEventListener("change", () => {
             cargarAnuncios();
         });
     });
 
-    // Botón borrar filtros
+    // Borrar filtros
     btnBorrarFiltros.addEventListener("click", () => {
         checkboxes.forEach(cb => {
             cb.checked = (cb.value === "all");
@@ -178,8 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
         cargarAnuncios();
     });
 
-    // Inicialización
-    manageCheckboxes();
-    updateActiveFilters();
-    cargarAnuncios();
+    // Inicialización general
+    cargarCategorias();
 });
