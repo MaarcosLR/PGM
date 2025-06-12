@@ -181,26 +181,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('btnLogout').addEventListener('click', (e) => {
+    document.getElementById('btnLogout').addEventListener('click', async (e) => {
         e.preventDefault();
 
-        fetch('/logout', {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then(async response => {
-                if (response.redirected) {
-                    await mostrarModal("Se ha cerrado su sesión")
-                    window.location.href = response.url;
+        // Pedir confirmación con modal tipo confirm
+        const confirmado = await mostrarModal('¿Estás seguro que quieres cerrar sesión?', { type: 'confirm' });
 
-                } else {
-                    await mostrarModal("Se ha cerrado su sesión")
-                }
-            })
-            .catch(async error => {
-                await mostrarModal("Error al cerrar sesión:", error);
+        if (!confirmado) {
+            // Usuario canceló, no hacemos nada más
+            return;
+        }
+
+        try {
+            const response = await fetch('/logout', {
+                method: 'GET',
+                credentials: 'include'
             });
+
+            if (response.redirected) {
+                await mostrarModal("Se ha cerrado su sesión");
+                window.location.href = response.url;
+            } else {
+                await mostrarModal("Se ha cerrado su sesión");
+            }
+        } catch (error) {
+            await mostrarModal("Error al cerrar sesión: " + error.message);
+        }
     });
+
 
     // --------- Bloque de moderación robusto ---------
     try {
