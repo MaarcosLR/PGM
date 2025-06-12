@@ -4,8 +4,8 @@ import com.pgm.plataformapgm.model.Anuncio;
 import com.pgm.plataformapgm.service.AnuncioService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -19,9 +19,16 @@ public class MostrarAnunciosController {
     }
 
     @GetMapping("/mostrarAnuncios")
-    public List<Anuncio> listarAnuncios() {
-        // Devuelve lista de anuncios como JSON
-        return anuncioService.obtenerTodosLosAnunciosAprobados();
+    public List<Anuncio> listarAnuncios(
+            @RequestParam(value = "busqueda", required = false) String busqueda,
+            @RequestParam(value = "categoriaId", required = false) List<String> categoriaIds,
+            @RequestParam(value = "orden", required = false) String orden,
+            @RequestParam(value = "moneda", required = false, defaultValue = "EUR") String moneda
+    ) {
+        // Si no se envía ninguna categoría, asumir "all"
+        if (categoriaIds == null || categoriaIds.isEmpty()) {
+            categoriaIds = List.of("all");
+        }
+        return anuncioService.buscarAnuncios(busqueda, categoriaIds, orden, moneda);
     }
 }
-
