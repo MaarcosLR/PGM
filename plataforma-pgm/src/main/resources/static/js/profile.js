@@ -162,22 +162,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const resp =  fetch('/api/usuario/actualizar', {
+            const resp = await fetch('/api/usuario/actualizar', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include'
             });
-            const data =  resp.json();
 
+            const data = await resp.json();
             if (data.error) {
-                 await mostrarModalMensaje('Error: ' + data.error);
+                await mostrarModalMensaje('Error: ' + data.error);
             } else {
-                 await mostrarModalMensaje('Datos guardados correctamente');
+                await mostrarModalMensaje('Datos guardados correctamente');
                 window.usuarioLogueado = data.usuario;
                 location.reload();  // Recarga la página tras cerrar el modal
             }
         } catch (err) {
-             await mostrarModalMensaje('Error guardando datos: ' + err.message);
+            await mostrarModalMensaje('Error guardando datos: ' + err.message);
         }
     });
 

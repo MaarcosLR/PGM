@@ -15,15 +15,26 @@
     max-width: 400px;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    color: black; /* Texto negro */
 }
 
 .modal-mensaje-content p {
     margin-bottom: 20px;
     font-size: 1.1em;
+    color: black; /* Texto negro */
 }
 
 .modal-mensaje-content button {
     padding: 8px 16px;
     font-size: 1em;
     cursor: pointer;
+    background-color: #007BFF; /* azul bootstrap */
+    color: white;
+    border: none;
+    border-radius: 12px; /* bordes redondeados */
+    transition: background-color 0.3s ease;
+}
+
+.modal-mensaje-content button:hover {
+    background-color: #0056b3; /* azul más oscuro al pasar el mouse */
 }
