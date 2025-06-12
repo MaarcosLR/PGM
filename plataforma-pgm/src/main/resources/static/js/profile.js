@@ -1,37 +1,52 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --------- Manejo menú secciones ---------
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await cargarModal(); // Asegura que el modal esté listo
+        console.log('✅ Modal cargado correctamente');
+
+        inicializarUI();               // Elementos visuales y eventos generales
+        agregarListenersModeracion();  // Botones de aprobar/rechazar
+        agregarListenerFormularioUsuario(); // Formulario usuario
+        agregarListenerLogout();       // Logout
+        inicializarCarruselYNotificaciones(); // Lo que me diste ahora (carrusel, notificaciones, anuncios, favoritos)
+    } catch (error) {
+        console.error('❌ Error inicializando la app:', error);
+    }
+});
+
+// Funciones auxiliares
+
+function inicializarUI() {
+    // Menú de secciones
     const buttons = document.querySelectorAll('.menu-btn');
     const sections = document.querySelectorAll('.content-section');
-
     buttons.forEach(btn => {
         btn.addEventListener('click', () => {
             buttons.forEach(b => b.classList.remove('active'));
             sections.forEach(s => s.classList.remove('active'));
-
             btn.classList.add('active');
             document.getElementById(btn.dataset.section).classList.add('active');
+
+            if (btn.dataset.section === 'favoritos') {
+                cargarFavoritos();
+            }
         });
     });
 
-    // --------- Variables para foto perfil ---------
+    // Imagen de perfil
     const profilePhotoWrapper = document.querySelector('.profile-photo-wrapper');
-    const photoOverlay = document.getElementById('photo-overlay');
     const photoMenu = document.getElementById('photo-menu');
     const fileInput = document.getElementById('foto');
     const profilePhoto = document.getElementById('profile-photo');
     const defaultPhoto = '/img/icoperfil.png';
 
-    // Asignar imagen por defecto si no hay foto de perfil
     if (!profilePhoto.getAttribute('src') || profilePhoto.src.endsWith('/null')) {
         profilePhoto.src = defaultPhoto;
     }
 
-    // Mostrar/ocultar menú contextual al hacer clic en la imagen
     profilePhotoWrapper.addEventListener('click', e => {
         e.stopPropagation();
         const isVisible = photoMenu.style.display === 'block';
         photoMenu.style.display = isVisible ? 'none' : 'block';
-
         if (!isVisible) {
             const rect = profilePhotoWrapper.getBoundingClientRect();
             photoMenu.style.top = `${rect.bottom + window.scrollY + 5}px`;
@@ -39,61 +54,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Ocultar menú si haces clic fuera
-    document.addEventListener('click', () => {
-        photoMenu.style.display = 'none';
-    });
+    document.addEventListener('click', () => photoMenu.style.display = 'none');
 
-    // Cambiar foto de perfil: previsualizar imagen
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = e => {
-                profilePhoto.src = e.target.result;
-            };
+            reader.onload = e => profilePhoto.src = e.target.result;
             reader.readAsDataURL(file);
         }
     });
 
-    // Botón para cambiar la foto
     document.getElementById('change-photo-btn').addEventListener('click', () => {
         fileInput.click();
         photoMenu.style.display = 'none';
     });
 
-    const removePhotoBtn = document.getElementById('remove-photo-btn');
-
-    // Botón para quitar la foto (restablecer a por defecto)
-    removePhotoBtn.addEventListener('click', () => {
+    document.getElementById('remove-photo-btn').addEventListener('click', () => {
         fetch('/api/usuario/foto/eliminar', {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' }
         })
-            .then(response => response.json())
-            .then(data => {
+            .then(res => res.json())
+            .then(async data => {
                 if (data.success) {
-                    // Cambiar la foto al icono por defecto
                     profilePhoto.src = defaultPhoto;
-
-                    // Opcional: limpiar input file si tienes uno para subir foto
-                    const fileInput = document.getElementById('foto-input');
-                    if (fileInput) fileInput.value = '';
-
-                    mostrarModal('Foto de perfil eliminada correctamente');
-                } else if (data.error) {
-                    mostrarModal('Error: ' + data.error);
+                    document.getElementById('foto').value = '';
+                    await window.mostrarMensaje('✅ Foto de perfil eliminada correctamente');
+                } else {
+                    await window.mostrarMensaje('❌ Error: ' + data.error);
                 }
             })
-            .catch(error => {
+            .catch(async error => {
                 console.error('Error eliminando la foto:', error);
-                mostrarModal('Error eliminando la foto de perfil.');
+                await window.mostrarMensaje('❌ Error eliminando la foto de perfil.');
             });
     });
 
-    // --------- País y ciudades ---------
+    // Cargar datos usuario
     const ciudadesPorPais = {
         "España": [
             "Selecciona una ciudad...", "Madrid", "Barcelona", "Valencia", "Sevilla", "Zaragoza",
@@ -122,18 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    paisSelect.addEventListener('change', (e) => {
-        llenarCiudades(e.target.value);
-    });
+    paisSelect.addEventListener('change', e => llenarCiudades(e.target.value));
 
-    // --------- Cargar datos usuario desde backend simulados ---------
     const usuario = window.usuarioLogueado || {
-        nombre: '',
-        correoElectronico: '',
-        telefono: '',
-        pais: '',
-        ciudad: '',
-        fotoPerfil: '',
+        nombre: '', correoElectronico: '', telefono: '', pais: '', ciudad: '', fotoPerfil: ''
     };
 
     document.getElementById('nombre').value = usuario.nombre || '';
@@ -142,22 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
     paisSelect.value = usuario.pais || '';
     llenarCiudades(usuario.pais);
     ciudadSelect.value = usuario.ciudad || '';
+    profilePhoto.src = usuario.fotoPerfil || defaultPhoto;
+}
 
-    if (usuario.fotoPerfil) {
-        profilePhoto.src = usuario.fotoPerfil;
-    } else {
-        profilePhoto.src = defaultPhoto;
-    }
+function agregarListenerFormularioUsuario() {
+    const form = document.getElementById('user-settings-form');
+    if (!form) return;
 
-// --------- Envío formulario ---------
-    document.getElementById('user-settings-form').addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async e => {
         e.preventDefault();
 
-        const form = e.target;
         const formData = new FormData(form);
-
         const fileInput = document.getElementById('foto');
-        if (fileInput.files.length > 0) {
+        if (fileInput?.files.length > 0) {
             formData.append('foto', fileInput.files[0]);
         }
 
@@ -167,24 +154,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData,
                 credentials: 'include'
             });
-            const data = await resp.json();
 
+            const data = await resp.json();
             if (data.error) {
-                await mostrarModal('Error: ' + data.error);
+                await window.mostrarMensaje('❌ Error: ' + data.error);
             } else {
-                await mostrarModal('Datos guardados correctamente');
+                await window.mostrarMensaje('✅ Datos guardados correctamente');
                 window.usuarioLogueado = data.usuario;
-                location.reload();  // Recarga la página tras cerrar el modal
+                location.reload();
             }
         } catch (err) {
-            await mostrarModal('Error guardando datos: ' + err.message);
+            await window.mostrarMensaje('❌ Error guardando datos: ' + err.message);
         }
     });
+}
 
-    document.getElementById('btnLogout').addEventListener('click', async (e) => {
+function agregarListenerLogout() {
+    const btnLogout = document.getElementById('btnLogout');
+    if (!btnLogout) return;
+
+    btnLogout.addEventListener('click', async e => {
         e.preventDefault();
 
-        const confirmado = await mostrarConfirmacion('¿Estás seguro de que deseas cerrar sesión?');
+        const confirmado = await window.mostrarConfirmacion('¿Estás seguro de que deseas cerrar sesión?');
         if (!confirmado) return;
 
         try {
@@ -193,90 +185,82 @@ document.addEventListener('DOMContentLoaded', () => {
                 credentials: 'include'
             });
 
+            await window.mostrarMensaje('✅ Sesión cerrada correctamente');
             if (response.redirected) {
-                await mostrarMensaje('Sesión cerrada correctamente.');
                 window.location.href = response.url;
-            } else {
-                await mostrarMensaje('Sesión cerrada correctamente.');
             }
         } catch (error) {
             console.error('Error al cerrar sesión:', error);
-            await mostrarMensaje('Hubo un error al cerrar la sesión.');
+            await window.mostrarMensaje('❌ Hubo un error al cerrar la sesión.');
         }
     });
+}
 
+function agregarListenersModeracion() {
+    const actualizarContadorRestar = () => {
+        const badge = document.querySelector('#btn-peticiones .badge');
+        if (badge) {
+            let count = parseInt(badge.textContent, 10);
+            badge.textContent = Math.max(0, isNaN(count) ? 0 : count - 1);
+        }
+    };
 
-    // --------- Bloque de moderación robusto ---------
-    try {
-        function actualizarContadorRestar() {
-            const badge = document.querySelector('#btn-peticiones .badge');
-            if (badge) {
-                let count = parseInt(badge.textContent, 10);
-                count = isNaN(count) ? 0 : count;
-                badge.textContent = Math.max(0, count - 1);
+    document.querySelectorAll('.btn-aprobar').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            const confirmar = await window.mostrarConfirmacion('¿Estás seguro de aprobar este anuncio?');
+            if (!confirmar) return;
+
+            try {
+                const res = await fetch(`/${id}/aprobar`, { method: 'POST' });
+                if (res.ok) {
+                    btn.closest('.anuncio-card')?.remove();
+                    actualizarContadorRestar();
+                    await window.mostrarMensaje('✅ Anuncio aprobado correctamente');
+                } else {
+                    await window.mostrarMensaje('❌ Error al aprobar el anuncio');
+                }
+            } catch (err) {
+                console.error('Error al aprobar:', err);
+                await window.mostrarMensaje('❌ Error al aprobar el anuncio');
             }
-        }
+        });
+    });
 
-        function agregarListenersModeracion() {
-            document.querySelectorAll('.btn-aprobar').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.getAttribute('data-id');
-                    fetch(`/${id}/aprobar`, {
-                        method: 'POST'
-                    })
-                        .then(res => {
-                            if (res.ok) {
-                                btn.closest('.anuncio-card')?.remove();
-                                actualizarContadorRestar();
-                                mostrarModal('Anuncio aprobado correctamente');
-                            } else {
-                                mostrarModal('Error al aprobar el anuncio');
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Error al aprobar:', err);
-                            mostrarModal('Error al aprobar el anuncio');
-                        });
+    document.querySelectorAll('.btn-rechazar').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            const motivo = await window.pedirMotivo('Indica el motivo del rechazo:');
+            if (motivo === null) return;
+
+            try {
+                const res = await fetch(`/${id}/rechazar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ motivo })
                 });
-            });
 
-            document.querySelectorAll('.btn-rechazar').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const id = btn.getAttribute('data-id');
-                    const motivo = await window.mostrarModalTexto();
+                if (res.ok) {
+                    btn.closest('.anuncio-card')?.remove();
+                    actualizarContadorRestar();
+                    await window.mostrarMensaje('✅ Anuncio rechazado correctamente');
+                } else {
+                    await window.mostrarMensaje('❌ Error al rechazar el anuncio');
+                }
+            } catch (err) {
+                console.error('Error al rechazar:', err);
+                await window.mostrarMensaje('❌ Error al rechazar el anuncio');
+            }
+        });
+    });
+}
 
-                    if (motivo === null) return;
+// --------------------------------------------------
+// Esta función contiene toda la parte que me diste
+// Carrusel de imágenes, notificaciones, favoritos y anuncios publicados
+// --------------------------------------------------
 
-                    fetch(`/${id}/rechazar`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ motivo })
-                    })
-                        .then(async res => {
-                            if (res.ok) {
-                                btn.closest('.anuncio-card')?.remove();
-                                actualizarContadorRestar();
-                                await mostrarModal('Anuncio rechazado correctamente')
-                            } else {
-                                await mostrarModal('Error al rechazar el anuncio');
-                            }
-                        })
-                        .catch(err => {
-                            console.error('Error al rechazar:', err);
-                            window.mostrarModal('Error al rechazar el anuncio');
-                        });
-                });
-            });
-
-        }
-
-        agregarListenersModeracion();
-    } catch (err) {
-        console.error('Error en sistema de moderación:', err);
-    }
-
+function inicializarCarruselYNotificaciones() {
     // --------- Carrusel de imágenes ---------
     const modal = document.getElementById('modalCarrusel');
     const modalImg = document.getElementById('imagen-modal');
@@ -378,107 +362,120 @@ document.addEventListener('DOMContentLoaded', () => {
         modalImg.style.transform = 'scale(1)';
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        const notificacionesDiv = document.getElementById('notificaciones');
-        const usuarioId = notificacionesDiv.getAttribute('data-user-id');
-        const lista = document.getElementById('lista-notificaciones');
-        const badge = document.querySelector('#btn-notificaciones .badge');
+    // --------------------------------------------------
+    // Notificaciones
+    // --------------------------------------------------
 
-        if (!usuarioId) {
-            console.error('No se encontró el ID del usuario.');
-            lista.innerHTML = '<li>Error: usuario no identificado.</li>';
-            return;
-        }
+    const notificacionesDiv = document.getElementById('notificaciones');
+    if (!notificacionesDiv) {
+        console.warn('No se encontró el div de notificaciones');
+        return;
+    }
+    const usuarioId = notificacionesDiv.getAttribute('data-user-id');
+    const lista = document.getElementById('lista-notificaciones');
+    const badge = document.querySelector('#btn-notificaciones .badge');
 
-        function actualizarBadge(notificaciones) {
-            const noLeidasCount = notificaciones.filter(n => !n.leida).length;
-            badge.textContent = noLeidasCount;
-            badge.style.display = noLeidasCount > 0 ? 'inline-block' : 'none';
-        }
+    if (!usuarioId) {
+        console.error('No se encontró el ID del usuario.');
+        if (lista) lista.innerHTML = '<li>Error: usuario no identificado.</li>';
+        return;
+    }
 
-        function marcarComoLeida(noti, item, notificaciones) {
-            fetch(`/notificaciones/${noti.id}/leer`, {
-                method: 'POST'
-            })
-                .then(res => {
-                    if (res.ok) {
-                        noti.leida = true;
-                        item.classList.remove('noti-no-leida');
-                        const botonLeer = item.querySelector('.btn-marcar-leida');
-                        if (botonLeer) botonLeer.style.display = 'none';
-                        actualizarBadge(notificaciones);
-                    } else {
-                        mostrarModal('Error al marcar la notificación como leída');
-                    }
-                })
-                .catch(err => {
-                    console.error('Error al marcar notificación leída:', err);
-                    mostrarModal('Error al marcar la notificación como leída');
-                });
-        }
+    function actualizarBadge(notificaciones) {
+        if (!badge) return;
+        const noLeidasCount = notificaciones.filter(n => !n.leida).length;
+        badge.textContent = noLeidasCount;
+        badge.style.display = noLeidasCount > 0 ? 'inline-block' : 'none';
+    }
 
-        fetch(`/notificaciones/usuario/${usuarioId}`)
+    function mostrarModal(mensaje) {
+        alert(mensaje);
+    }
+
+    function marcarComoLeida(noti, item, notificaciones) {
+        fetch(`/notificaciones/${noti.id}/leer`, {
+            method: 'POST'
+        })
             .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
-            })
-            .then(notificaciones => {
-                lista.innerHTML = '';
-
-                if (!Array.isArray(notificaciones) || notificaciones.length === 0) {
-                    lista.innerHTML = '<li>No hay notificaciones.</li>';
-                    actualizarBadge([]);
-                    return;
+                if (res.ok) {
+                    noti.leida = true;
+                    item.classList.remove('noti-no-leida');
+                    const botonLeer = item.querySelector('.btn-marcar-leida');
+                    if (botonLeer) botonLeer.style.display = 'none';
+                    actualizarBadge(notificaciones);
+                } else {
+                    mostrarModal('Error al marcar la notificación como leída');
                 }
-
-                actualizarBadge(notificaciones);
-
-                notificaciones.forEach(noti => {
-                    const item = document.createElement('li');
-                    item.classList.add('notificacion-item');
-                    if (!noti.leida) {
-                        item.classList.add('noti-no-leida');
-                    }
-
-                    // Detectar tipo de notificación para aplicar color
-                    let color = '#333';
-                    if (noti.tipo === 'APROBACION') color = 'green';
-                    if (noti.tipo === 'RECHAZO') color = 'red';
-
-                    const contenido = `
-                        <div class="noti-header">
-                            <strong>${new Date(noti.fechaEnvio).toLocaleString()}</strong>
-                        </div>
-                        <div class="noti-body">
-                            <span style="color:${color};">${noti.contenido}</span>
-                            ${!noti.leida ? `<button class="btn-marcar-leida" title="Marcar como leída">👁️</button>` : ''}
-                        </div>
-                    `;
-
-                    item.innerHTML = contenido;
-
-                    if (!noti.leida) {
-                        const btnLeer = item.querySelector('.btn-marcar-leida');
-                        btnLeer.addEventListener('click', () => marcarComoLeida(noti, item, notificaciones));
-                    }
-
-                    lista.appendChild(item);
-                });
             })
             .catch(err => {
-                console.error('Error al cargar notificaciones:', err);
-                lista.innerHTML = '<li>Error al cargar notificaciones.</li>';
-                actualizarBadge([]);
+                console.error('Error al marcar notificación leída:', err);
+                mostrarModal('Error al marcar la notificación como leída');
             });
-    });
+    }
 
+    fetch(`/notificaciones/usuario/${usuarioId}`)
+        .then(res => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        })
+        .then(notificaciones => {
+            lista.innerHTML = '';
 
+            if (!Array.isArray(notificaciones) || notificaciones.length === 0) {
+                lista.innerHTML = '<li>No hay notificaciones.</li>';
+                actualizarBadge([]);
+                return;
+            }
+
+            actualizarBadge(notificaciones);
+
+            notificaciones.forEach(noti => {
+                const item = document.createElement('li');
+                item.classList.add('notificacion-item');
+                if (!noti.leida) {
+                    item.classList.add('noti-no-leida');
+                }
+
+                // Detectar tipo de notificación para aplicar color
+                let color = '#333';
+                if (noti.tipo === 'APROBACION') color = 'green';
+                if (noti.tipo === 'RECHAZO') color = 'red';
+
+                const contenido = `
+                    <div class="noti-header">
+                        <strong>${new Date(noti.fechaEnvio).toLocaleString()}</strong>
+                    </div>
+                    <div class="noti-body">
+                        <span style="color:${color};">${noti.contenido}</span>
+                        ${!noti.leida ? `<button class="btn-marcar-leida" title="Marcar como leída">👁️</button>` : ''}
+                    </div>
+                `;
+
+                item.innerHTML = contenido;
+
+                if (!noti.leida) {
+                    const btnLeer = item.querySelector('.btn-marcar-leida');
+                    btnLeer.addEventListener('click', () => marcarComoLeida(noti, item, notificaciones));
+                }
+
+                lista.appendChild(item);
+            });
+        })
+        .catch(err => {
+            console.error('Error al cargar notificaciones:', err);
+            lista.innerHTML = '<li>Error al cargar notificaciones.</li>';
+            actualizarBadge([]);
+        });
+
+    // --------------------------------------------------
+    // Favoritos
+    // --------------------------------------------------
 
     function cargarFavoritos() {
         const listaFavoritos = document.getElementById('lista-favoritos');
         listaFavoritos.innerHTML = '<p>Cargando favoritos...</p>';
 
-        fetch('/api/favoritos', { credentials: 'include' })
+        fetch('/api/favoritos', {credentials: 'include'})
             .then(resp => resp.json())
             .then(data => {
                 if (data.error) {
@@ -497,7 +494,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const anuncioDiv = document.createElement('div');
                     anuncioDiv.classList.add('anuncio-card');
 
-                    // Construimos el contenido dentro de un <a> con display:flex para que se mantenga el layout
                     anuncioDiv.innerHTML = `
                     <a href="/anuncio/${anuncio.id}" class="anuncio-link" style="display: flex; text-decoration: none; color: inherit;">
                         <div class="imagenes-collage" style="flex-shrink: 0;">
@@ -523,26 +519,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            buttons.forEach(b => b.classList.remove('active'));
-            sections.forEach(s => s.classList.remove('active'));
-
-            btn.classList.add('active');
-            const section = document.getElementById(btn.dataset.section);
-            section.classList.add('active');
-
-            if (btn.dataset.section === 'favoritos') {
-                cargarFavoritos();
-            }
-        });
-    });
+    // --------------------------------------------------
+    // Anuncios publicados
+    // --------------------------------------------------
 
     function cargarAnunciosPublicados() {
         const contenedor = document.getElementById('anunciosPublicados');
         contenedor.innerHTML = '<p>Cargando anuncios publicados...</p>';
 
-        fetch('/anuncios/aprobados/usuario', { credentials: 'include' })
+        fetch('/anuncios/aprobados/usuario', {credentials: 'include'})
             .then(response => {
                 if (!response.ok) throw new Error('Error al cargar anuncios');
                 return response.json();
@@ -584,7 +569,29 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // --------------------------------------------------
+    // Navegación entre secciones
+    // --------------------------------------------------
+
+    const buttons = document.querySelectorAll('#menu-secciones button');
+    const sections = document.querySelectorAll('section');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+
+            btn.classList.add('active');
+            const section = document.getElementById(btn.dataset.section);
+            section.classList.add('active');
+
+            if (btn.dataset.section === 'favoritos') {
+                cargarFavoritos();
+            }
+        });
+    });
+
+    // Cargar anuncios publicados inicialmente
     cargarAnunciosPublicados();
 
-
-});
+}

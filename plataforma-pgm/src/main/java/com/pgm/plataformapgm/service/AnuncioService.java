@@ -35,11 +35,9 @@ public class AnuncioService {
         return anuncioRepository.findByEstado(estado);
     }
 
-
     public List<Anuncio> obtenerTodosLosAnunciosAprobados() {
         return anuncioRepository.findByEstado("aprobado");
     }
-
 
     public List<Anuncio> buscarAnuncios(String texto, List<String> categorias, String orden, String moneda) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -96,7 +94,6 @@ public class AnuncioService {
         return anuncios;
     }
 
-
     // Método para cargar todos
     public List<Anuncio> findAll() {
         return anuncioRepository.findAll();
@@ -111,7 +108,6 @@ public class AnuncioService {
             return "Sin precio";
         }
         DecimalFormat df;
-
         // Comprobar si tiene decimales (parte decimal > 0)
         if (precio.stripTrailingZeros().scale() <= 0) {
             df = new DecimalFormat("#");
