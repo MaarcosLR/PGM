@@ -1,6 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    const container = document.querySelector('.grid.ads');
+    fetch('/api/anuncios/mostrarAnuncios')
+        .then(response => response.json())
+        .then(anuncios => {
+            const container = document.querySelector('.grid.ads');
+            container.innerHTML = ''; // Limpia contenido
+
+            anuncios.forEach(anuncio => {
+                const card = document.createElement('a');
+                card.classList.add('tarjetaAnuncio');
+                card.href = `/anuncio/${anuncio.id}`;
+                card.innerHTML = `
+          <div class="imagenAnuncio">
+            <img src="${anuncio.imagenes.length ? anuncio.imagenes[0].urlImagen : '/img/default.jpg'}" alt="Imagen anuncio" />
+          </div>
+          <div class="pieAnuncio">${anuncio.titulo}</div>
+          <div class="precioAnuncio">${anuncio.precioFormateado}</div>
+          <div class="estadoAnuncio">${anuncio.estadoArticulo ? anuncio.estadoArticulo.nombre : 'Sin estado'}</div>
+          <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
+        `;
+                container.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar anuncios:', error);
+        });
+
     const btnFiltro = document.getElementById("btnFiltro");
     const filterDropdown = document.getElementById("filterDropdown");
     const activeFiltersContainer = document.getElementById("activeFilters");
@@ -12,73 +37,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = searchForm.querySelector('input[name="busqueda"]');
     const ordenRadios = searchForm.querySelectorAll('input[name="orden"]');
 
-    function getSelectedOrden() {
-        const selected = Array.from(ordenRadios).find(r => r.checked);
-        return selected ? selected.value : null;
-    }
+    // Toggle panel filtros
+    btnFiltro.addEventListener("click", () => {
+        filterDropdown.classList.toggle("open");
+    });
 
-    function cargarAnuncios() {
-        const categoriasSeleccionadas = Array.from(checkboxes)
-            .filter(cb => cb.checked && cb.value !== "all")
-            .map(cb => cb.value);
+    // Cerrar panel filtros
+    btnCerrarFiltro.addEventListener("click", () => {
+        filterDropdown.classList.remove("open");
+    });
 
-        const busqueda = searchInput?.value?.trim();
-        const orden = getSelectedOrden();
-        const moneda = "EUR"; // puedes obtenerla dinámicamente si lo necesitas
-
-        const params = new URLSearchParams();
-
-        if (categoriasSeleccionadas.length) {
-            categoriasSeleccionadas.forEach(cat => params.append('categorias', cat));
-        }
-
-        if (busqueda) params.append('busqueda', busqueda);
-        if (orden) params.append('orden', orden);
-        params.append('moneda', moneda);
-
-        fetch(`/api/anuncios/buscar?${params.toString()}`)
-            .then(response => response.json())
-            .then(anuncios => {
-                container.innerHTML = '';
-
-                if (!anuncios.length) {
-                    container.innerHTML = '<p>No se encontraron anuncios.</p>';
-                    return;
-                }
-
-                anuncios.forEach(anuncio => {
-                    const card = document.createElement('a');
-                    card.classList.add('tarjetaAnuncio');
-                    card.href = `/anuncio/${anuncio.id}`;
-                    card.innerHTML = `
-                        <div class="imagenAnuncio">
-                            <img src="${anuncio.imagenes?.[0]?.urlImagen || '/img/default.jpg'}" alt="Imagen anuncio" />
-                        </div>
-                        <div class="pieAnuncio">${anuncio.titulo}</div>
-                        <div class="precioAnuncio">${anuncio.precioFormateado}</div>
-                        <div class="estadoAnuncio">${anuncio.estadoArticulo?.nombre || 'Sin estado'}</div>
-                        <div class="localizacionAnuncio">${anuncio.ubicacion}</div>
-                    `;
-                    container.appendChild(card);
-                });
-            })
-            .catch(error => {
-                console.error('Error al cargar anuncios:', error);
-                container.innerHTML = '<p>Error al cargar los anuncios.</p>';
-            });
-    }
-
+    // Actualiza etiquetas de filtros activos
     function updateActiveFilters() {
         activeFiltersContainer.innerHTML = "";
 
-        const seleccionadas = Array.from(checkboxes)
-            .filter(cb => cb.checked && cb.value !== "all")
-            .map(cb => cb.value);
+        const categoriasSeleccionadas = activeFiltersContainer.getAttribute("data-categorias");
+        let categoriasIds = [];
 
-        if (!seleccionadas.length) {
+        if (categoriasSeleccionadas && categoriasSeleccionadas !== "null") {
+            try {
+                categoriasIds = JSON.parse(categoriasSeleccionadas.replace(/'/g, '"'));
+            } catch {
+                categoriasIds = categoriasSeleccionadas.split(",");
+            }
+        }
+
+        // Si no hay categorías seleccionadas o está "all", mostramos "Todas las categorías"
+        if (!categoriasIds.length || categoriasIds.includes("all")) {
             const tag = document.createElement("div");
             tag.className = "active-filter-tag";
-            tag.textContent = "Todas las categorías";
+            tag.textContent = "Todas las categorías"; // Mostrar texto legible
+            // No pongo botón de eliminar porque quitar "Todas las categorías" no tiene sentido (es el estado base)
             activeFiltersContainer.appendChild(tag);
             return;
         }
@@ -88,7 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (cb.value !== "all") catMap[cb.value] = cb.nextElementSibling.textContent;
         });
 
-        seleccionadas.forEach(id => {
+        categoriasIds.forEach(id => {
+            if (id === "all") return; // Ya gestionado arriba
             const tag = document.createElement("div");
             tag.className = "active-filter-tag";
             tag.textContent = catMap[id] || id;
@@ -97,13 +87,13 @@ document.addEventListener("DOMContentLoaded", () => {
             removeBtn.className = "remove-btn";
             removeBtn.textContent = "×";
             removeBtn.title = "Quitar filtro";
+
             removeBtn.addEventListener("click", () => {
                 const input = filterDropdown.querySelector(`input[name="categoriaId"][value="${id}"]`);
                 if (input) {
                     input.checked = false;
                     manageCheckboxes();
                     updateActiveFilters();
-                    cargarAnuncios();
                 }
             });
 
@@ -112,11 +102,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Gestiona selección/deselección de checkboxes categorías
     function manageCheckboxes() {
         const checked = Array.from(checkboxes).filter(cb => cb.checked && cb.value !== "all");
-        allCheckbox.checked = checked.length === 0;
+
+        if (checked.length > 0) {
+            allCheckbox.checked = false;
+        } else {
+            allCheckbox.checked = true;
+        }
     }
 
+    // Escucha cambios en checkboxes y aplica lógica
     checkboxes.forEach(input => {
         input.addEventListener("change", () => {
             if (input.value === "all" && input.checked) {
@@ -129,29 +126,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
             manageCheckboxes();
             updateActiveFilters();
-            cargarAnuncios();
         });
     });
 
+    // Botón borrar filtros
     btnBorrarFiltros.addEventListener("click", () => {
-        checkboxes.forEach(cb => cb.checked = cb.value === "all");
+        // Seleccionar solo "all"
+        checkboxes.forEach(cb => {
+            cb.checked = (cb.value === "all");
+        });
+
+        // Vaciar búsqueda
         if (searchInput) searchInput.value = "";
-        ordenRadios.forEach(r => r.checked = false);
+
+        // Desmarcar orden
+        ordenRadios.forEach(radio => {
+            radio.checked = false;
+        });
+
+        // Actualizar checkboxes y etiquetas
         manageCheckboxes();
         updateActiveFilters();
-        cargarAnuncios();
+
+        // No enviamos el formulario para evitar recarga
     });
 
-    searchForm.addEventListener("submit", e => {
-        e.preventDefault();
-        cargarAnuncios();
-    });
-
-    btnFiltro.addEventListener("click", () => filterDropdown.classList.toggle("open"));
-    btnCerrarFiltro.addEventListener("click", () => filterDropdown.classList.remove("open"));
-
-    // Inicializar
+    // Inicializar estado al cargar página
     manageCheckboxes();
     updateActiveFilters();
-    cargarAnuncios();
 });
+

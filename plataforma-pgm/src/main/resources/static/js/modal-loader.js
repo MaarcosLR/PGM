@@ -1,108 +1,36 @@
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        await cargarModal(); // Espera a que se cargue el modal
-        console.log('✅ Modal cargado correctamente');
-    } catch (error) {
-        console.error('❌ Error cargando el modal:', error);
-    }
-});
+fetch('/components/modal.html')
+    .then(res => res.text())
+    .then(html => {
+        document.body.insertAdjacentHTML('beforeend', html);
 
-async function cargarModal() {
-    const resp = await fetch('/components/modal.html'); // Asegúrate que la ruta sea correcta
-    if (!resp.ok) throw new Error('No se pudo cargar el modal HTML');
+        const modalOverlay = document.getElementById('info-modal-overlay');
+        const modalMessage = document.getElementById('modal-message');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
 
-    const html = await resp.text();
-    document.body.insertAdjacentHTML('beforeend', html);
+        function mostrarModal(mensaje) {
+            return new Promise((resolve) => {
+                modalMessage.textContent = mensaje;
+                modalOverlay.classList.remove('hidden');
 
-    // Obtener referencias a los elementos del modal
-    window.modalOverlay = document.getElementById('general-modal-overlay');
-    window.modalMessage = document.getElementById('modal-message');
-    window.textareaLabel = document.getElementById('modal-textarea-label');
-    window.modalTextarea = document.getElementById('modal-textarea');
-
-    window.btnConfirm = document.getElementById('modal-confirm-btn');
-    window.btnCancel = document.getElementById('modal-cancel-btn');
-    window.btnSend = document.getElementById('modal-send-btn');
-    window.btnCloseSimple = document.getElementById('modal-close-btn-simple');
-
-    // Funciones del modal
-    function resetModal() {
-        window.modalMessage.textContent = '';
-        window.modalTextarea.value = '';
-        window.textareaLabel.classList.add('hidden');
-        window.modalTextarea.classList.add('hidden');
-
-        window.btnConfirm.classList.add('hidden');
-        window.btnCancel.classList.add('hidden');
-        window.btnSend.classList.add('hidden');
-        window.btnCloseSimple.classList.add('hidden');
-    }
-
-    function showModal() {
-        window.modalOverlay.classList.remove('hidden');
-    }
-
-    function hideModal() {
-        window.modalOverlay.classList.add('hidden');
-        resetModal();
-    }
-
-    window.mostrarMensaje = function(mensaje) {
-        return new Promise(resolve => {
-            resetModal();
-            window.modalMessage.textContent = mensaje;
-            window.btnCloseSimple.classList.remove('hidden');
-            showModal();
-
-            window.btnCloseSimple.onclick = () => {
-                hideModal();
-                resolve();
-            };
-        });
-    };
-
-    window.mostrarConfirmacion = function(mensaje) {
-        return new Promise(resolve => {
-            resetModal();
-            window.modalMessage.textContent = mensaje;
-            window.btnConfirm.classList.remove('hidden');
-            window.btnCancel.classList.remove('hidden');
-            showModal();
-
-            window.btnConfirm.onclick = () => {
-                hideModal();
-                resolve(true);
-            };
-            window.btnCancel.onclick = () => {
-                hideModal();
-                resolve(false);
-            };
-        });
-    };
-
-    window.pedirMotivo = function(mensaje) {
-        return new Promise(resolve => {
-            resetModal();
-            window.modalMessage.textContent = mensaje;
-            window.textareaLabel.classList.remove('hidden');
-            window.modalTextarea.classList.remove('hidden');
-            window.btnSend.classList.remove('hidden');
-            window.btnCancel.classList.remove('hidden');
-            showModal();
-
-            window.btnSend.onclick = () => {
-                const texto = window.modalTextarea.value.trim();
-                if (texto === '') {
-                    alert('El motivo no puede estar vacío.');
-                    return;
+                function cerrar() {
+                    modalOverlay.classList.add('hidden');
+                    modalCloseBtn.removeEventListener('click', cerrar);
+                    modalOverlay.removeEventListener('click', overlayClick);
+                    resolve();  // Resolvemos la promesa cuando se cierre
                 }
-                hideModal();
-                resolve(texto);
-            };
-            window.btnCancel.onclick = () => {
-                hideModal();
-                resolve(null);
-            };
-        });
-    };
-}
+
+                function overlayClick(e) {
+                    if (e.target === modalOverlay) {
+                        cerrar();
+                    }
+                }
+
+                modalCloseBtn.addEventListener('click', cerrar);
+                modalOverlay.addEventListener('click', overlayClick);
+            });
+        }
+
+        // Hacemos global la función para que pueda usarse con await
+        window.mostrarModal = mostrarModal;
+    })
+    .catch(err => console.error('Error cargando modal:', err));
