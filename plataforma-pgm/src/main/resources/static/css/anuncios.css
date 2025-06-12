@@ -1,45 +1,39 @@
-/* CONTENEDOR PRINCIPAL DEL MAIN */
 main {
-  padding: 2rem;
-  position: relative;
+    padding: 2rem;
+    position: relative;
 }
+  .search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    margin-bottom: 2rem;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  .search-bar input {
+    width: 60%;
+    padding: .75rem 1rem;
+    border: 4px solid #0094ca;
+    border-radius: 2rem;
+    outline: none;
+    font-size: 1rem;
+  }
+  .search-bar button {
+    background: #FFF;
+    border: 4px solid #0094ca;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
 
-/* BARRA DE BÚSQUEDA */
-.search-bar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1200px;
-}
-
-.search-bar input {
-  width: 60%;
-  padding: 0.75rem 1rem;
-  border: 4px solid #0094ca;
-  border-radius: 2rem;
-  outline: none;
-  font-size: 1rem;
-}
-
-.search-bar button {
-  background: #fff;
-  border: 4px solid #0094ca;
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-/* GRID DE ANUNCIOS: columnas flexibles */
+/* GRID DE ANUNCIOS: 4 columnas */
 .grid.ads {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* columnas flexibles */
@@ -48,76 +42,72 @@ main {
   margin: 0 auto 2rem auto;
   padding-bottom: 1rem;
   max-width: 1200px;
-  width: 90%;
+  width: 90%; /* o 80%, según prefieras */
+
+  /* Evitar corte y scroll */
   max-height: none;
-  overflow: visible; /* para que hover no quede cortado */
+  overflow: visible;
 }
 
-/* TARJETA DE ANUNCIO */
-.tarjetaAnuncios {
+
+
+.tarjetaAnuncio {
+  width: 220px;
   background: #f9f9f9;
   border-radius: 1rem;
   overflow: hidden;
-  display: flex;
   flex-direction: column;
+  display: flex;
   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
   text-decoration: none;
   color: inherit;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-  width: 100%; /* ocupa todo el espacio del grid cell */
-  max-width: 220px; /* limita ancho máximo */
-  margin: 0 auto; /* centra si el grid cell es más ancho */
+  position: relative; /* para que los hijos con z-index relativos se posicionen */
 }
 
-.tarjetaAnuncios:hover {
+.tarjetaAnuncio:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0,0,0,0.25);
   z-index: 10;
   cursor: pointer;
 }
 
-/* IMAGEN DEL ANUNCIO */
-.tarjetaAnuncios .imagenAnuncio {
+/* IMAGEN */
+.tarjetaAnuncio .imagenAnuncio {
   flex: 1 0 auto;
   overflow: hidden;
-  position: relative;
-  z-index: 1;
-  max-height: 180px;
-  width: 100%; /* que ocupe todo el ancho */
+  position: relative;     /* para que z-index funcione */
+  z-index: 1;             /* imagen detrás */
+  max-height: 180px;      /* limita altura para no tapar texto */
 }
 
-.tarjetaAnuncios .imagenAnuncio img {
+.tarjetaAnuncio .imagenAnuncio img {
   width: 100%;
-  height: 180px; /* para que ocupe el máximo definido */
+  height: 100%;
   object-fit: cover;
   display: block;
-  position: relative;
+  position: relative;    /* para z-index */
   z-index: 1;
 }
 
-/* INFORMACIÓN DEL ANUNCIO DEBAJO */
-.tarjetaAnuncios .estadoAnuncio,
-.tarjetaAnuncios .pieAnuncio,
-.tarjetaAnuncios .precioAnuncio,
-.tarjetaAnuncios .localizacionAnuncio {
+/* INFORMACIÓN DEBAJO */
+.tarjetaAnuncio .estadoAnuncio,
+.tarjetaAnuncio .pieAnuncio,
+.tarjetaAnuncio .precioAnuncio,
+.tarjetaAnuncio .localizacionAnuncio {
   gap: 5px;
   font-size: 0.9rem;
   color: black;
   padding-left: 10px;
   background-color: #fff;
-  position: relative;
-  z-index: 10;
-  margin: 0;
-  line-height: 1.3;
+  position: relative;  /* para z-index */
+  z-index: 10;         /* textos delante */
 }
 
-.tarjetaAnuncios .pieAnuncio {
+.tarjetaAnuncio .pieAnuncio {
   font-weight: bold;
   border-top: 1px solid #ccc;
   box-sizing: border-box;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
 }
 
 /* PANEL DESPLEGABLE DE FILTROS */
@@ -128,7 +118,7 @@ main {
   margin: 1rem auto;
   background: white;
   border: 1px solid #ccc;
-  padding: 0 1rem;
+  padding: 0 1rem; /* solo horizontal cerrado */
   border-radius: 5px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.15);
   color: black;
@@ -137,8 +127,9 @@ main {
   margin-bottom: 2rem;
 }
 
+/* Al abrir */
 .filter-dropdown.open {
-  max-height: 1000px;
+  max-height: 1000px; /* aumenta el límite para evitar cortes */
   padding: 1rem;
 }
 
@@ -211,7 +202,7 @@ main {
   font-size: 1rem;
 }
 
-.btn-aplicar-filtro {
+.btn-aplicar-filtro{
   background-color: #0094ca;
   border: none;
   padding: 0.5rem 1rem;
@@ -226,7 +217,7 @@ main {
   background-color: #00beff;
 }
 
-.btn-borrar-filtro {
+.btn-borrar-filtro{
   background-color: #c10404;
   border: none;
   padding: 0.5rem 1rem;
@@ -258,7 +249,7 @@ main {
 
 .filter-buttons {
   display: flex;
-  gap: 1rem;
+  gap: 1rem; /* separación entre botones */
   align-items: center;
 }
 
@@ -267,11 +258,12 @@ main {
   margin-left: auto;
 }
 
+
 /* CONTENEDOR SCROLLABLE DE RESULTADOS */
 .results-container {
   height: calc(100vh - 350px);
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: hidden;    /* evita scroll horizontal */
   padding-right: 0.5rem;
   max-width: 1200px;
   width: 80%;
@@ -280,10 +272,10 @@ main {
 
 /* RESPONSIVE */
 
-/* Hasta 1200px: columnas flexibles */
+/* Hasta 1200px: 6 columnas */
 @media (max-width: 1200px) {
   .grid.ads {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(6, 220px);
   }
 }
 
@@ -301,26 +293,29 @@ main {
   }
 }
 
-/* Hasta 480px: 1 columna */
+/* Hasta 480px: 1 columna, tarjetas 100% ancho */
 @media (max-width: 480px) {
   .grid.ads {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* solo 1 columna */
     justify-content: center;
   }
-  .tarjetaAnuncios {
-    width: 100%;
-    max-width: 350px;
+  .tarjetaAnuncio {
+    width: 100%;  /* ancho completo del contenedor */
+    max-width: 350px; /* opcional: limitar ancho máximo para que no quede muy grande */
   }
 }
 
-/* Evitar selección de texto en filtros y etiquetas */
+/* No permitir seleccionar texto en etiquetas y botones del filtro */
 .filtro-categorias label,
 .filtro-orden label,
 .active-filter-tag,
 .remove-btn,
 .cat-item {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  user-select: none; /* estándar moderno */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
 }
+
+
+
