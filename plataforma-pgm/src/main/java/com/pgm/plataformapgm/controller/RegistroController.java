@@ -1,8 +1,10 @@
 package com.pgm.plataformapgm.controller;
 
 import com.pgm.plataformapgm.DTO.RegistroUsuarioDTO;
+import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.service.EmailService;
 import com.pgm.plataformapgm.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,13 @@ public class RegistroController {
                     .body(Map.of("message", e.getMessage()));
         }
     }
+    // En tu controlador, por ejemplo UsuarioController
+    @ModelAttribute("esAdmin")
+    public boolean agregarEsAdmin(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        return usuario != null && "admin".equalsIgnoreCase(usuario.getTipoCuenta());
+    }
+
 }
 
 

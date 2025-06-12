@@ -1,7 +1,9 @@
 package com.pgm.plataformapgm.controller;
 
 import com.pgm.plataformapgm.model.Notificacion;
+import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.service.NotificacionService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,4 +37,12 @@ public class NotificacionController {
         notificacionService.guardar(notificacion);
         return ResponseEntity.noContent().build();
     }
+
+    // En tu controlador, por ejemplo UsuarioController
+    @ModelAttribute("esAdmin")
+    public boolean agregarEsAdmin(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        return usuario != null && "admin".equalsIgnoreCase(usuario.getTipoCuenta());
+    }
+
 }

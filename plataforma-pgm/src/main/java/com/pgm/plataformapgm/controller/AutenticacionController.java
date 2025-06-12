@@ -50,5 +50,12 @@ public class AutenticacionController {
         return "redirect:/login"; // Redirige a la página de login
     }
 
+    // En tu controlador, por ejemplo UsuarioController
+    @ModelAttribute("esAdmin")
+    public boolean agregarEsAdmin(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        return usuario != null && "admin".equalsIgnoreCase(usuario.getTipoCuenta());
+    }
+
 }
 

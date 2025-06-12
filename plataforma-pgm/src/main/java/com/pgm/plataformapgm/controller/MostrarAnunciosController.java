@@ -2,11 +2,11 @@ package com.pgm.plataformapgm.controller;
 
 import com.pgm.plataformapgm.DTO.AnuncioDTO;
 import com.pgm.plataformapgm.model.Anuncio;
+import com.pgm.plataformapgm.model.Usuario;
 import com.pgm.plataformapgm.service.AnuncioService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -41,4 +41,12 @@ public class MostrarAnunciosController {
                 })
                 .toList();
     }
+
+    // En tu controlador, por ejemplo UsuarioController
+    @ModelAttribute("esAdmin")
+    public boolean agregarEsAdmin(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        return usuario != null && "admin".equalsIgnoreCase(usuario.getTipoCuenta());
+    }
+
 }

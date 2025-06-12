@@ -62,4 +62,12 @@ public class FavoritoController {
         return ResponseEntity.ok(favorito);
     }
 
+    // En tu controlador, por ejemplo UsuarioController
+    @ModelAttribute("esAdmin")
+    public boolean agregarEsAdmin(HttpSession session) {
+        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        return usuario != null && "admin".equalsIgnoreCase(usuario.getTipoCuenta());
+    }
+
+
 }
