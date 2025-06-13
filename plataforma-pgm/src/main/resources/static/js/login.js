@@ -1,5 +1,13 @@
 document.getElementById('loginForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Prevenir submit tradicional
+    event.preventDefault();
+
+    const boton = this.querySelector('button[type="submit"]');
+    const mensajeElem = document.getElementById('loginMensaje');
+
+    // Deshabilitar y mostrar "Enviando..."
+    boton.disabled = true;
+    const textoOriginal = boton.textContent;
+    boton.textContent = 'Enviando...';
 
     const data = {
         correoElectronico: this.correoElectronico.value,
@@ -9,27 +17,30 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     try {
         const response = await fetch('/login', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
         const result = await response.json();
 
-        const mensajeElem = document.getElementById('loginMensaje');
-
         if (response.ok) {
             mensajeElem.style.color = '#0079a6';
             mensajeElem.textContent = result.message || 'Inicio de sesión exitoso';
-            // Redirigir tras 1.5s
+            // restaurar botón (opcional, ya que redirige)
+            boton.disabled = false;
+            boton.textContent = textoOriginal;
             setTimeout(() => window.location.href = '/index.html', 500);
         } else {
             mensajeElem.style.color = 'red';
             mensajeElem.textContent = result.message || 'Error al iniciar sesión';
+            // restaurar botón para intentar de nuevo
+            boton.disabled = false;
+            boton.textContent = textoOriginal;
         }
     } catch (error) {
-        document.getElementById('loginMensaje').style.color = 'red';
-        document.getElementById('loginMensaje').textContent = 'Error de conexión al servidor';
+        mensajeElem.style.color = 'red';
+        mensajeElem.textContent = 'Error de conexión al servidor';
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
     }
 });

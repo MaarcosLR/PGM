@@ -1,5 +1,13 @@
 document.getElementById('registroForm').addEventListener('submit', async function(event) {
-    event.preventDefault(); // evitar submit tradicional
+    event.preventDefault();
+
+    const boton = this.querySelector('button[type="submit"]');
+    const mensajeElem = document.getElementById('mensaje');
+
+    // Deshabilitar y mostrar "Enviando..."
+    boton.disabled = true;
+    const textoOriginal = boton.textContent;
+    boton.textContent = 'Enviando...';
 
     const data = {
         nombre: this.nombre.value,
@@ -10,26 +18,31 @@ document.getElementById('registroForm').addEventListener('submit', async functio
     try {
         const response = await fetch('/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
 
+        const result = await response.json();
+
         if (response.ok) {
-            // Aquí asumimos que backend responde con JSON con mensaje éxito
-            const result = await response.json();
-            document.getElementById('mensaje').style.color = '#0079a6';
-            document.getElementById('mensaje').textContent = result.message || 'Usuario registrado correctamente';
+            mensajeElem.style.color = '#0079a6';
+            mensajeElem.textContent = result.message || 'Usuario registrado correctamente';
             this.reset();
+            // restaurar botón (opcional, ya que redirige)
+            boton.disabled = false;
+            boton.textContent = textoOriginal;
             setTimeout(() => window.location.href = '/login.html', 500);
         } else {
-            const errorResult = await response.json();
-            document.getElementById('mensaje').style.color = 'red';
-            document.getElementById('mensaje').textContent = errorResult.message || 'Error en el registro';
+            mensajeElem.style.color = 'red';
+            mensajeElem.textContent = result.message || 'Error en el registro';
+            // restaurar botón para intentar de nuevo
+            boton.disabled = false;
+            boton.textContent = textoOriginal;
         }
     } catch (error) {
-        document.getElementById('mensaje').style.color = 'red';
-        document.getElementById('mensaje').textContent = 'Error de conexión al servidor';
+        mensajeElem.style.color = 'red';
+        mensajeElem.textContent = 'Error de conexión al servidor';
+        boton.disabled = false;
+        boton.textContent = textoOriginal;
     }
 });
