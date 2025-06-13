@@ -59,13 +59,19 @@
         </div>
     </div>
 
-<div class="anuncioInfo">
-    <p><strong>Precio:</strong> <span th:text="${anuncio.precioFormateado}"></span></p>
-    <p><strong>Ubicación:</strong> <span th:text="${anuncio.ubicacion}"></span></p>
-    <p><strong>Estado:</strong> <span th:text="${anuncio.estadoArticulo != null ? anuncio.estadoArticulo.nombre : 'Sin estado'}"></span></p>
-    <p><strong>Descripción:</strong></p>
-    <p th:text="${anuncio.descripcion}">Descripción detallada del anuncio aquí</p>
-</div>
+    <div class="anuncioInfo">
+        <p><strong>Precio:</strong> <span th:text="${anuncio.precioFormateado}"></span></p>
+        <p><strong>Ubicación:</strong> <span th:text="${anuncio.ubicacion}"></span></p>
+        <p><strong>Estado:</strong> <span th:text="${anuncio.estadoArticulo != null ? anuncio.estadoArticulo.nombre : 'Sin estado'}"></span></p>
+
+        <div class="bloque-descripcion">
+            <p><strong>Descripción:</strong></p>
+            <div class="descripcion" th:text="${anuncio.descripcion}">
+                Descripción detallada del anuncio aquí.
+            </div>
+        </div>
+    </div>
+
 
     <a href="/anuncios.html" class="back-link">← Volver a anuncios</a>
 

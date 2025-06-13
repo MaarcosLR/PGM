@@ -419,16 +419,16 @@ h2 {
 
 .img-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
+    grid-template-columns: 1fr; /* ← Solo 1 columna */
+    gap: 0; /* Sin espacio entre imágenes, opcional */
 }
 
 .img-thumb {
-    width: 100%;
-    height: 80px;
+    width: 100%;    /* La imagen ocupa todo el ancho */
+    height: auto;   /* Mantiene proporción */
     object-fit: cover;
-    cursor: pointer;
     border-radius: 4px;
+    cursor: pointer;
 }
 
 .info-anuncio {
@@ -691,14 +691,30 @@ h2 {
         margin-right: 1rem;
     }
 
+    .acciones-anuncio {
+        width: 100%;       /* Que ocupe todo el ancho disponible */
+        display: flex;     /* Flex para alinear botones */
+        flex-wrap: wrap;   /* Permite que pasen a la siguiente línea si no caben */
+        gap: 8px;          /* Espacio entre botones */
+        justify-content: flex-end; /* Alinea a la derecha o cambia a center si prefieres */
+        margin-top: 1rem;
+    }
+
     .img-grid {
-        grid-template-columns: repeat(3, 1fr); /* mantén 3 o ajusta a 2 */
-        gap: 4px;
+        grid-template-columns: 1fr; /* 1 columna solo */
+        gap: 0;
     }
 
     .img-thumb {
-        height: 60px; /* reducir un poco la altura */
-        border-radius: 3px;
+        height: auto; /* para mantener proporción */
+        max-height: 300px; /* opcional para no hacerla muy grande */
+        border-radius: 4px;
+    }
+
+
+    /* Opcional: ocultar todas las imágenes excepto la primera */
+    .img-thumb:not(:first-child) {
+        display: none;
     }
 
 
