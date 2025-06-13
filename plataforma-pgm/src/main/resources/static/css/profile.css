@@ -59,6 +59,7 @@
 #peticiones .anuncio-card-container {
     max-height: 540px; /* ajusta según lo que necesites */
     overflow-y: auto;
+    padding: 20px;
 }
 
 #lista-notificaciones {
@@ -791,5 +792,14 @@ h2 {
     .photo-menu {
         right: auto;
         left: auto;
+    }
+
+    /* Secciones internas con scroll */
+    #anunciosPublicados,
+    #lista-favoritos,
+    #peticiones .anuncio-card-container {
+        max-height: 540px; /* ajusta según lo que necesites */
+        overflow-y: auto;
+        padding: 10px;
     }
 }
