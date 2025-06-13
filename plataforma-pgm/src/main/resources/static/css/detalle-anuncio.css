@@ -164,7 +164,6 @@ main h1 {
     top: 0; left: 0;
     width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.8);
-    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -275,56 +274,50 @@ main h1 {
     .imageAd-carousel {
         width: 100%;
         height: auto;
-        /* Quita el aspect-ratio si quieres más altura */
-        aspect-ratio: auto;
-        /* Alternativa: define altura relativa a la ventana */
-        height: 70vh; /* 70% de la altura visible, ajusta a gusto */
+        aspect-ratio: 2 / 2;
     }
 
     .modal-content {
         width: 100%;
         max-width: 100%;
         height: auto;
-        /* Igual: quita aspecto fijo y usa altura relativa */
-        aspect-ratio: auto;
-        height: 90vh;
+        aspect-ratio: 1 / 1;
         border-radius: 10px;
     }
 
-    /* Mantén los botones un poco más grandes para pulgar */
     .carousel-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
     }
 
     .modal-nav button {
-        width: 48px;
-        height: 48px;
-        font-size: 1.8rem;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
     }
 
     .close-modal {
         top: 8px;
         right: 10px;
-        width: 36px;
-        height: 36px;
-        font-size: 1.5rem;
+        width: 32px;
+        height: 32px;
+        font-size: 1.2rem;
     }
 
     .back-link {
-        font-size: 1rem;
-        padding: 0.5rem 1.25rem;
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
     }
 
     .tituloAnuncio {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         padding: 0 1rem;
     }
 
     .anuncioInfo {
         padding: 0 1rem;
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
 }
 
