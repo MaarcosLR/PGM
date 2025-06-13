@@ -59,8 +59,6 @@
 #peticiones .anuncio-card-container {
     max-height: 540px; /* ajusta según lo que necesites */
     overflow-y: auto;
-    padding-right: 40px;
-    padding-left: 40px;
 }
 
 #lista-notificaciones {
@@ -425,7 +423,7 @@ h2 {
 
 .img-thumb {
     width: 100%;    /* La imagen ocupa todo el ancho */
-    height: auto;   /* Mantiene proporción */
+    max-height: 120px;   /* Mantiene proporción */
     object-fit: cover;
     border-radius: 4px;
     cursor: pointer;
@@ -433,9 +431,9 @@ h2 {
 
 .info-anuncio {
     flex: 2;
-    display: flex;
     flex-direction: column;
     justify-content: space-between;
+    margin-left: 1rem;
 }
 
 .acciones-anuncio {
@@ -706,9 +704,11 @@ h2 {
     }
 
     .img-thumb {
-        height: auto; /* para mantener proporción */
-        max-height: 300px; /* opcional para no hacerla muy grande */
+        width: 120px;    /* La imagen ocupa todo el ancho */
+        max-height: 120px;
+        object-fit: cover;
         border-radius: 4px;
+        cursor: pointer;
     }
 
 
@@ -773,6 +773,7 @@ h2 {
 
     .info-anuncio {
         flex: 1;
+        font-size: 0.8rem;
         width: auto;
     }
 

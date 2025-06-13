@@ -503,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <img src="${anuncio.imagenPrincipalUrl || '/img/default.png'}" alt="Imagen de anuncio" class="img-thumb" />
                             </div>
                         </div>
-                        <div class="info-anuncio" style="margin-left: 1rem;">
+                        <div class="info-anuncio">
                             <p><strong>Título:</strong> ${anuncio.titulo}</p>
                             <p><strong>Precio:</strong> ${anuncio.precioFormateado}</p>
                             <p><strong>Descripción:</strong> ${anuncio.descripcion}</p>
@@ -564,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <img src="${anuncio.imagenPrincipalUrl || '/img/default.png'}" alt="Imagen de anuncio" class="img-thumb" />
                             </div>
                         </div>
-                        <div class="info-anuncio" style="margin-left: 1rem;">
+                        <div class="info-anuncio">
                             <p><strong>Título:</strong> ${anuncio.titulo}</p>
                             <p><strong>Precio:</strong> ${anuncio.precioFormateado}</p>
                             <p><strong>Descripción:</strong> ${anuncio.descripcion}</p>
