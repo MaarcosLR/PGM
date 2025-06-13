@@ -422,7 +422,7 @@ h2 {
 }
 
 .img-thumb {
-    width: 100%;    /* La imagen ocupa todo el ancho */
+    width: 150px;    /* La imagen ocupa todo el ancho */
     height: 120px;   /* Mantiene proporción */
     object-fit: cover;
     border-radius: 4px;
