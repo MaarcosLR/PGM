@@ -1,4 +1,23 @@
-/* Texto negro en el contenido principal */
+/* =======================
+   RESET GLOBAL
+   ======================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* =======================
+   CONTENIDO PRINCIPAL
+   ======================= */
 main p,
 main strong,
 main span,
@@ -6,11 +25,13 @@ main h1 {
     color: black;
 }
 
-/* Botón "Volver a anuncios" */
+/* =======================
+   BOTÓN "Volver a anuncios"
+   ======================= */
 .back-link {
     display: block;
-    width: max-content; /* que ocupe solo lo necesario */
-    margin: 2rem auto 0 auto; /* arriba 2rem, auto a izquierda y derecha para centrar */
+    width: max-content;
+    margin: 2rem auto 0 auto;
     background-color: #0079;
     color: white;
     padding: 0.5rem 1.25rem;
@@ -21,23 +42,24 @@ main h1 {
     cursor: pointer;
 }
 
-
 .back-link:hover {
-    background-color: #00b6f6; /* verde más claro */
+    background-color: #00b6f6;
     text-decoration: none;
 }
 
+/* =======================
+   CAROUSEL PRINCIPAL
+   ======================= */
 .imageAd-carousel {
     position: relative;
-    width: 400px;       /* tamaño fijo ancho */
-    height: 400px;      /* tamaño fijo alto */
-    margin: 0 auto 1rem auto;  /* centrado horizontal y margen abajo */
+    width: 400px;
+    height: 400px;
+    margin: 0 auto 1rem auto;
     overflow: hidden;
-    border-radius: 15px;  /* bordes redondeados */
+    border-radius: 15px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    background-color: #000; /* para evitar "flash" al cargar imagen */
+    background-color: #000;
 }
-
 
 .btn-favorito {
     position: absolute;
@@ -49,16 +71,15 @@ main h1 {
     padding: 0;
     width: 32px;
     height: 32px;
-    color: #ccc; /* gris claro para no marcado */
+    color: #ccc;
     transition: color 0.3s ease;
-    z-index: 20; /* para que quede encima */
+    z-index: 20;
 }
 
 .btn-favorito[aria-pressed="true"] {
-    color: #e63946; /* rojo cuando está activo */
+    color: #e63946;
 }
 
-/* Opcional: agrandar un poco el icono al hacer hover */
 .btn-favorito:hover {
     color: #e63946;
     transform: scale(1.1);
@@ -72,7 +93,7 @@ main h1 {
 }
 
 .btn-favorito[aria-pressed="true"] .icon-heart {
-    fill: currentColor; /* rellena con el color rojo */
+    fill: currentColor;
     stroke: currentColor;
 }
 
@@ -85,7 +106,7 @@ main h1 {
 .carousel-image {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* o contain, según prefieras */
+    object-fit: cover;
     border-radius: 15px;
     display: none;
     position: absolute;
@@ -97,7 +118,9 @@ main h1 {
     display: block;
 }
 
-/* Navegación */
+/* =======================
+   NAVEGACIÓN CARRUSEL
+   ======================= */
 .carousel-btn {
     position: absolute;
     top: 50%;
@@ -131,23 +154,25 @@ main h1 {
     right: 10px;
 }
 
-
+/* =======================
+   MODAL CARRUSEL
+   ======================= */
 .modal-carrusel {
-    display: none; /* oculto al inicio */
+    display: none;
     position: fixed;
     z-index: 999;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background-color: rgba(0,0,0,0.8);
-    display: flex; /* para centrar */
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
     position: relative;
-    width: 600px;      /* ancho fijo */
-    height: 600px;     /* altura más alta */
+    width: 600px;
+    height: 600px;
     max-width: 90%;
     max-height: 90%;
     background: #222;
@@ -170,7 +195,6 @@ main h1 {
     z-index: 1;
 }
 
-/* Navegación dentro del área de la imagen */
 .modal-nav {
     position: absolute;
     top: 50%;
@@ -207,13 +231,11 @@ main h1 {
     color: black;
 }
 
-/* Zoom al hacer clic */
 .modal-content img.zoomed {
     transform: scale(2);
     cursor: zoom-out;
 }
 
-/* Botón de cerrar fuera del modal-content */
 .close-modal {
     position: fixed;
     top: 10px;
@@ -246,16 +268,21 @@ main h1 {
     font-size: 1.5rem;
 }
 
-/* Responsivo */
+/* =======================
+   RESPONSIVO
+   ======================= */
 @media (max-width: 767px) {
     .imageAd-carousel {
-        width: 90vw;
-        height: 90vw; /* Mantiene proporción cuadrada */
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
     }
 
     .modal-content {
-        width: 90vw;
-        height: 90vw;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 1 / 1;
         border-radius: 10px;
     }
 
@@ -295,3 +322,11 @@ main h1 {
     }
 }
 
+/* =======================
+   PREVENCIÓN DE DESBORDES
+   ======================= */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
