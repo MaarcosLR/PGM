@@ -39,102 +39,100 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const modal = document.getElementById('modalCarrusel');
 const modalImg = document.getElementById('imagen-modal');
-const closeBtn = modal.querySelector('.close-modal');
+const closeBtn = modal?.querySelector('.close-modal');
 const prevBtn = document.getElementById('prev-img');
 const nextBtn = document.getElementById('next-img');
 
-let images = [];
-let currentIndex = 0;
-let zoomed = false;
+if (document.querySelector('.img-thumb')) {
+    let images = [];
+    let currentIndex = 0;
+    let zoomed = false;
 
-document.querySelectorAll('.img-thumb').forEach(img => {
-    img.addEventListener('click', (e) => {
-        const clickedImg = e.target;
-        const anuncioDiv = clickedImg.closest('.anuncio-card');
+    document.querySelectorAll('.img-thumb').forEach(img => {
+        img.addEventListener('click', (e) => {
+            const clickedImg = e.target;
+            const anuncioDiv = clickedImg.closest('.anuncio-card');
 
-        images = Array.from(anuncioDiv.querySelectorAll('.img-thumb')).map(i => i.src);
-        currentIndex = images.indexOf(clickedImg.src);
+            images = Array.from(anuncioDiv.querySelectorAll('.img-thumb')).map(i => i.src);
+            currentIndex = images.indexOf(clickedImg.src);
 
+            modalImg.src = images[currentIndex];
+            modal.style.display = 'flex';
+
+            zoomed = false;
+            modalImg.classList.remove('zoomed');
+            resetZoom();
+        });
+    });
+
+    prevBtn?.addEventListener('click', () => {
+        if (images.length === 0) return;
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
         modalImg.src = images[currentIndex];
-        modal.style.display = 'flex';
-
         zoomed = false;
         modalImg.classList.remove('zoomed');
         resetZoom();
     });
-});
 
-prevBtn.addEventListener('click', () => {
-    if (images.length === 0) return;
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    modalImg.src = images[currentIndex];
+    nextBtn?.addEventListener('click', () => {
+        if (images.length === 0) return;
+        currentIndex = (currentIndex + 1) % images.length;
+        modalImg.src = images[currentIndex];
+        zoomed = false;
+        modalImg.classList.remove('zoomed');
+        resetZoom();
+    });
 
-    zoomed = false;
-    modalImg.classList.remove('zoomed');
-    resetZoom();
-});
-
-nextBtn.addEventListener('click', () => {
-    if (images.length === 0) return;
-    currentIndex = (currentIndex + 1) % images.length;
-    modalImg.src = images[currentIndex];
-
-    zoomed = false;
-    modalImg.classList.remove('zoomed');
-    resetZoom();
-});
-
-closeBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-    modalImg.src = '';
-    images = [];
-    zoomed = false;
-    modalImg.classList.remove('zoomed');
-    resetZoom();
-});
-
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
+    closeBtn?.addEventListener('click', () => {
         modal.style.display = 'none';
         modalImg.src = '';
         images = [];
         zoomed = false;
         modalImg.classList.remove('zoomed');
         resetZoom();
-    }
-});
+    });
 
-modalImg.addEventListener('click', (e) => {
-    zoomed = !zoomed;
-    if (zoomed) {
-        modalImg.classList.add('zoomed');
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            modalImg.src = '';
+            images = [];
+            zoomed = false;
+            modalImg.classList.remove('zoomed');
+            resetZoom();
+        }
+    });
+
+    modalImg?.addEventListener('click', (e) => {
+        zoomed = !zoomed;
+        if (zoomed) {
+            modalImg.classList.add('zoomed');
+            moveZoom(e);
+        } else {
+            modalImg.classList.remove('zoomed');
+            resetZoom();
+        }
+    });
+
+    modalImg?.addEventListener('mousemove', (e) => {
+        if (!zoomed) return;
         moveZoom(e);
-    } else {
-        modalImg.classList.remove('zoomed');
-        resetZoom();
+    });
+
+    function moveZoom(e) {
+        const rect = modalImg.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const xPercent = (x / rect.width) * 100;
+        const yPercent = (y / rect.height) * 100;
+        modalImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+        modalImg.style.transform = 'scale(2)';
     }
-});
 
-modalImg.addEventListener('mousemove', (e) => {
-    if (!zoomed) return;
-    moveZoom(e);
-});
-
-function moveZoom(e) {
-    const rect = modalImg.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const xPercent = (x / rect.width) * 100;
-    const yPercent = (y / rect.height) * 100;
-
-    modalImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-    modalImg.style.transform = 'scale(2)';
-}
-
-function resetZoom() {
-    modalImg.style.transformOrigin = 'center center';
-    modalImg.style.transform = 'scale(1)';
+    function resetZoom() {
+        modalImg.style.transformOrigin = 'center center';
+        modalImg.style.transform = 'scale(1)';
+    }
 }
 
 
